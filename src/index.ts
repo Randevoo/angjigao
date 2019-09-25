@@ -21,3 +21,4 @@ const startServer = async () => {
   app.listen(8081);
   console.log("Running a GraphQL API server at localhost:8081/graphql");
 };
+startServer();
