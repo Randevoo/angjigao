@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "engines": {
-    "yarn": "1.16.0"
+    "yarn": "1.16.0",
+    "node": "12.5.0"
   },
   "repository": "git@github.com:Randevoo/angjigao.git",
   "author": "Winson <winsonheng@hotmail.com>",
