@@ -17,6 +17,7 @@
     "typescript": "^3.6.3"
   },
   "scripts": {
+    "postinstall": "npx tsc",
     "serve": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
     "build": "npx tsc",
     "start": "node ./build/index.js"
