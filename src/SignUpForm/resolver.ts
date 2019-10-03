@@ -24,7 +24,7 @@ export default class SignUpFormResolver {
     { email, phone, q1, q2, q3, q4, mailing }: SignUpFormInput,
     @Ctx() context: Context
   ): Promise<SignUpForm> {
-    await context.firebaseDb.ref("test").push({
+    await context.firebaseDb.ref("responses").push({
       email: email || "",
       phone: phone || "",
       q1,
