@@ -3,7 +3,6 @@ dotenv.config();
 import * as path from "path";
 import { buildSchema } from "type-graphql";
 import Admin from "firebase-admin";
-import UserResolver from "./User/resolver";
 import SignUpFormResolver from "./SignUpForm/resolver";
 import { ApolloServer } from "apollo-server";
 
@@ -22,7 +21,7 @@ export interface Context {
 
 const startServer = async () => {
   const schema = await buildSchema({
-    resolvers: [UserResolver, SignUpFormResolver],
+    resolvers: [SignUpFormResolver],
     emitSchemaFile: path.resolve(__dirname, "schema.gql")
   });
 

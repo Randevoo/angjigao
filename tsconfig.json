@@ -8,7 +8,8 @@
     "emitDecoratorMetadata": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "build"
   },
   "include": ["src", "babel.config.js"]
 }
