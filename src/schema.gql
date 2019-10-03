@@ -19,6 +19,7 @@ type Mutation {
 
 type Query {
   user(name: String!): User!
+  getForm: String!
 }
 
 """Object representing a Sign Up Form"""

@@ -13,6 +13,11 @@ import SignUpFormInput from "./input";
 
 @Resolver()
 export default class SignUpFormResolver {
+  @Query(returns => String)
+  getForm(): string {
+    return "Not implemented";
+  }
+
   @Mutation(returns => SignUpForm)
   async submitForm(
     @Arg("formInput")
