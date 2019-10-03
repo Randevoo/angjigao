@@ -3,8 +3,33 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input FormInput {
+  email: String
+  phone: Float
+  q1: String!
+  q2: String!
+  q3: String!
+  q4: String!
+  mailing: Boolean!
+}
+
+type Mutation {
+  submitForm(formInput: FormInput!): SignUpForm!
+}
+
 type Query {
   user(name: String!): User!
+}
+
+"""Object representing a Sign Up Form"""
+type SignUpForm {
+  email: String
+  phone: Float
+  q1: String!
+  q2: String!
+  q3: String!
+  q4: String!
+  mailing: Boolean!
 }
 
 """Object representing User"""

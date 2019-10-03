@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import UserType from "./schema";
-import UserInput from "./input";
 import { Resolver, ResolverInterface, Arg, Query } from "type-graphql";
 
 let testUser = new UserType("test");
