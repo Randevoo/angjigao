@@ -1,18 +1,16 @@
 import { Context } from "./../index";
 import "reflect-metadata";
-import {
-  Resolver,
-  ResolverInterface,
-  Arg,
-  Query,
-  Mutation,
-  Ctx
-} from "type-graphql";
+import { Resolver, Arg, Mutation, Ctx, Query } from "type-graphql";
 import SignUpForm from "./types";
 import SignUpFormInput from "./input";
 
 @Resolver()
 export default class SignUpFormResolver {
+  @Query(returns => String)
+  getForm(): string {
+    return "This should not be queried";
+  }
+
   @Mutation(returns => SignUpForm)
   async submitForm(
     @Arg("formInput")

@@ -3,11 +3,11 @@ dotenv.config();
 import * as path from "path";
 import { buildSchema } from "type-graphql";
 import Admin from "firebase-admin";
-import UserResolver from "./User/resolver";
 import SignUpFormResolver from "./SignUpForm/resolver";
 import { ApolloServer } from "apollo-server";
+import { GraphQLSchema } from "graphql";
 
-let app = Admin.initializeApp({
+const app = Admin.initializeApp({
   credential: Admin.credential.cert({
     privateKey: process.env.FIREBASE_PRIVATE_KEY,
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
@@ -16,20 +16,28 @@ let app = Admin.initializeApp({
   databaseURL: process.env.FIREBASE_DATABASE_URL
 });
 
+export const firebaseDb = app.database();
+
 export interface Context {
   firebaseDb: Admin.database.Database;
 }
 
 const startServer = async () => {
-  const schema = await buildSchema({
-    resolvers: [UserResolver, SignUpFormResolver],
-    emitSchemaFile: path.resolve(__dirname, "schema.gql")
-  });
+  let schema: GraphQLSchema;
+  try {
+    schema = await buildSchema({
+      resolvers: [SignUpFormResolver],
+      emitSchemaFile: path.resolve(__dirname, "schema.gql")
+    });
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
 
   const server = new ApolloServer({
     schema,
     context: () => ({
-      firebaseDb: app.database()
+      firebaseDb
     })
   });
 

@@ -18,7 +18,7 @@ type Mutation {
 }
 
 type Query {
-  user(name: String!): User!
+  getForm: String!
 }
 
 """Object representing a Sign Up Form"""
@@ -30,10 +30,4 @@ type SignUpForm {
   q3: String!
   q4: String!
   mailing: Boolean!
-}
-
-"""Object representing User"""
-type User {
-  name: String!
-  number: Float!
 }
