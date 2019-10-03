@@ -29,7 +29,9 @@ const startServer = async () => {
     schema,
     context: () => ({
       firebaseDb: app.database()
-    })
+    }),
+    introspection: true,
+    playground: true
   });
 
   // The `listen` method launches a web server.
