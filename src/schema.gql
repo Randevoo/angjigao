@@ -3,6 +3,26 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+"""Object representing a Booking"""
+type Booking {
+  id: String!
+  booked_by: String!
+  trip_uuid: String!
+  charge_id: String!
+}
+
+input BookingInput {
+  id: String!
+  booked_by: String!
+  trip_uuid: String!
+  charge_id: String!
+}
+
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
+
 input FormInput {
   email: String
   phone: Float
@@ -15,11 +35,13 @@ input FormInput {
 
 type Mutation {
   submitForm(formInput: FormInput!): SignUpForm!
+  bookTrip(formInput: BookingInput!): Trip!
+  createTrip(tripInput: TripInput!): Trip!
 }
 
 type Query {
-  user(name: String!): User!
   getForm: String!
+  getTrip(tripUuid: String!): Trip!
 }
 
 """Object representing a Sign Up Form"""
@@ -33,8 +55,29 @@ type SignUpForm {
   mailing: Boolean!
 }
 
-"""Object representing User"""
-type User {
+"""Timeframe that contains time start and time end"""
+scalar Timeframe
+
+"""Object representing a Trip"""
+type Trip {
+  id: String!
   name: String!
-  number: Float!
+  price: Float!
+  type: String!
+  description: String!
+  booking_uuid: String
+  guide_uuid: String!
+  trip_start: DateTime!
+  trip_end: DateTime!
+  unavailable_times: [Timeframe!]!
+}
+
+input TripInput {
+  name: String!
+  price: Float!
+  type: String!
+  description: String!
+  guide_uuid: String!
+  trip_start: DateTime!
+  trip_end: DateTime!
 }

@@ -4,6 +4,7 @@ import * as path from "path";
 import { buildSchema } from "type-graphql";
 import Admin from "firebase-admin";
 import SignUpFormResolver from "./SignUpForm/resolver";
+import BookingResolver from "./Booking/resolver";
 import { ApolloServer } from "apollo-server";
 
 let app = Admin.initializeApp({
@@ -21,7 +22,7 @@ export interface Context {
 
 const startServer = async () => {
   const schema = await buildSchema({
-    resolvers: [SignUpFormResolver],
+    resolvers: [SignUpFormResolver, BookingResolver],
     emitSchemaFile: path.resolve(__dirname, "schema.gql")
   });
 
