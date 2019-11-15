@@ -22,7 +22,8 @@ export default class BookingResolver {
       guide_uuid,
       trip_start,
       trip_end,
-      unavailable_times
+      unavailable_times,
+      image_url
     } = await context.firebaseDb
       .ref("trips")
       .child(tripUuid)
@@ -39,7 +40,8 @@ export default class BookingResolver {
       guide_uuid,
       trip_start,
       trip_end,
-      unavailable_times
+      unavailable_times,
+      image_url
     });
   }
 
