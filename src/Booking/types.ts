@@ -46,6 +46,9 @@ export class Trip {
   @Field()
   trip_end: Date;
 
+  @Field()
+  image_url: string;
+
   @Field(type => [TimeframeScalar])
   unavailable_times: Timeframe[];
 
@@ -54,6 +57,7 @@ export class Trip {
     name: string;
     price: number;
     type: string;
+    image_url: string;
     description: string;
     booking_uuid?: string;
     guide_uuid: string;
@@ -71,6 +75,7 @@ export class Trip {
     this.trip_start = properties.trip_start;
     this.trip_end = properties.trip_end;
     this.unavailable_times = properties.unavailable_times;
+    this.image_url = this.image_url;
   }
 }
 

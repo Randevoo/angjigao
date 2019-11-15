@@ -38,4 +38,7 @@ export class TripInput implements Partial<Trip> {
 
   @Field()
   trip_end: Date;
+
+  @Field()
+  image_url: string;
 }

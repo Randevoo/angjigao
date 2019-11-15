@@ -45,14 +45,14 @@ export default class BookingResolver {
 
   @Mutation(returns => Trip)
   async bookTrip(
-    @Arg("formInput")
+    @Arg("bookingInput")
     { booked_by, trip_uuid, charge_id }: BookingInput,
     @Ctx() context: Context
   ): Promise<Trip> {
     await context.firebaseDb
       .ref("booking")
       .child(uuid_v4())
-      .push({
+      .set({
         trip_uuid: trip_uuid,
         booked_by: booked_by,
         charge_id: charge_id
@@ -68,7 +68,8 @@ export default class BookingResolver {
       guide_uuid,
       trip_start,
       trip_end,
-      unavailable_times
+      unavailable_times,
+      image_url
     } = await context.firebaseDb
       .ref("trips")
       .child(trip_uuid)
@@ -85,8 +86,25 @@ export default class BookingResolver {
       guide_uuid,
       trip_start,
       trip_end,
-      unavailable_times
+      unavailable_times,
+      image_url
     });
+  }
+
+  @Mutation(returns => Boolean)
+  async cancelTrip(
+    @Arg("bookingUuid") bookingUuid: string,
+    @Ctx() context: Context
+  ) {
+    try {
+      await context.firebaseDb
+        .ref("booking")
+        .child(bookingUuid)
+        .remove();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   @Mutation(returns => Trip)
@@ -99,7 +117,8 @@ export default class BookingResolver {
       description,
       guide_uuid,
       trip_start,
-      trip_end
+      trip_end,
+      image_url
     }: TripInput,
     @Ctx() context: Context
   ) {
@@ -107,7 +126,7 @@ export default class BookingResolver {
     await context.firebaseDb
       .ref("trips")
       .child(trip_id)
-      .push({
+      .set({
         name,
         price,
         type,
@@ -126,7 +145,8 @@ export default class BookingResolver {
       guide_uuid,
       trip_start,
       trip_end,
-      unavailable_times: [] as Timeframe[]
+      unavailable_times: [] as Timeframe[],
+      image_url
     });
   }
 }

@@ -35,7 +35,8 @@ input FormInput {
 
 type Mutation {
   submitForm(formInput: FormInput!): SignUpForm!
-  bookTrip(formInput: BookingInput!): Trip!
+  bookTrip(bookingInput: BookingInput!): Trip!
+  cancelTrip(bookingUuid: String!): Boolean!
   createTrip(tripInput: TripInput!): Trip!
 }
 
@@ -69,6 +70,7 @@ type Trip {
   guide_uuid: String!
   trip_start: DateTime!
   trip_end: DateTime!
+  image_url: String!
   unavailable_times: [Timeframe!]!
 }
 
@@ -80,4 +82,5 @@ input TripInput {
   guide_uuid: String!
   trip_start: DateTime!
   trip_end: DateTime!
+  image_url: String!
 }
