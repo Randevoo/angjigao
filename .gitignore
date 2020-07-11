@@ -1,4 +1,4 @@
 /node_modules
 .env
 firebase_admin_key_prod.json
-/build
+/dist

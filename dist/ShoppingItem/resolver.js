@@ -24,10 +24,64 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const type_graphql_1 = require("type-graphql");
 const models_1 = require("./models");
-let BookingResolver = class BookingResolver {
+const input_1 = require("./input");
+let ShoppingItemResolver = class ShoppingItemResolver {
     getItem(itemId, context) {
         return __awaiter(this, void 0, void 0, function* () {
             return context.db.getRepository(models_1.ShoppingItem).findOne(itemId);
+        });
+    }
+    // @Mutation((returns) => Trip)
+    // async bookTrip(
+    //   @Arg('bookingInput')
+    //   { booked_by, trip_uuid, charge_id }: BookingInput,
+    //   @Ctx() context: Context,
+    // ): Promise<Trip> {
+    //   await context.firebaseDb.ref('booking').child(uuid_v4()).set({
+    //     trip_uuid: trip_uuid,
+    //     booked_by: booked_by,
+    //     charge_id: charge_id,
+    //   });
+    //   const {
+    //     id,
+    //     name,
+    //     price,
+    //     type,
+    //     description,
+    //     booking_uuid,
+    //     guide_uuid,
+    //     trip_start,
+    //     trip_end,
+    //     unavailable_times,
+    //     image_url,
+    //   } = await context.firebaseDb
+    //     .ref('trips')
+    //     .child(trip_uuid)
+    //     .once('value')
+    //     .then((snapshot) => snapshot.val());
+    //   return new Trip({
+    //     id,
+    //     name,
+    //     price,
+    //     type,
+    //     description,
+    //     booking_uuid,
+    //     guide_uuid,
+    //     trip_start,
+    //     trip_end,
+    //     unavailable_times,
+    //     image_url,
+    //   });
+    // }
+    createItem({ name, price, description, categories, image_url }, context) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let shoppingItem = new models_1.ShoppingItem();
+            shoppingItem.categories = categories;
+            shoppingItem.name = name;
+            shoppingItem.price = price;
+            shoppingItem.description = description;
+            shoppingItem.image_url = image_url;
+            return context.db.getRepository(models_1.ShoppingItem).create(shoppingItem);
         });
     }
 };
@@ -38,8 +92,16 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
-], BookingResolver.prototype, "getItem", null);
-BookingResolver = __decorate([
+], ShoppingItemResolver.prototype, "getItem", null);
+__decorate([
+    type_graphql_1.Mutation((returns) => models_1.ShoppingItem),
+    __param(0, type_graphql_1.Arg('tripInput')),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [input_1.ShoppingItemInput, Object]),
+    __metadata("design:returntype", Promise)
+], ShoppingItemResolver.prototype, "createItem", null);
+ShoppingItemResolver = __decorate([
     type_graphql_1.Resolver()
-], BookingResolver);
-exports.default = BookingResolver;
+], ShoppingItemResolver);
+exports.default = ShoppingItemResolver;

@@ -1,5 +1,5 @@
-// import { InputType, Field } from 'type-graphql';
-// import { Booking, Trip } from './models';
+import { InputType, Field } from 'type-graphql';
+import { ShoppingItem } from './models';
 
 // @InputType()
 // export class BookingInput implements Partial<Booking> {
@@ -16,29 +16,20 @@
 //   charge_id: string;
 // }
 
-// @InputType()
-// export class TripInput implements Partial<Trip> {
-//   @Field()
-//   name: string;
+@InputType()
+export class ShoppingItemInput implements Partial<ShoppingItem> {
+  @Field()
+  name: string;
 
-//   @Field()
-//   price: number;
+  @Field()
+  price: number;
 
-//   @Field()
-//   type: string;
+  @Field()
+  description: string;
 
-//   @Field()
-//   description: string;
+  @Field((type) => [String])
+  categories: string[];
 
-//   @Field()
-//   guide_uuid: string;
-
-//   @Field()
-//   trip_start: Date;
-
-//   @Field()
-//   trip_end: Date;
-
-//   @Field()
-//   image_url: string;
-// }
+  @Field()
+  image_url: string;
+}

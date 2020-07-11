@@ -28,22 +28,6 @@ export class ShoppingItem {
   @Column()
   @Field((type) => [String])
   categories: string[];
-
-  constructor(properties: {
-    id: string;
-    name: string;
-    price: number;
-    image_url: string;
-    description: string;
-    categories: string[];
-  }) {
-    this.id = properties.id;
-    this.name = properties.name;
-    this.price = properties.price;
-    this.description = properties.description;
-    this.image_url = properties.image_url;
-    this.categories = properties.categories;
-  }
 }
 
 @ObjectType({ description: 'Object representing an Order' })

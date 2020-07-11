@@ -13,14 +13,6 @@ const models_1 = require("../User/models");
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 let ShoppingItem = class ShoppingItem {
-    constructor(properties) {
-        this.id = properties.id;
-        this.name = properties.name;
-        this.price = properties.price;
-        this.description = properties.description;
-        this.image_url = properties.image_url;
-        this.categories = properties.categories;
-    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn('uuid'),
@@ -54,8 +46,7 @@ __decorate([
 ], ShoppingItem.prototype, "categories", void 0);
 ShoppingItem = __decorate([
     typeorm_1.Entity(),
-    type_graphql_1.ObjectType({ description: 'Object representing a Shopping Item' }),
-    __metadata("design:paramtypes", [Object])
+    type_graphql_1.ObjectType({ description: 'Object representing a Shopping Item' })
 ], ShoppingItem);
 exports.ShoppingItem = ShoppingItem;
 let Order = class Order {

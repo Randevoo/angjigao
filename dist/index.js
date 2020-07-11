@@ -23,13 +23,12 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const path = __importStar(require("path"));
 const type_graphql_1 = require("type-graphql");
-const resolver_1 = __importDefault(require("./SignUpForm/resolver"));
-const resolver_2 = __importDefault(require("./ShoppingItem/resolver"));
+const resolver_1 = __importDefault(require("./ShoppingItem/resolver"));
 const apollo_server_1 = require("apollo-server");
 const typeorm_1 = require("typeorm");
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     const schema = yield type_graphql_1.buildSchema({
-        resolvers: [resolver_1.default, resolver_2.default],
+        resolvers: [resolver_1.default],
         emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
     });
     const db = yield typeorm_1.createConnection();
