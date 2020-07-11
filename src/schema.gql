@@ -3,84 +3,47 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-"""Object representing a Booking"""
-type Booking {
-  id: String!
-  booked_by: String!
-  trip_uuid: String!
-  charge_id: String!
-}
-
-input BookingInput {
-  id: String!
-  booked_by: String!
-  trip_uuid: String!
-  charge_id: String!
-}
-
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
 
-input FormInput {
-  email: String
-  phone: Float
-  q1: String!
-  q2: String!
-  q3: String!
-  q4: String!
-  mailing: Boolean!
+type Mutation {
+  createItem(tripInput: ShoppingItemInput!): ShoppingItem!
 }
 
-type Mutation {
-  submitForm(formInput: FormInput!): SignUpForm!
-  bookTrip(bookingInput: BookingInput!): Trip!
-  cancelTrip(bookingUuid: String!): Boolean!
-  createTrip(tripInput: TripInput!): Trip!
+"""Object representing an Order"""
+type Order {
+  id: String!
+  charge_id: String!
 }
 
 type Query {
-  getForm: String!
-  getTrip(tripUuid: String!): Trip!
+  getItem(itemId: String!): ShoppingItem!
+  getAllItems: [ShoppingItem!]!
 }
 
-"""Object representing a Sign Up Form"""
-type SignUpForm {
-  email: String
-  phone: Float
-  q1: String!
-  q2: String!
-  q3: String!
-  q4: String!
-  mailing: Boolean!
-}
-
-"""Timeframe that contains time start and time end"""
-scalar Timeframe
-
-"""Object representing a Trip"""
-type Trip {
+"""Object representing a Shopping Item"""
+type ShoppingItem {
   id: String!
   name: String!
   price: Float!
-  type: String!
   description: String!
-  booking_uuid: String
-  guide_uuid: String!
-  trip_start: DateTime!
-  trip_end: DateTime!
   image_url: String!
-  unavailable_times: [Timeframe!]!
+  categories: [String!]!
 }
 
-input TripInput {
+input ShoppingItemInput {
   name: String!
   price: Float!
-  type: String!
   description: String!
-  guide_uuid: String!
-  trip_start: DateTime!
-  trip_end: DateTime!
+  categories: [String!]!
   image_url: String!
+}
+
+type User {
+  id: String!
+  username: String!
+  dob: DateTime!
+  password: String!
 }

@@ -1,7 +1,7 @@
 import { Context } from '../index';
 import 'reflect-metadata';
 import { Resolver, Arg, Query, Mutation, Ctx } from 'type-graphql';
-import { ShoppingItem } from './models';
+import { ShoppingItem } from '../models/ShoppingItem/models';
 import { ShoppingItemInput } from './input';
 
 @Resolver()
@@ -12,6 +12,11 @@ export default class ShoppingItemResolver {
     @Ctx() context: Context,
   ): Promise<ShoppingItem | undefined> {
     return context.db.getRepository(ShoppingItem).findOne(itemId);
+  }
+
+  @Query((returns) => [ShoppingItem])
+  async getAllItems(@Ctx() context: Context): Promise<ShoppingItem[]> {
+    return context.db.getRepository(ShoppingItem).find();
   }
 
   // @Mutation((returns) => Trip)

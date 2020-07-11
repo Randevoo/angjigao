@@ -1,4 +1,4 @@
-import { User } from '../User/models';
+import { User } from 'src/models/User/models';
 import { Field, ObjectType, Int } from 'type-graphql';
 import { PrimaryGeneratedColumn, Column, Entity, OneToOne, JoinColumn } from 'typeorm';
 
@@ -25,7 +25,7 @@ export class ShoppingItem {
   @Field()
   image_url: string;
 
-  @Column()
+  @Column('text', { array: true })
   @Field((type) => [String])
   categories: string[];
 }

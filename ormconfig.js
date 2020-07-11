@@ -1,8 +1,12 @@
 module.exports = {
-  type: 'postgresql',
+  type: 'postgres',
   host: 'localhost',
   port: 5432,
-  username: 'test',
-  password: 'test',
   database: 'longzongbuy',
+  entities: ['src/models/**/*.ts'],
+  migrations: ['src/migration/*.ts'],
+  cli: {
+    entitiesDir: 'src/models',
+    migrationsDir: 'src/migration',
+  },
 };

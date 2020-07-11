@@ -20,6 +20,7 @@
     "firebase-admin": "^8.6.0",
     "graphql": "^14.5.8",
     "lodash": "^4.17.15",
+    "pg": "^8.3.0",
     "reflect-metadata": "^0.1.13",
     "stripe": "^7.13.0",
     "ts-node": "^8.10.2",
@@ -31,10 +32,12 @@
   },
   "scripts": {
     "postinstall": "npx tsc",
-    "serve": "ts-node-dev --respawn --transpileOnly tsconfig-paths/register ./src/index.ts",
+    "serve": "ts-node-dev -r tsconfig-paths/register ./src/index.ts",
     "build": "npx tsc",
     "start": "node -r ts-node/register -r tsconfig-paths/register dist/index.js",
-    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+    "typeorm": "node --require ts-node/register tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "migrate": "node --require ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run",
+    "generateMigration": "node --require ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",

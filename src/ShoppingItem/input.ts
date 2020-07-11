@@ -1,5 +1,5 @@
 import { InputType, Field } from 'type-graphql';
-import { ShoppingItem } from './models';
+import { ShoppingItem } from '../models/ShoppingItem/models';
 
 // @InputType()
 // export class BookingInput implements Partial<Booking> {

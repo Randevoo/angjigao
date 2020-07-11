@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import * as path from 'path';
 import { buildSchema } from 'type-graphql';
-import ShoppingItemResolver from './ShoppingItem/resolver';
+import ShoppingItemResolver from 'src/ShoppingItem/resolver';
 import { ApolloServer } from 'apollo-server';
 import { createConnection, Connection } from 'typeorm';
 
