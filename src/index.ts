@@ -1,38 +1,29 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
-import * as path from "path";
-import { buildSchema } from "type-graphql";
-import Admin from "firebase-admin";
-import SignUpFormResolver from "./SignUpForm/resolver";
-import BookingResolver from "./Booking/resolver";
-import { ApolloServer } from "apollo-server";
-
-let app = Admin.initializeApp({
-  credential: Admin.credential.cert({
-    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    projectId: process.env.FIREBASE_PROJECT_ID
-  }),
-  databaseURL: process.env.FIREBASE_DATABASE_URL
-});
+import * as path from 'path';
+import { buildSchema } from 'type-graphql';
+import SignUpFormResolver from './SignUpForm/resolver';
+import BookingResolver from './ShoppingItem/resolver';
+import { ApolloServer } from 'apollo-server';
+import { createConnection, Connection } from 'typeorm';
 
 export interface Context {
-  firebaseDb: Admin.database.Database;
+  db: Connection;
 }
 
 const startServer = async () => {
   const schema = await buildSchema({
     resolvers: [SignUpFormResolver, BookingResolver],
-    emitSchemaFile: path.resolve(__dirname, "schema.gql")
+    emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
   });
-
+  const db = await createConnection();
   const server = new ApolloServer({
     schema,
     context: () => ({
-      firebaseDb: app.database()
+      db,
     }),
     introspection: true,
-    playground: true
+    playground: true,
   });
 
   // The `listen` method launches a web server.

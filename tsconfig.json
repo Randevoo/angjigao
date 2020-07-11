@@ -9,7 +9,9 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "build"
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strictFunctionTypes": true
   },
   "include": ["src", "babel.config.js"]
 }
