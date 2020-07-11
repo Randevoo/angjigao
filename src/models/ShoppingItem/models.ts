@@ -37,13 +37,22 @@ export class Order {
   @Field()
   id: string;
 
+  @Field()
+  item_id: string;
+
   @OneToOne((type) => ShoppingItem)
   @JoinColumn()
   item: ShoppingItem;
 
+  @Field()
+  buyer_id: string;
+
   @OneToOne((type) => User)
   @JoinColumn()
   buyer: User;
+
+  @Field()
+  seller_id: string;
 
   @OneToOne((type) => User)
   @JoinColumn()

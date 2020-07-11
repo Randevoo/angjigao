@@ -21,7 +21,7 @@ export default class ShoppingItemResolver {
 
   @Mutation((returns) => ShoppingItem)
   async createItem(
-    @Arg('tripInput')
+    @Arg('shoppingItemInput')
     { name, price, description, categories, image_url }: ShoppingItemInput,
     @Ctx() context: Context,
   ) {
