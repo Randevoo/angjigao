@@ -7,8 +7,9 @@ import { buildSchema } from 'type-graphql';
 import ShoppingItemResolver from 'src/ShoppingItem/resolver';
 import { ApolloServer } from 'apollo-server';
 import { Connection, createConnection, Any } from 'typeorm';
-import UserResolver from 'src/User/resolver';
+import { UserResolver, ShopResolver } from 'src/User/resolver';
 import { Order } from './models/Order/models';
+import OrderResolver from './Order/resolvers';
 
 export interface Context {
   db: Connection;
@@ -19,7 +20,7 @@ export interface Context {
 const startServer = async () => {
   console.log('building schema');
   const schema = await buildSchema({
-    resolvers: [ShoppingItemResolver, UserResolver],
+    resolvers: [ShoppingItemResolver, UserResolver, OrderResolver, ShopResolver],
     emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
   });
   console.log('creating connection');

@@ -10,11 +10,21 @@ scalar DateTime
 
 type Mutation {
   createItem(shoppingItemInput: ShoppingItemInput!): ShoppingItem!
+  createShop(shopInput: ShopInput!): Shop!
   createUser(userInput: UserInput!): User!
+  createOrder(orderInput: OrderInput!): Order!
 }
 
 """Object representing an Order"""
 type Order {
+  id: String!
+  item_id: String!
+  buyer_id: String!
+  shop_id: String!
+  charge_id: String!
+}
+
+input OrderInput {
   item_id: String!
   buyer_id: String!
   seller_id: String!
@@ -24,6 +34,20 @@ type Order {
 type Query {
   getItem(itemId: String!): ShoppingItem!
   getAllItems: [ShoppingItem!]!
+  getUser(userId: String!): User!
+}
+
+type Shop {
+  id: String!
+  username: String!
+  dob: DateTime!
+  password: String!
+}
+
+input ShopInput {
+  username: String!
+  dob: DateTime!
+  password: String!
 }
 
 """Object representing a Shopping Item"""
@@ -53,7 +77,6 @@ type User {
 }
 
 input UserInput {
-  id: String!
   username: String!
   dob: DateTime!
   password: String!

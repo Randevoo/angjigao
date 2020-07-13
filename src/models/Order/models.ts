@@ -14,13 +14,13 @@ import { ObjectType, Field } from 'type-graphql';
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn('uuid')
+  @Field()
   id: string;
 
   @Field()
   item_id: string;
 
   @ManyToMany((type) => ShoppingItem, (item) => item.orders, { cascade: true })
-  @JoinTable()
   items: ShoppingItem[];
 
   @Field()
