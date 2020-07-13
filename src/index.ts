@@ -17,17 +17,16 @@ export interface Context {
   orderLoader: DataLoader<string, Order | undefined>;
 }
 
-const startServer = async () => {
-  console.log('building schema');
-  const schema = await buildSchema({
+export const getSchema = async () =>
+  await buildSchema({
     resolvers: [ShoppingItemResolver, UserResolver, OrderResolver, ShopResolver],
     emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
   });
-  console.log('creating connection');
+
+const startServer = async () => {
   const db = await createConnection();
-  console.log('connection created');
   const server = new ApolloServer({
-    schema,
+    schema: await getSchema(),
     context: () => ({
       db,
       requestId: uuid_v4(),
