@@ -1,27 +1,19 @@
+import DataLoader from 'dataloader';
 import uuid_v4 from 'uuid/v4';
 import dotenv from 'dotenv';
 dotenv.config();
 import * as path from 'path';
-import { buildSchema, createParamDecorator } from 'type-graphql';
+import { buildSchema } from 'type-graphql';
 import ShoppingItemResolver from 'src/ShoppingItem/resolver';
 import { ApolloServer } from 'apollo-server';
-import { createConnection, Connection } from 'typeorm';
-import { Container } from 'typedi';
+import { Connection, createConnection, Any } from 'typeorm';
 import UserResolver from 'src/User/resolver';
+import { Order } from './models/Order/models';
 
 export interface Context {
   db: Connection;
   requestId: string;
-}
-
-export function RequestContainer(): ParameterDecorator {
-  return function (target: Object, propertyName: string | symbol, index: number) {
-    return createParamDecorator<Context>(({ context, info }) => {
-      const paramtypes = Reflect.getMetadata('design:paramtypes', target, propertyName);
-      const requestContainer = Container.of(context.requestId);
-      return requestContainer.get(paramtypes[index]);
-    })(target, propertyName, index);
-  };
+  orderLoader: DataLoader<string, Order | undefined>;
 }
 
 const startServer = async () => {
@@ -38,6 +30,12 @@ const startServer = async () => {
     context: () => ({
       db,
       requestId: uuid_v4(),
+      orderLoader: new DataLoader(async (ids: readonly string[]) => {
+        const orders = await db
+          .getRepository(Order)
+          .find({ where: { buyer_id: Any(ids as string[]) } });
+        return ids.map((id) => orders.find((order) => order.id === id));
+      }),
     }),
     introspection: true,
     playground: true,

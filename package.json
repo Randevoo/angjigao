@@ -9,6 +9,7 @@
   "author": "Winson <winsonheng@hotmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@mando75/typeorm-graphql-loader": "^1.2.0",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^4.17.1",
     "@types/lodash": "^4.14.145",

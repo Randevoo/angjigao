@@ -10,11 +10,11 @@ scalar DateTime
 
 type Mutation {
   createItem(shoppingItemInput: ShoppingItemInput!): ShoppingItem!
+  createUser(userInput: UserInput!): User!
 }
 
 """Object representing an Order"""
 type Order {
-  id: String!
   item_id: String!
   buyer_id: String!
   seller_id: String!
@@ -45,6 +45,14 @@ input ShoppingItemInput {
 }
 
 type User {
+  id: String!
+  username: String!
+  dob: DateTime!
+  password: String!
+  user: Order!
+}
+
+input UserInput {
   id: String!
   username: String!
   dob: DateTime!
