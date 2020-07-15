@@ -5,7 +5,7 @@ import { ShoppingItem } from '../models/ShoppingItem/models';
 import { ShoppingItemInput } from './input';
 
 @Resolver()
-export default class ShoppingItemResolver {
+export class ShoppingItemResolver {
   @Query((returns) => ShoppingItem)
   async getItem(
     @Arg('itemId') itemId: string,

@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import * as path from 'path';
 import { buildSchema } from 'type-graphql';
-import ShoppingItemResolver from 'src/ShoppingItem/resolver';
+import { ShoppingItemResolver } from 'src/ShoppingItem/resolver';
 import { ApolloServer } from 'apollo-server';
 import { Connection, createConnection, Any } from 'typeorm';
 import { UserResolver, ShopResolver } from 'src/User/resolver';
@@ -17,16 +17,14 @@ export interface Context {
   orderLoader: DataLoader<string, Order | undefined>;
 }
 
-export const getSchema = async () =>
-  await buildSchema({
-    resolvers: [ShoppingItemResolver, UserResolver, OrderResolver, ShopResolver],
-    emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
-  });
-
 const startServer = async () => {
   const db = await createConnection();
   const server = new ApolloServer({
-    schema: await getSchema(),
+    schema: await buildSchema({
+      resolvers: [ShoppingItemResolver, UserResolver, OrderResolver, ShopResolver],
+      emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
+      validate: false,
+    }),
     context: () => ({
       db,
       requestId: uuid_v4(),
@@ -46,5 +44,5 @@ const startServer = async () => {
     console.log(`🚀  Server ready at ${url}`);
   });
 };
-console.log('Hello');
+
 startServer();

@@ -1,6 +1,6 @@
 module.exports = [
   {
-    name: 'prod',
+    name: 'default',
     type: 'postgres',
     host: 'localhost',
     port: 5432,
