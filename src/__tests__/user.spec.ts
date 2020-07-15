@@ -1,6 +1,6 @@
-import { Connection } from 'typeorm';
+import { Connection, Db } from 'typeorm';
 import { createTestClient, ApolloServerTestClient } from 'apollo-server-testing';
-import { createTestServer } from './utils';
+import { createTestServer, resetDb } from './utils';
 import { gql } from 'apollo-server';
 import { expect } from 'chai';
 
@@ -24,6 +24,14 @@ describe('User', () => {
     connection = db;
   });
 
+  afterEach(async () => {
+    await resetDb(connection);
+  });
+
+  after(async () => {
+    await connection.close();
+  });
+
   describe('Resolvers', () => {
     it('should be able to create new user', async () => {
       const {
@@ -33,6 +41,15 @@ describe('User', () => {
       });
       expect(createUser.username).to.be.equal('Test1');
       expect(createUser.dob).to.be.equal('2020-07-13T14:21:23.000Z');
+    });
+
+    it('should not be able to create new users with duplicate names', async () => {
+      await client.mutate({
+        mutation: createUserMutation,
+      });
+      const { data } = await client.mutate({
+        mutation: createUserMutation,
+      });
     });
   });
 });

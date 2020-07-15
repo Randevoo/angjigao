@@ -11,7 +11,7 @@ import {
 import { ObjectType, Field } from 'type-graphql';
 
 @ObjectType({ description: 'Object representing an Order' })
-@Entity()
+@Entity({ name: 'item_order' })
 export class Order {
   @PrimaryGeneratedColumn('uuid')
   @Field()

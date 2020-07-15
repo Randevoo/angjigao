@@ -1,9 +1,9 @@
 import { Order } from 'src/models/Order/models';
 import { ShoppingItem } from 'src/models/ShoppingItem/models';
 import { Field, ObjectType } from 'type-graphql';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, Unique } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'user_buyer' })
 @ObjectType()
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -31,6 +31,7 @@ export class User {
 
 @Entity()
 @ObjectType()
+@Unique(['username'])
 export class Shop {
   @PrimaryGeneratedColumn('uuid')
   @Field()
