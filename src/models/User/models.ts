@@ -1,7 +1,16 @@
+import { Cart } from 'src/models/Cart/Cart';
 import { Order } from 'src/models/Order/models';
 import { ShoppingItem } from 'src/models/ShoppingItem/models';
 import { Field, ObjectType } from 'type-graphql';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, Unique } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  JoinColumn,
+  Unique,
+  OneToOne,
+} from 'typeorm';
 
 @Entity({ name: 'user_buyer' })
 @ObjectType()
@@ -27,6 +36,9 @@ export class User {
     cascade: true,
   })
   orders: Order[];
+
+  @OneToMany((type) => Cart, (cart) => cart.owner)
+  cart: Cart[];
 }
 
 @Entity()
