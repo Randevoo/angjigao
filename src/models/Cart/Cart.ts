@@ -9,6 +9,7 @@ import {
   OneToMany,
   AfterLoad,
   ManyToOne,
+  OneToOne,
 } from 'typeorm';
 import { sumBy } from 'lodash';
 import { MultiCart } from './MultiCart';
@@ -21,13 +22,14 @@ export class Cart {
   id: string;
 
   @JoinColumn()
-  @ManyToOne((type) => User, (user) => user.cart)
+  @OneToOne((type) => User, (user) => user.cart)
   owner: User;
 
   @OneToMany((type) => Order, (order) => order.cart)
+  @Field((type) => [Order])
   orders: Order[];
 
-  @Column()
+  @Column({ nullable: true })
   charge_id: string;
 
   @JoinColumn()

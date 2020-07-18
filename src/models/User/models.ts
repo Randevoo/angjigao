@@ -38,8 +38,8 @@ export class User {
   })
   orders: Order[];
 
-  @OneToMany((type) => Cart, (cart) => cart.owner)
-  cart: Cart[];
+  @OneToOne((type) => Cart, (cart) => cart.owner)
+  cart: Cart;
 }
 
 @Entity()

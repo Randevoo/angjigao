@@ -47,10 +47,11 @@ describe('User', () => {
       await client.mutate({
         mutation: createUserMutation,
       });
-      const { data } = await client.mutate({
+      const { data, errors } = await client.mutate({
         mutation: createUserMutation,
       });
-      console.log(data);
+      expect(data).to.be.null;
+      expect(errors).to.be.lengthOf(1);
     });
   });
 });

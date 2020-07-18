@@ -24,5 +24,7 @@ module.exports = [
       entitiesDir: 'src/models',
       migrationsDir: 'src/migration',
     },
+    // Make this true to print sql statements
+    logging: false,
   },
 ];

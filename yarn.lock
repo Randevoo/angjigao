@@ -800,6 +800,11 @@
     lodash.camelcase "^4.3.0"
     protobufjs "^6.8.6"
 
+"@mando75/typeorm-graphql-loader@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@mando75/typeorm-graphql-loader/-/typeorm-graphql-loader-1.2.0.tgz#7d1aedde4120297f47865906e4d54272c00b0ce0"
+  integrity sha512-7uB1VYcmIsX5v0RuexQTx7GG0kGtXUnEPZGekZksLUEZ9m4+kFX4ig2PpBRnUvoYNonw9VH9O0NNFENQFd6j/g==
+
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@protobufjs/aspromise/-/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"
@@ -961,6 +966,11 @@
     "@types/body-parser" "*"
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
+
+"@types/faker@^4.1.12":
+  version "4.1.12"
+  resolved "https://registry.yarnpkg.com/@types/faker/-/faker-4.1.12.tgz#065d37343677df1aa757c622650bd14666c42602"
+  integrity sha512-0MEyzJrLLs1WaOCx9ULK6FzdCSj2EuxdSP9kvuxxdBEGujZYUOZ4vkPXdgu3dhyg/pOdn7VCatelYX7k0YShlA==
 
 "@types/fs-capacitor@*":
   version "2.0.0"
@@ -2314,6 +2324,11 @@ extend@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
   integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
+
+faker@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/faker/-/faker-4.1.0.tgz#1e45bbbecc6774b3c195fad2835109c6d748cc3f"
+  integrity sha1-HkW7vsxndLPBlfrSg1EJxtdIzD8=
 
 fast-json-stable-stringify@^2.0.0:
   version "2.1.0"

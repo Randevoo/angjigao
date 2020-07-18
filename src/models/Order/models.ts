@@ -21,26 +21,21 @@ export class Order {
   id: string;
 
   @ManyToMany((type) => ShoppingItem, (item) => item.orders, { cascade: true })
+  @Field((type) => [ShoppingItem])
   items: ShoppingItem[];
 
   @ManyToOne((type) => Cart, (cart) => cart.orders)
   cart: Cart;
 
-  @Field()
-  buyer_id: string;
-
   @ManyToOne((type) => User, (user) => user.orders)
   @JoinColumn()
   buyer: User;
-
-  @Field()
-  shop_id: string;
 
   @ManyToOne((type) => Shop, (shop) => shop.orders)
   @JoinColumn()
   shop: Shop;
 
-  @Column()
+  @Column({ nullable: true })
   charge_id: string;
 
   price: number;

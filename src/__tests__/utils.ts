@@ -9,13 +9,14 @@ import { createConnection, Any, Connection } from 'typeorm';
 import { ApolloServer } from 'apollo-server';
 import OrderResolver from 'src/Order/resolvers';
 import { join, map } from 'lodash';
+import CartResolver from 'src/Cart/resolvers';
 
 //TODO: Change out the context, or find a better way to create it. Now mimics prod.
 export async function createTestServer({ context = {} } = {}) {
   const db = await createConnection('test');
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [ShoppingItemResolver, UserResolver, OrderResolver, ShopResolver],
+      resolvers: [ShoppingItemResolver, UserResolver, OrderResolver, ShopResolver, CartResolver],
       validate: false,
     }),
     context: () => ({

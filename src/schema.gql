@@ -3,9 +3,15 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input AddToCartInput {
+  item_id: String!
+  buyer_id: String!
+}
+
 """Object representing a Cart"""
 type Cart {
   id: String!
+  orders: [Order!]!
 }
 
 """
@@ -24,13 +30,13 @@ type Mutation {
   createShop(shopInput: ShopInput!): Shop!
   createUser(userInput: UserInput!): User!
   createOrder(orderInput: OrderInput!): Order!
+  addToCart(addToCartInput: AddToCartInput!): Cart!
 }
 
 """Object representing an Order"""
 type Order {
   id: String!
-  buyer_id: String!
-  shop_id: String!
+  items: [ShoppingItem!]!
 }
 
 input OrderInput {

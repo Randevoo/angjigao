@@ -13,7 +13,4 @@ export class MultiCart {
   @OneToMany((type) => Cart, (cart) => cart.multi_cart)
   @Field((type) => [Cart])
   carts: Cart[];
-
-  @Column()
-  charge_id: string;
 }

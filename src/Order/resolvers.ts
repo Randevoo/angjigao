@@ -14,9 +14,6 @@ export default class OrderResolver {
     const item = await context.db
       .getRepository(ShoppingItem)
       .findOneOrFail({ id: orderInput.item_id });
-    console.log(user);
-    console.log(shop);
-    console.log(item);
     const order = new Order();
     order.buyer = user;
     order.shop = shop;

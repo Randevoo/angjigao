@@ -6,6 +6,7 @@ import { User, Shop } from 'src/models/User/models';
 import { Resolver, FieldResolver, Root } from 'type-graphql';
 import { Order } from 'src/models/Order/models';
 import { UserInput, ShopInput } from './input';
+import { UserInputError } from 'apollo-server';
 
 @Resolver()
 export class ShopResolver {
