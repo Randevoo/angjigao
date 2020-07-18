@@ -9,19 +9,19 @@ import {
   JoinColumn,
   AfterLoad,
   Column,
+  BaseEntity,
 } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 import { Cart } from 'src/models/Cart/Cart';
 
 @ObjectType({ description: 'Object representing an Order' })
 @Entity({ name: 'item_order' })
-export class Order {
+export class Order extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field()
   id: string;
 
   @ManyToMany((type) => ShoppingItem, (item) => item.orders, { cascade: true })
-  @Field((type) => [ShoppingItem])
   items: ShoppingItem[];
 
   @ManyToOne((type) => Cart, (cart) => cart.orders)

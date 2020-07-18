@@ -2,15 +2,25 @@ import { AddToCartInput } from './inputs';
 import { User } from 'src/models/User/models';
 import { Context } from './../index';
 import { Order } from 'src/models/Order/models';
-import { Resolver, Mutation, Ctx, Arg } from 'type-graphql';
+import { Resolver, Mutation, Ctx, Arg, Root, FieldResolver } from 'type-graphql';
 import { ShoppingItem } from 'src/models/ShoppingItem/models';
 import { Cart } from 'src/models/Cart/Cart';
-import { isNil, concat } from 'lodash';
+import { isNil, concat, find } from 'lodash';
+import { GraphQLResolveInfo } from 'graphql';
 
 @Resolver(() => Cart)
 export default class CartResolver {
+  @FieldResolver((type) => Order)
+  async orders(@Root() root: Cart, @Ctx() context: Context) {
+    return context.loader.loadEntity(Order, 'order').where('order.id = :id', { id: root.id });
+  }
+
   @Mutation(() => Cart)
-  async addToCart(@Arg('addToCartInput') orderInput: AddToCartInput, @Ctx() context: Context) {
+  async addToCart(
+    @Arg('addToCartInput') orderInput: AddToCartInput,
+    @Ctx() context: Context,
+    info: GraphQLResolveInfo,
+  ) {
     const cartRepo = context.db.getRepository(Cart);
     const orderRepo = context.db.getRepository(Order);
 
@@ -19,7 +29,10 @@ export default class CartResolver {
       .findOneOrFail({ id: orderInput.item_id }, { relations: ['shop'] });
     const buyer = await context.db
       .getRepository(User)
-      .findOneOrFail({ id: orderInput.buyer_id }, { relations: ['cart'] });
+      .findOneOrFail(
+        { id: orderInput.buyer_id },
+        { relations: ['cart', 'cart.orders', 'cart.orders.shop'] },
+      );
 
     const buyerCart =
       buyer.cart ||
@@ -29,13 +42,7 @@ export default class CartResolver {
       });
 
     const order =
-      (await orderRepo.findOne({
-        where: {
-          shop: {
-            id: item.shop.id,
-          },
-        },
-      })) ||
+      find(buyerCart.orders, (order) => order.shop.id === item.shop.id) ||
       orderRepo.create({
         shop: item.shop,
         buyer: buyer,

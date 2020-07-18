@@ -36,7 +36,6 @@ type Mutation {
 """Object representing an Order"""
 type Order {
   id: String!
-  items: [ShoppingItem!]!
 }
 
 input OrderInput {

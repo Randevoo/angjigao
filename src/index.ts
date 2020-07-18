@@ -17,6 +17,7 @@ export interface Context {
   db: Connection;
   requestId: string;
   orderLoader: DataLoader<string, Order | undefined>;
+  loader: GraphQLDatabaseLoader;
 }
 
 const startServer = async () => {
