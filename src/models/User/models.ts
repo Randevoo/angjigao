@@ -14,6 +14,7 @@ import {
 
 @Entity({ name: 'user_buyer' })
 @ObjectType()
+@Unique(['username'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   @Field()

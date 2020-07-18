@@ -3,10 +3,21 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+"""Object representing a Cart"""
+type Cart {
+  id: String!
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
+
+"""Object representing MultiCart"""
+type MultiCart {
+  id: String!
+  carts: [Cart!]!
+}
 
 type Mutation {
   createItem(shoppingItemInput: ShoppingItemInput!): ShoppingItem!
@@ -18,10 +29,8 @@ type Mutation {
 """Object representing an Order"""
 type Order {
   id: String!
-  item_id: String!
   buyer_id: String!
   shop_id: String!
-  charge_id: String!
 }
 
 input OrderInput {

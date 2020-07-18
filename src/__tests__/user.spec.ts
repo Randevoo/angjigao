@@ -50,6 +50,7 @@ describe('User', () => {
       const { data } = await client.mutate({
         mutation: createUserMutation,
       });
+      console.log(data);
     });
   });
 });
