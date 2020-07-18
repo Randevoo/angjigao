@@ -10,6 +10,7 @@ import {
   AfterLoad,
   Column,
   BaseEntity,
+  OneToMany,
 } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 import { Cart } from 'src/models/Cart/Cart';
@@ -21,10 +22,12 @@ export class Order extends BaseEntity {
   @Field()
   id: string;
 
-  @ManyToMany((type) => ShoppingItem, (item) => item.orders, { cascade: true })
-  items: ShoppingItem[];
+  @OneToMany((type) => OrderItemCount, (orderItemCount) => orderItemCount.order, { cascade: true })
+  @JoinColumn()
+  itemAndCounts: OrderItemCount[];
 
   @ManyToOne((type) => Cart, (cart) => cart.orders)
+  @JoinColumn()
   cart: Cart;
 
   @ManyToOne((type) => User, (user) => user.orders)
@@ -37,11 +40,21 @@ export class Order extends BaseEntity {
 
   @Column({ nullable: true })
   charge_id: string;
+}
 
-  price: number;
+@ObjectType({ description: 'Join table for shopping items and its count in an order' })
+@Entity()
+export class OrderItemCount {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @AfterLoad()
-  getPrice() {
-    this.price = sumBy(this.items, (item) => item.price);
-  }
+  @ManyToOne((type) => ShoppingItem)
+  item: ShoppingItem;
+
+  @Column({ default: 0 })
+  count: number;
+
+  @ManyToOne((type) => Order, (order) => order.itemAndCounts)
+  @JoinColumn()
+  order: Order;
 }

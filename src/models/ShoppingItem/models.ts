@@ -22,10 +22,6 @@ export class ShoppingItem {
   @ManyToOne((type) => Shop, (shop) => shop.id)
   shop: Shop;
 
-  @JoinTable()
-  @ManyToMany((type) => Order, (order) => order.items)
-  orders: Order[];
-
   @Column()
   @Field()
   name: string;

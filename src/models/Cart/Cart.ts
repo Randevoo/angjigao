@@ -37,9 +37,4 @@ export class Cart {
   multi_cart: MultiCart;
 
   totalPrice: number;
-
-  @AfterLoad()
-  getTotalPrice() {
-    this.totalPrice = sumBy(this.orders, (order) => order.price);
-  }
 }
