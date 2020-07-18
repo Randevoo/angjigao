@@ -1,13 +1,10 @@
-import { sumBy } from 'lodash';
 import { User, Shop } from 'src/models/User/models';
 import { ShoppingItem } from 'src/models/ShoppingItem/models';
 import {
   Entity,
   PrimaryGeneratedColumn,
-  ManyToMany,
   ManyToOne,
   JoinColumn,
-  AfterLoad,
   Column,
   BaseEntity,
   OneToMany,
@@ -40,6 +37,9 @@ export class Order extends BaseEntity {
 
   @Column({ nullable: true })
   charge_id: string;
+
+  @Column({ default: 0 })
+  price: number;
 }
 
 @ObjectType({ description: 'Join table for shopping items and its count in an order' })

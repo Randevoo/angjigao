@@ -10,13 +10,14 @@ import {
   AfterLoad,
   ManyToOne,
   OneToOne,
+  BaseEntity,
 } from 'typeorm';
 import { sumBy } from 'lodash';
 import { MultiCart } from './MultiCart';
 
 @Entity()
 @ObjectType({ description: 'Object representing a Cart' })
-export class Cart {
+export class Cart extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Field()
   id: string;
@@ -37,4 +38,7 @@ export class Cart {
   multi_cart: MultiCart;
 
   totalPrice: number;
+
+  @Column({ default: 0 })
+  price: number;
 }
