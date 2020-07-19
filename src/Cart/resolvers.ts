@@ -37,7 +37,7 @@ export default class CartResolver {
       await cartItemCountRepo.save(cartItemCount);
     }
     const cart = await cartRepo.findOne({
-      relations: ['cartItemCounts'],
+      relations: ['cartItemCounts', 'cartItemCounts.item'],
       where: {
         owner: {
           id: removeFromCartInput.buyer_id,
