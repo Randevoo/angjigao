@@ -50,13 +50,13 @@ export default class CartResolver {
       });
       buyerCart = await cartRepo.save(newCart);
     }
-
     const order =
       find(buyerCart.orders, (order) => order.shop.id === item.shop.id) ||
       orderRepo.create({
         shop: item.shop,
         buyer: buyer,
         itemAndCounts: [],
+        cart: buyerCart,
       });
     const itemAndCount = find(
       order.itemAndCounts,
@@ -67,7 +67,6 @@ export default class CartResolver {
       const newItemCount = orderItemCountRepo.create({
         item,
         count: 1,
-        order,
       });
 
       order.itemAndCounts = concat(order.itemAndCounts, newItemCount);
@@ -77,7 +76,10 @@ export default class CartResolver {
       await orderItemCountRepo.save(itemAndCount);
     }
 
-    await buyerCart.reload();
-    return buyerCart;
+    return await cartRepo.findOne({
+      where: {
+        owner: buyer,
+      },
+    });
   }
 }

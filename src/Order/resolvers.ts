@@ -1,3 +1,4 @@
+import { OrderItemCount } from './../models/Order/models';
 import { User, Shop } from 'src/models/User/models';
 import { Context } from './../index';
 import { Order } from 'src/models/Order/models';
@@ -14,10 +15,16 @@ export default class OrderResolver {
     const item = await context.db
       .getRepository(ShoppingItem)
       .findOneOrFail({ id: orderInput.item_id });
-    const order = new Order();
-    order.buyer = user;
-    order.shop = shop;
-    order.items = [item];
+    const itemAndCount = await context.db.getRepository(OrderItemCount).create({
+      item,
+      count: 1,
+    });
+    const order = await context.db.getRepository(Order).create({
+      buyer: user,
+      shop,
+      itemAndCounts: [itemAndCount],
+    });
+
     return context.db.manager.save(order);
   }
 }

@@ -23,7 +23,7 @@ export class Order extends BaseEntity {
   @JoinColumn()
   itemAndCounts: OrderItemCount[];
 
-  @ManyToOne((type) => Cart, (cart) => cart.orders)
+  @ManyToOne((type) => Cart, (cart) => cart.orders, { cascade: true })
   @JoinColumn()
   cart: Cart;
 
@@ -46,15 +46,19 @@ export class Order extends BaseEntity {
 @Entity()
 export class OrderItemCount {
   @PrimaryGeneratedColumn('uuid')
+  @Field()
   id: string;
 
   @ManyToOne((type) => ShoppingItem)
+  @Field()
   item: ShoppingItem;
 
   @Column({ default: 0 })
+  @Field()
   count: number;
 
   @ManyToOne((type) => Order, (order) => order.itemAndCounts)
   @JoinColumn()
+  @Field()
   order: Order;
 }

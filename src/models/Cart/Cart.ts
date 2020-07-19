@@ -7,17 +7,14 @@ import {
   Entity,
   JoinColumn,
   OneToMany,
-  AfterLoad,
   ManyToOne,
   OneToOne,
-  BaseEntity,
 } from 'typeorm';
-import { sumBy } from 'lodash';
 import { MultiCart } from './MultiCart';
 
 @Entity()
 @ObjectType({ description: 'Object representing a Cart' })
-export class Cart extends BaseEntity {
+export class Cart {
   @PrimaryGeneratedColumn('uuid')
   @Field()
   id: string;

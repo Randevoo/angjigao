@@ -1,4 +1,4 @@
-import { Order } from 'src/models/Order/models';
+import { Order, OrderItemCount } from 'src/models/Order/models';
 import { Connection } from 'typeorm';
 import { createTestClient, ApolloServerTestClient } from 'apollo-server-testing';
 import { createTestServer, resetDb } from './utils';
@@ -8,6 +8,7 @@ import { insertNewUser, insertNewShop } from './seed/user';
 import { insertNewShoppingItem } from './seed/shoppingItem';
 import { insertNewCart } from './seed/cart';
 import { insertNewOrder } from './seed/order';
+import { first } from 'lodash';
 
 const addToCartMutation = gql`
   mutation($itemId: String!, $buyerId: String!) {
@@ -35,69 +36,127 @@ describe('Cart', () => {
   });
 
   describe('Resolvers', () => {
-    it('should be able to add to cart for a new user', async () => {
-      const user = await insertNewUser(connection);
-      const shop = await insertNewShop(connection);
-      const item = await insertNewShoppingItem(connection, { shop });
-      const {
-        data: { addToCart },
-        errors,
-      } = await client.mutate({
-        mutation: addToCartMutation,
-        variables: {
-          itemId: item.id,
-          buyerId: user.id,
-        },
-      });
-      expect(errors).to.be.undefined;
-      expect(addToCart.id).to.not.be.undefined;
-      const order = await connection.getRepository(Order).findOne({
-        where: {
-          cart: {
-            id: addToCart.id,
-          },
-        },
-      });
-      expect(order).to.not.be.undefined;
-    });
+    describe('Mutations', () => {
+      describe('addToCart', () => {
+        it('should be able to add to cart for a new user', async () => {
+          const user = await insertNewUser(connection);
+          const shop = await insertNewShop(connection);
+          const item = await insertNewShoppingItem(connection, { shop });
+          const { data, errors } = await client.mutate({
+            mutation: addToCartMutation,
+            variables: {
+              itemId: item.id,
+              buyerId: user.id,
+            },
+          });
 
-    it('should be able to add to cart for a user who already has an existing order', async () => {
-      const user = await insertNewUser(connection);
-      const shop = await insertNewShop(connection);
-      const firstItem = await insertNewShoppingItem(connection, { shop });
-      const secondItem = await insertNewShoppingItem(connection, { shop });
-      const order = await insertNewOrder(connection, {
-        buyer: user,
-        shop,
-        items: [firstItem],
-      });
-      await insertNewCart(connection, {
-        owner: user,
-        orders: [order],
-      });
+          expect(errors).to.be.undefined;
+          const { addToCart } = data;
+          expect(addToCart.id).to.not.be.undefined;
+          const order = await connection.getRepository(Order).findOne({
+            relations: ['itemAndCounts', 'itemAndCounts.item'],
+            where: {
+              cart: {
+                id: addToCart.id,
+              },
+            },
+          });
+          expect(order).to.not.be.undefined;
+          expect(order.itemAndCounts).to.have.lengthOf(1);
+          expect(first(order.itemAndCounts).item.id).to.be.equal(item.id);
+        });
 
-      const {
-        data: { addToCart },
-        errors,
-      } = await client.mutate({
-        mutation: addToCartMutation,
-        variables: {
-          itemId: secondItem.id,
-          buyerId: user.id,
-        },
-      });
+        it('should be able to add to cart for a user who already has an existing order', async () => {
+          const user = await insertNewUser(connection);
+          const shop = await insertNewShop(connection);
+          const firstItem = await insertNewShoppingItem(connection, { shop });
+          const secondItem = await insertNewShoppingItem(connection, { shop });
+          const firstOrderItem = connection.getRepository(OrderItemCount).create({
+            item: firstItem,
+            count: 1,
+          });
+          const order = await insertNewOrder(connection, {
+            buyer: user,
+            shop,
+            itemAndCounts: [firstOrderItem],
+          });
+          await insertNewCart(connection, {
+            owner: user,
+            orders: [order],
+          });
 
-      expect(errors).to.be.undefined;
-      expect(addToCart.id).to.not.be.undefined;
+          const {
+            data: { addToCart },
+            errors,
+          } = await client.mutate({
+            mutation: addToCartMutation,
+            variables: {
+              itemId: secondItem.id,
+              buyerId: user.id,
+            },
+          });
 
-      const orderResult = await connection.getRepository(Order).findOne({
-        where: {
-          cart: {
-            id: addToCart.id,
-          },
-        },
+          expect(errors).to.be.undefined;
+          expect(addToCart.id).to.not.be.undefined;
+
+          const orderResult = await connection.getRepository(Order).findOne({
+            relations: ['itemAndCounts'],
+            where: {
+              cart: {
+                id: addToCart.id,
+              },
+            },
+          });
+          expect(orderResult.id).to.be.equal(order.id);
+          expect(orderResult.itemAndCounts).to.have.lengthOf(2);
+        });
+
+        it('should be able to add to cart for a user who already has an existing order with existing item', async () => {
+          const user = await insertNewUser(connection);
+          const shop = await insertNewShop(connection);
+          const item = await insertNewShoppingItem(connection, { shop });
+          const firstOrderItem = connection.getRepository(OrderItemCount).create({
+            item: item,
+            count: 1,
+          });
+          const order = await insertNewOrder(connection, {
+            buyer: user,
+            shop,
+            itemAndCounts: [firstOrderItem],
+          });
+          await insertNewCart(connection, {
+            owner: user,
+            orders: [order],
+          });
+
+          const {
+            data: { addToCart },
+            errors,
+          } = await client.mutate({
+            mutation: addToCartMutation,
+            variables: {
+              itemId: item.id,
+              buyerId: user.id,
+            },
+          });
+
+          expect(errors).to.be.undefined;
+          expect(addToCart.id).to.not.be.undefined;
+
+          const orderResult = await connection.getRepository(Order).findOne({
+            relations: ['itemAndCounts', 'itemAndCounts.item'],
+            where: {
+              cart: {
+                id: addToCart.id,
+              },
+            },
+          });
+          expect(orderResult.id).to.be.equal(order.id);
+          expect(orderResult.itemAndCounts).to.have.lengthOf(1);
+          expect(orderResult.itemAndCounts[0].item.id).to.be.equal(item.id);
+          expect(orderResult.itemAndCounts[0].count).to.be.equal(2);
+        });
       });
-      expect(orderResult.id).to.be.equal(order.id);
     });
   });
 });

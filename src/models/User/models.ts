@@ -38,7 +38,7 @@ export class User {
   })
   orders: Order[];
 
-  @OneToOne((type) => Cart, (cart) => cart.owner)
+  @OneToOne((type) => Cart, (cart) => cart.owner, { cascade: true })
   cart: Cart;
 }
 

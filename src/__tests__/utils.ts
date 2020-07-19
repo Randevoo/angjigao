@@ -14,22 +14,27 @@ import CartResolver from 'src/Cart/resolvers';
 //TODO: Change out the context, or find a better way to create it. Now mimics prod.
 export async function createTestServer({ context = {} } = {}) {
   const db = await createConnection('test');
-  const server = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [ShoppingItemResolver, UserResolver, OrderResolver, ShopResolver, CartResolver],
-      validate: false,
-    }),
-    context: () => ({
-      db,
-      requestId: uuid_v4(),
-      orderLoader: new DataLoader(async (ids: readonly string[]) => {
-        const orders = await db
-          .getRepository(Order)
-          .find({ where: { buyer_id: Any(ids as string[]) } });
-        return ids.map((id) => orders.find((order) => order.id === id));
+  let server;
+  try {
+    server = new ApolloServer({
+      schema: await buildSchema({
+        resolvers: [ShoppingItemResolver, UserResolver, OrderResolver, ShopResolver, CartResolver],
+        validate: false,
       }),
-    }),
-  });
+      context: () => ({
+        db,
+        requestId: uuid_v4(),
+        orderLoader: new DataLoader(async (ids: readonly string[]) => {
+          const orders = await db
+            .getRepository(Order)
+            .find({ where: { buyer_id: Any(ids as string[]) } });
+          return ids.map((id) => orders.find((order) => order.id === id));
+        }),
+      }),
+    });
+  } catch (e) {
+    console.log(e);
+  }
 
   return { server, db };
 }
