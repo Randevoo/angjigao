@@ -1,4 +1,4 @@
-import { AddToCartInput } from './inputs';
+import { AddToCartInput, RemoveFromCartInput } from './inputs';
 import { User } from 'src/models/User/models';
 import { Context } from './../index';
 import { Resolver, Mutation, Ctx, Arg, Root, FieldResolver } from 'type-graphql';
@@ -10,19 +10,50 @@ import { GraphQLResolveInfo } from 'graphql';
 @Resolver(() => Cart)
 export default class CartResolver {
   @Mutation(() => Cart)
-  async addToCart(
-    @Arg('addToCartInput') orderInput: AddToCartInput,
+  async removeFromCart(
+    @Arg('removeFromCartInput') removeFromCartInput: RemoveFromCartInput,
     @Ctx() context: Context,
-    info: GraphQLResolveInfo,
   ) {
+    const cartItemCountRepo = context.db.getRepository(CartItemCount);
+    const cartItemCount = await cartItemCountRepo.findOneOrFail({
+      relations: ['item'],
+      where: {
+        item: {
+          id: removeFromCartInput.item_id,
+        },
+        cart: {
+          owner: {
+            id: removeFromCartInput.buyer_id,
+          },
+        },
+      },
+    });
+    if (cartItemCount.count > 1) {
+      await cartItemCountRepo.softRemove(cartItemCount);
+    } else {
+      cartItemCount.price -= cartItemCount.item.price;
+      cartItemCount.count -= 1;
+      await cartItemCountRepo.save(cartItemCount);
+    }
+    return await context.db.getRepository(Cart).findOne({
+      where: {
+        owner: {
+          id: removeFromCartInput.buyer_id,
+        },
+      },
+    });
+  }
+
+  @Mutation(() => Cart)
+  async addToCart(@Arg('addToCartInput') addToCartInput: AddToCartInput, @Ctx() context: Context) {
     const cartRepo = context.db.getRepository(Cart);
-    const orderItemCountRepo = context.db.getRepository(CartItemCount);
+    const cartItemCountRepo = context.db.getRepository(CartItemCount);
 
     const item = await context.db
       .getRepository(ShoppingItem)
-      .findOneOrFail({ id: orderInput.item_id });
+      .findOneOrFail({ id: addToCartInput.item_id });
     const buyer = await context.db.getRepository(User).findOneOrFail(
-      { id: orderInput.buyer_id },
+      { id: addToCartInput.buyer_id },
       {
         relations: ['cart', 'cart.cartItemCounts', 'cart.cartItemCounts.item'],
       },
@@ -44,7 +75,7 @@ export default class CartResolver {
     );
 
     if (isNil(cartItemCount)) {
-      const newItemCount = orderItemCountRepo.create({
+      const newItemCount = cartItemCountRepo.create({
         item,
         count: 1,
         price: item.price,
@@ -55,7 +86,7 @@ export default class CartResolver {
     } else {
       cartItemCount.count = cartItemCount.count + 1;
       cartItemCount.price = cartItemCount.price + item.price;
-      await orderItemCountRepo.save(cartItemCount);
+      await cartItemCountRepo.save(cartItemCount);
       buyerCart.price = buyerCart.price + item.price;
     }
 

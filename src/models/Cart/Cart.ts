@@ -9,6 +9,7 @@ import {
   OneToMany,
   ManyToOne,
   OneToOne,
+  DeleteDateColumn,
 } from 'typeorm';
 import { MultiCart } from './MultiCart';
 
@@ -60,5 +61,9 @@ export class CartItemCount {
   cart: Cart;
 
   @Column()
+  @Field()
   price: number;
+
+  @DeleteDateColumn()
+  deletedDate: Date;
 }

@@ -7,3 +7,12 @@ export class AddToCartInput {
   @Field()
   buyer_id: string;
 }
+
+@InputType()
+export class RemoveFromCartInput {
+  @Field()
+  item_id: string;
+
+  @Field()
+  buyer_id: string;
+}
