@@ -4,9 +4,7 @@ import { Arg } from 'type-graphql';
 import { Mutation } from 'type-graphql';
 import { User, Shop } from 'src/models/User/models';
 import { Resolver, FieldResolver, Root } from 'type-graphql';
-import { Order } from 'src/models/Order/models';
 import { UserInput, ShopInput } from './input';
-import { UserInputError } from 'apollo-server';
 
 @Resolver()
 export class ShopResolver {
@@ -23,11 +21,6 @@ export class ShopResolver {
 
 @Resolver(() => User)
 export class UserResolver {
-  @FieldResolver(() => Order)
-  user(@Root() root: User, @Ctx() context: Context): Promise<Order> {
-    return context.orderLoader.load(root.id);
-  }
-
   @Query(() => User)
   async getUser(@Arg('userId') id: string, @Ctx() context: Context) {
     return await context.db.getRepository(User).findOneOrFail({ id });

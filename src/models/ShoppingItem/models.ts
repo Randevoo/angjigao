@@ -1,5 +1,4 @@
-import { Order } from 'src/models/Order/models';
-import { User, Shop } from 'src/models/User/models';
+import { Shop } from 'src/models/User/models';
 import { Field, ObjectType, Int } from 'type-graphql';
 import {
   PrimaryGeneratedColumn,

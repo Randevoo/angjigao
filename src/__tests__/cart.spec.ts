@@ -1,4 +1,3 @@
-import { Order, OrderItemCount } from 'src/models/Order/models';
 import { Connection } from 'typeorm';
 import { createTestClient, ApolloServerTestClient } from 'apollo-server-testing';
 import { createTestServer, resetDb } from './utils';
@@ -7,13 +6,13 @@ import { expect } from 'chai';
 import { insertNewUser, insertNewShop } from './seed/user';
 import { insertNewShoppingItem } from './seed/shoppingItem';
 import { insertNewCart } from './seed/cart';
-import { insertNewOrder } from './seed/order';
-import { first } from 'lodash';
+import { CartItemCount } from 'src/models/Cart/Cart';
 
 const addToCartMutation = gql`
   mutation($itemId: String!, $buyerId: String!) {
     addToCart(addToCartInput: { item_id: $itemId, buyer_id: $buyerId }) {
       id
+      price
     }
   }
 `;
@@ -49,40 +48,40 @@ describe('Cart', () => {
               buyerId: user.id,
             },
           });
-
+          // console.log(errors[0]);
           expect(errors).to.be.undefined;
+
           const { addToCart } = data;
           expect(addToCart.id).to.not.be.undefined;
-          const order = await connection.getRepository(Order).findOne({
-            relations: ['itemAndCounts', 'itemAndCounts.item'],
+
+          expect(addToCart.price).to.be.equal(item.price);
+          const cartItemCount = await connection.getRepository(CartItemCount).findOne({
+            relations: ['item'],
             where: {
               cart: {
                 id: addToCart.id,
               },
             },
           });
-          expect(order).to.not.be.undefined;
-          expect(order.itemAndCounts).to.have.lengthOf(1);
-          expect(first(order.itemAndCounts).item.id).to.be.equal(item.id);
+          expect(cartItemCount).to.not.be.undefined;
+          expect(cartItemCount.item.id).to.be.equal(item.id);
+          expect(cartItemCount.count).to.be.equal(1);
         });
 
-        it('should be able to add to cart for a user who already has an existing order', async () => {
+        it('should be able to add to cart for a user who already has an existing item in cart', async () => {
           const user = await insertNewUser(connection);
           const shop = await insertNewShop(connection);
           const firstItem = await insertNewShoppingItem(connection, { shop });
           const secondItem = await insertNewShoppingItem(connection, { shop });
-          const firstOrderItem = connection.getRepository(OrderItemCount).create({
+          const firstCartItem = connection.getRepository(CartItemCount).create({
             item: firstItem,
             count: 1,
+            price: firstItem.price,
           });
-          const order = await insertNewOrder(connection, {
-            buyer: user,
-            shop,
-            itemAndCounts: [firstOrderItem],
-          });
+
           await insertNewCart(connection, {
             owner: user,
-            orders: [order],
+            cartItemCounts: [firstCartItem],
           });
 
           const {
@@ -98,35 +97,32 @@ describe('Cart', () => {
 
           expect(errors).to.be.undefined;
           expect(addToCart.id).to.not.be.undefined;
+          expect(addToCart.price).to.be.equal(firstItem.price + secondItem.price);
 
-          const orderResult = await connection.getRepository(Order).findOne({
-            relations: ['itemAndCounts'],
+          const cartItemCounts = await connection.getRepository(CartItemCount).find({
+            relations: ['item'],
             where: {
               cart: {
                 id: addToCart.id,
               },
             },
           });
-          expect(orderResult.id).to.be.equal(order.id);
-          expect(orderResult.itemAndCounts).to.have.lengthOf(2);
+          expect(cartItemCounts).to.have.lengthOf(2);
         });
 
-        it('should be able to add to cart for a user who already has an existing order with existing item', async () => {
+        it('should be able to add to cart for a user who already the same existing item in cart', async () => {
           const user = await insertNewUser(connection);
           const shop = await insertNewShop(connection);
           const item = await insertNewShoppingItem(connection, { shop });
-          const firstOrderItem = connection.getRepository(OrderItemCount).create({
+          const firstCartItem = connection.getRepository(CartItemCount).create({
             item: item,
             count: 1,
+            price: item.price,
           });
-          const order = await insertNewOrder(connection, {
-            buyer: user,
-            shop,
-            itemAndCounts: [firstOrderItem],
-          });
+
           await insertNewCart(connection, {
             owner: user,
-            orders: [order],
+            cartItemCounts: [firstCartItem],
           });
 
           const {
@@ -142,19 +138,20 @@ describe('Cart', () => {
 
           expect(errors).to.be.undefined;
           expect(addToCart.id).to.not.be.undefined;
+          expect(addToCart.price).to.be.equal(item.price * 2);
 
-          const orderResult = await connection.getRepository(Order).findOne({
-            relations: ['itemAndCounts', 'itemAndCounts.item'],
+          const cartItemCounts = await connection.getRepository(CartItemCount).find({
+            relations: ['item'],
             where: {
               cart: {
                 id: addToCart.id,
               },
             },
           });
-          expect(orderResult.id).to.be.equal(order.id);
-          expect(orderResult.itemAndCounts).to.have.lengthOf(1);
-          expect(orderResult.itemAndCounts[0].item.id).to.be.equal(item.id);
-          expect(orderResult.itemAndCounts[0].count).to.be.equal(2);
+          expect(cartItemCounts).to.have.lengthOf(1);
+          expect(cartItemCounts[0].item.id).to.be.equal(item.id);
+          expect(cartItemCounts[0].count).to.be.equal(2);
+          expect(cartItemCounts[0].price).to.be.equal(2 * item.price);
         });
       });
     });

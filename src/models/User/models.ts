@@ -1,5 +1,4 @@
 import { Cart } from 'src/models/Cart/Cart';
-import { Order } from 'src/models/Order/models';
 import { ShoppingItem } from 'src/models/ShoppingItem/models';
 import { Field, ObjectType } from 'type-graphql';
 import {
@@ -32,12 +31,6 @@ export class User {
   @Column()
   password: string;
 
-  @JoinColumn()
-  @OneToMany((type) => Order, (item) => item, {
-    cascade: true,
-  })
-  orders: Order[];
-
   @OneToOne((type) => Cart, (cart) => cart.owner, { cascade: true })
   cart: Cart;
 }
@@ -68,10 +61,4 @@ export class Shop {
     onDelete: 'CASCADE',
   })
   items: ShoppingItem[];
-
-  @JoinColumn()
-  @OneToMany((type) => Order, (item) => item, {
-    cascade: true,
-  })
-  orders: Order[];
 }
