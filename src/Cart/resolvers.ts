@@ -15,6 +15,7 @@ export default class CartResolver {
     @Ctx() context: Context,
   ) {
     const cartItemCountRepo = context.db.getRepository(CartItemCount);
+    const cartRepo = context.db.getRepository(Cart);
     const cartItemCount = await cartItemCountRepo.findOneOrFail({
       relations: ['item'],
       where: {
@@ -35,13 +36,16 @@ export default class CartResolver {
       cartItemCount.count -= 1;
       await cartItemCountRepo.save(cartItemCount);
     }
-    return await context.db.getRepository(Cart).findOne({
+    const cart = await cartRepo.findOne({
+      relations: ['cartItemCounts'],
       where: {
         owner: {
           id: removeFromCartInput.buyer_id,
         },
       },
     });
+    cart.price = sumBy(cart.cartItemCounts, (itemCount) => itemCount.price);
+    return await cartRepo.save(cart);
   }
 
   @Mutation(() => Cart)

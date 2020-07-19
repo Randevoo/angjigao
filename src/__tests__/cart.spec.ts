@@ -5,8 +5,7 @@ import { gql } from 'apollo-server';
 import { expect } from 'chai';
 import { insertNewUser, insertNewShop } from './seed/user';
 import { insertNewShoppingItem } from './seed/shoppingItem';
-import { insertNewCart } from './seed/cart';
-import { CartItemCount } from 'src/models/Cart/Cart';
+import { insertNewCart, insertNewCartItemCount } from './seed/cart';
 
 const addToCartMutation = gql`
   mutation($itemId: String!, $buyerId: String!) {
@@ -71,10 +70,9 @@ describe('Cart', () => {
           const shop = await insertNewShop(connection);
           const firstItem = await insertNewShoppingItem(connection, { shop });
           const secondItem = await insertNewShoppingItem(connection, { shop });
-          const firstCartItem = connection.getRepository(CartItemCount).create({
+          const firstCartItem = await insertNewCartItemCount(connection, {
             item: firstItem,
             count: 1,
-            price: firstItem.price,
           });
 
           await insertNewCart(connection, {
@@ -103,10 +101,9 @@ describe('Cart', () => {
           const user = await insertNewUser(connection);
           const shop = await insertNewShop(connection);
           const item = await insertNewShoppingItem(connection, { shop });
-          const firstCartItem = connection.getRepository(CartItemCount).create({
-            item: item,
+          const firstCartItem = await insertNewCartItemCount(connection, {
+            item,
             count: 1,
-            price: item.price,
           });
 
           await insertNewCart(connection, {
