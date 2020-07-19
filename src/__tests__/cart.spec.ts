@@ -48,14 +48,14 @@ describe('Cart', () => {
               buyerId: user.id,
             },
           });
-          // console.log(errors[0]);
+
           expect(errors).to.be.undefined;
 
           const { addToCart } = data;
           expect(addToCart.id).to.not.be.undefined;
 
           expect(addToCart.price).to.be.equal(item.price);
-          const cartItemCount = await connection.getRepository(CartItemCount).findOne({
+          const cartItemCount = await connection.getRepository(CartItemCount).find({
             relations: ['item'],
             where: {
               cart: {
@@ -64,8 +64,9 @@ describe('Cart', () => {
             },
           });
           expect(cartItemCount).to.not.be.undefined;
-          expect(cartItemCount.item.id).to.be.equal(item.id);
-          expect(cartItemCount.count).to.be.equal(1);
+          expect(cartItemCount).to.have.lengthOf(1);
+          expect(cartItemCount[0].item.id).to.be.equal(item.id);
+          expect(cartItemCount[0].count).to.be.equal(1);
         });
 
         it('should be able to add to cart for a user who already has an existing item in cart', async () => {
