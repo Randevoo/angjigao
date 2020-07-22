@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+generator client {
+  provider             = "prisma-client-js"
+  experimentalFeatures = ["aggregateApi"]
+}
+
+generator typegraphql {
+  provider = "node node_modules/typegraphql-prisma/generator.js"
+  output   = "../prisma/generated/type-graphql"
+}
+
+model User {
+  id       String   @default(uuid()) @id
+  email    String   @unique
+  username String   @unique
+  password String
+  dob      DateTime
+  cart     Cart?
+}
+
+model Shop {
+  id        String     @default(uuid()) @id
+  email     String     @unique
+  username  String     @unique
+  password  String
+  shopItems ShopItem[]
+}
+
+model ShopItem {
+  id            String          @default(uuid()) @id
+  createdAt     DateTime        @default(now())
+  name          String
+  description   String
+  price         Float
+  imageUrl      String
+  Shop          Shop            @relation(fields: [shopId], references: [id])
+  shopId        String
+  CartItemCount CartItemCount[]
+}
+
+model Cart {
+  id            String          @default(uuid()) @id
+  ownerId       String
+  owner         User            @relation(fields: [ownerId], references: [id])
+  chargeId      String?
+  price         Float           @default(0)
+  CartItemCount CartItemCount[]
+}
+
+model CartItemCount {
+  id         String   @default(uuid()) @id
+  cartId     String
+  cart       Cart     @relation(fields: [cartId], references: [id])
+  itemId     String
+  shopItem   ShopItem @relation(fields: [itemId], references: [id])
+  price      Float
+  count      Int
+  deleted_at DateTime
+}

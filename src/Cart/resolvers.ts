@@ -1,99 +1,150 @@
 import { AddToCartInput, RemoveFromCartInput } from './inputs';
-import { User } from 'src/models/User/models';
 import { Context } from './../index';
-import { Resolver, Mutation, Ctx, Arg, Root, FieldResolver } from 'type-graphql';
-import { ShoppingItem } from 'src/models/ShoppingItem/models';
-import { Cart, CartItemCount } from 'src/models/Cart/Cart';
-import { isNil, concat, find, sumBy } from 'lodash';
-import { GraphQLResolveInfo } from 'graphql';
+import { Resolver, Mutation, Ctx, Arg } from 'type-graphql';
+import { Cart } from 'src/models/Cart/Cart';
+import { isNil, concat, find, sumBy, now } from 'lodash';
+import { GraphQLError } from 'graphql';
 
 @Resolver(() => Cart)
 export default class CartResolver {
   @Mutation(() => Cart)
   async removeFromCart(
     @Arg('removeFromCartInput') removeFromCartInput: RemoveFromCartInput,
-    @Ctx() context: Context,
+    @Ctx() { prisma }: Context,
   ) {
-    const cartItemCountRepo = context.db.getRepository(CartItemCount);
-    const cartRepo = context.db.getRepository(Cart);
-    const cartItemCount = await cartItemCountRepo.findOneOrFail({
-      relations: ['item'],
+    const cartItemCountArr = await prisma.cartItemCount.findMany({
       where: {
-        item: {
-          id: removeFromCartInput.item_id,
-        },
-        cart: {
-          owner: {
-            id: removeFromCartInput.buyer_id,
-          },
-        },
+        AND: [
+          { itemId: removeFromCartInput.item_id },
+          { cart: { ownerId: removeFromCartInput.buyer_id } },
+        ],
+      },
+      include: {
+        shopItem: true,
       },
     });
-    if (cartItemCount.count > 1) {
-      await cartItemCountRepo.softRemove(cartItemCount);
-    } else {
-      cartItemCount.price -= cartItemCount.item.price;
-      cartItemCount.count -= 1;
-      await cartItemCountRepo.save(cartItemCount);
+    if (cartItemCountArr.length === 0) {
+      throw new GraphQLError('Item not found in cart');
     }
-    const cart = await cartRepo.findOne({
-      relations: ['cartItemCounts', 'cartItemCounts.item'],
+    const cartItemCount = cartItemCountArr[0];
+    if (cartItemCount.count < 2) {
+      await prisma.cartItemCount.update({
+        where: {
+          id: cartItemCount.cartId,
+        },
+        data: { deletedAt: Date() },
+      });
+    } else {
+      await prisma.cartItemCount.update({
+        where: {
+          id: cartItemCount.id,
+        },
+        data: {
+          count: cartItemCount.count - 1,
+          price: cartItemCount.price - cartItemCount.shopItem.price,
+        },
+      });
+    }
+    const cart = await prisma.cart.findMany({
       where: {
         owner: {
           id: removeFromCartInput.buyer_id,
         },
       },
+      include: {
+        cartItemCounts: true,
+      },
     });
-    cart.price = sumBy(cart.cartItemCounts, (itemCount) => itemCount.price);
-    return await cartRepo.save(cart);
+    return await prisma.cart.update({
+      where: {
+        id: cart[0].id,
+      },
+      data: {
+        price: sumBy(cart[0].cartItemCounts, (itemCount) => itemCount.price),
+      },
+    });
   }
 
   @Mutation(() => Cart)
-  async addToCart(@Arg('addToCartInput') addToCartInput: AddToCartInput, @Ctx() context: Context) {
-    const cartRepo = context.db.getRepository(Cart);
-    const cartItemCountRepo = context.db.getRepository(CartItemCount);
-
-    const item = await context.db
-      .getRepository(ShoppingItem)
-      .findOneOrFail({ id: addToCartInput.item_id });
-    const buyer = await context.db.getRepository(User).findOneOrFail(
-      { id: addToCartInput.buyer_id },
-      {
-        relations: ['cart', 'cart.cartItemCounts', 'cart.cartItemCounts.item'],
+  async addToCart(
+    @Arg('addToCartInput') addToCartInput: AddToCartInput,
+    @Ctx() { prisma }: Context,
+  ) {
+    const item = await prisma.shopItem.findOne({
+      where: {
+        id: addToCartInput.item_id,
       },
-    );
+    });
+    const buyer = await prisma.user.findOne({
+      where: {
+        id: addToCartInput.buyer_id,
+      },
+      include: {
+        cart: {
+          include: {
+            cartItemCounts: {
+              include: {
+                shopItem: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
     let buyerCart = buyer.cart;
 
-    if (isNil(buyerCart)) {
-      const newCart = cartRepo.create({
-        owner: buyer,
-        cartItemCounts: [],
-      });
-      buyerCart = await cartRepo.save(newCart);
-    }
+    // Create cart when user is created
 
     const cartItemCount = find(
       buyerCart.cartItemCounts,
-      (cartItemCount) => cartItemCount.item.id === item.id,
+      (cartItemCount) => cartItemCount.shopItem.id === item.id,
     );
 
     if (isNil(cartItemCount)) {
-      const newItemCount = cartItemCountRepo.create({
-        item,
-        count: 1,
-        price: item.price,
+      await prisma.cartItemCount.create({
+        data: {
+          count: 1,
+          price: item.price,
+          shopItem: {
+            connect: {
+              id: item.id,
+            },
+          },
+          cart: {
+            connect: {
+              id: buyerCart.id,
+            },
+          },
+        },
       });
-
-      buyerCart.cartItemCounts = concat(buyerCart.cartItemCounts, newItemCount);
-      buyerCart.price = sumBy(buyerCart.cartItemCounts, (itemAndCount) => itemAndCount.price);
+      return await prisma.cart.update({
+        where: {
+          id: buyerCart.id,
+        },
+        data: {
+          price: buyerCart.price + item.price,
+        },
+      });
     } else {
-      cartItemCount.count = cartItemCount.count + 1;
-      cartItemCount.price = cartItemCount.price + item.price;
-      await cartItemCountRepo.save(cartItemCount);
-      buyerCart.price = buyerCart.price + item.price;
+      await prisma.cartItemCount.update({
+        where: {
+          id: cartItemCount.id,
+        },
+        data: {
+          count: cartItemCount.count + 1,
+          price: cartItemCount.price + item.price,
+        },
+      });
     }
 
-    return await cartRepo.save(buyerCart);
+    return await prisma.cart.update({
+      where: {
+        id: buyerCart.id,
+      },
+      data: {
+        price: buyerCart.price + item.price,
+      },
+    });
   }
 }

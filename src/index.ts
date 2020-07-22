@@ -1,4 +1,3 @@
-import DataLoader from 'dataloader';
 import uuid_v4 from 'uuid/v4';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -6,19 +5,19 @@ import * as path from 'path';
 import { buildSchema } from 'type-graphql';
 import { ShoppingItemResolver } from 'src/ShoppingItem/resolver';
 import { ApolloServer } from 'apollo-server';
-import { Connection, createConnection, Any } from 'typeorm';
 import { UserResolver, ShopResolver } from 'src/User/resolver';
-import { GraphQLDatabaseLoader } from '@mando75/typeorm-graphql-loader';
+import { PrismaClient } from '@prisma/client';
+
 import CartResolver from './Cart/resolvers';
 
+const prisma = new PrismaClient();
+
 export interface Context {
-  db: Connection;
+  prisma: PrismaClient;
   requestId: string;
-  loader: GraphQLDatabaseLoader;
 }
 
 const startServer = async () => {
-  const db = await createConnection();
   const server = new ApolloServer({
     schema: await buildSchema({
       resolvers: [ShoppingItemResolver, UserResolver, ShopResolver, CartResolver],
@@ -26,9 +25,8 @@ const startServer = async () => {
       validate: false,
     }),
     context: () => ({
-      db,
       requestId: uuid_v4(),
-      loader: new GraphQLDatabaseLoader(db),
+      prisma,
     }),
     introspection: true,
     playground: true,

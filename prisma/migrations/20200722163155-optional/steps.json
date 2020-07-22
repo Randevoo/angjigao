@@ -1,0 +1,11 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "UpdateField",
+      "model": "CartItemCount",
+      "field": "deletedAt",
+      "arity": "Optional"
+    }
+  ]
+}

@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://winson@localhost:5432/ecoscale?schema=public"
+  url = "***"
 }
 
 generator client {
@@ -22,7 +22,7 @@ model User {
   username String   @unique
   password String
   dob      DateTime
-  cart     Cart
+  cart     Cart?
 }
 
 model Shop {
@@ -55,12 +55,12 @@ model Cart {
 }
 
 model CartItemCount {
-  id        String    @default(uuid()) @id
+  id        String   @default(uuid()) @id
   cartId    String
-  cart      Cart      @relation(fields: [cartId], references: [id])
+  cart      Cart     @relation(fields: [cartId], references: [id])
   itemId    String
-  shopItem  ShopItem  @relation(fields: [itemId], references: [id])
+  shopItem  ShopItem @relation(fields: [itemId], references: [id])
   price     Float
   count     Int
-  deletedAt DateTime?
+  deletedAt DateTime
 }

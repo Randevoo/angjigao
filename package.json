@@ -53,8 +53,9 @@
     "build": "npx tsc",
     "start": "node -r ts-node/register -r tsconfig-paths/register dist/index.js",
     "typeorm": "node --require ts-node/register tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "migrate": "node --require ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run",
-    "generateMigration": "node -r ts-node/register -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate",
+    "generateMigration": "prisma migrate save --experimental --name",
+    "migrate": "npx prisma migrate up --experimental",
+    "codegen": "prisma generate",
     "test": "mocha --timeout 10000 -r ts-node/register -r tsconfig-paths/register -r esm src/__tests__/*.spec.ts"
   },
   "devDependencies": {

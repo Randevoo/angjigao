@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://winson@localhost:5432/ecoscale?schema=public"
+  url = "***"
 }
 
 generator client {
@@ -22,7 +22,7 @@ model User {
   username String   @unique
   password String
   dob      DateTime
-  cart     Cart
+  cart     Cart?
 }
 
 model Shop {
