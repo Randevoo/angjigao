@@ -7,6 +7,7 @@ import { isNil, find, sumBy } from 'lodash';
 import { GraphQLError } from 'graphql';
 import { ShopItem } from '~prisma/models/ShopItem';
 import { shopItemLoader } from 'src/dataloaders';
+import moment from 'moment';
 
 @Resolver((type) => CartItemCount)
 export class CartItemCountResolver {
@@ -39,11 +40,10 @@ export default class CartResolver {
     }
     const cartItemCount = cartItemCountArr[0];
     if (cartItemCount.count < 2) {
-      await prisma.cartItemCount.update({
+      await prisma.cartItemCount.delete({
         where: {
-          id: cartItemCount.cartId,
+          id: cartItemCount.id,
         },
-        data: { deletedAt: Date() },
       });
     } else {
       await prisma.cartItemCount.update({

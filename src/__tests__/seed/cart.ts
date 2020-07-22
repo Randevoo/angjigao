@@ -64,4 +64,5 @@ export async function insertNewCartItemCount(prisma: PrismaClient, args: CartIte
       price: price + shopItem.price,
     },
   });
+  return itemCount;
 }
