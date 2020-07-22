@@ -40,7 +40,7 @@ model ShopItem {
   description    String
   price          Float
   imageUrl       String
-  Shop           Shop            @relation(fields: [shopId], references: [id])
+  shop           Shop            @relation(fields: [shopId], references: [id])
   shopId         String
   cartItemCounts CartItemCount[]
 }

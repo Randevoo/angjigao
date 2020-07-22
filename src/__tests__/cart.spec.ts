@@ -1,4 +1,4 @@
-import { Connection } from 'typeorm';
+import { PrismaClient } from '@prisma/client';
 import { createTestClient, ApolloServerTestClient } from 'apollo-server-testing';
 import { createTestServer, resetDb } from './utils';
 import { gql } from 'apollo-server';
@@ -25,28 +25,27 @@ const addToCartMutation = gql`
 
 describe('Cart', () => {
   let client: ApolloServerTestClient;
-  let connection: Connection;
+  let prisma: PrismaClient;
   before(async () => {
-    const { server, db } = await createTestServer();
+    const { server, prisma } = await createTestServer();
     client = createTestClient(server);
-    connection = db;
   });
 
   afterEach(async () => {
-    await resetDb(connection);
+    await resetDb();
   });
 
   after(async () => {
-    await connection.close();
+    await prisma.disconnect();
   });
 
   describe('Resolvers', () => {
     describe('Mutations', () => {
       describe('addToCart', () => {
         it('should be able to add to cart for a new user', async () => {
-          const user = await insertNewUser(connection);
-          const shop = await insertNewShop(connection);
-          const item = await insertNewShoppingItem(connection, { shop });
+          const user = await insertNewUser(prisma);
+          const shop = await insertNewShop(prisma);
+          const item = await insertNewShoppingItem(prisma, { shop });
           const { data, errors } = await client.mutate({
             mutation: addToCartMutation,
             variables: {
@@ -66,16 +65,16 @@ describe('Cart', () => {
         });
 
         it('should be able to add to cart for a user who already has an existing item in cart', async () => {
-          const user = await insertNewUser(connection);
-          const shop = await insertNewShop(connection);
-          const firstItem = await insertNewShoppingItem(connection, { shop });
-          const secondItem = await insertNewShoppingItem(connection, { shop });
-          const firstCartItem = await insertNewCartItemCount(connection, {
-            item: firstItem,
+          const user = await insertNewUser(prisma);
+          const shop = await insertNewShop(prisma);
+          const firstItem = await insertNewShoppingItem(prisma, { shop });
+          const secondItem = await insertNewShoppingItem(prisma, { shop });
+          const firstCartItem = await insertNewCartItemCount(prisma, {
+            shopItem: firstItem,
             count: 1,
           });
 
-          await insertNewCart(connection, {
+          await insertNewCart(prisma, {
             owner: user,
             cartItemCounts: [firstCartItem],
           });
@@ -98,15 +97,15 @@ describe('Cart', () => {
         });
 
         it('should be able to add to cart for a user who already the same existing item in cart', async () => {
-          const user = await insertNewUser(connection);
-          const shop = await insertNewShop(connection);
-          const item = await insertNewShoppingItem(connection, { shop });
-          const firstCartItem = await insertNewCartItemCount(connection, {
-            item,
+          const user = await insertNewUser(prisma);
+          const shop = await insertNewShop(prisma);
+          const shopItem = await insertNewShoppingItem(prisma, { shop });
+          const firstCartItem = await insertNewCartItemCount(prisma, {
+            shopItem,
             count: 1,
           });
 
-          await insertNewCart(connection, {
+          await insertNewCart(prisma, {
             owner: user,
             cartItemCounts: [firstCartItem],
           });
@@ -117,19 +116,19 @@ describe('Cart', () => {
           } = await client.mutate({
             mutation: addToCartMutation,
             variables: {
-              itemId: item.id,
+              itemId: shopItem.id,
               buyerId: user.id,
             },
           });
 
           expect(errors).to.be.undefined;
           expect(addToCart.id).to.not.be.undefined;
-          expect(addToCart.price).to.be.equal(item.price * 2);
+          expect(addToCart.price).to.be.equal(shopItem.price * 2);
 
           expect(addToCart.cartItemCounts).to.have.lengthOf(1);
-          expect(addToCart.cartItemCounts[0].item.id).to.be.equal(item.id);
+          expect(addToCart.cartItemCounts[0].item.id).to.be.equal(shopItem.id);
           expect(addToCart.cartItemCounts[0].count).to.be.equal(2);
-          expect(addToCart.cartItemCounts[0].price).to.be.equal(2 * item.price);
+          expect(addToCart.cartItemCounts[0].price).to.be.equal(2 * shopItem.price);
         });
       });
     });

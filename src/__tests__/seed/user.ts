@@ -1,22 +1,25 @@
+import { PrismaClient } from '@prisma/client';
 import { User, Shop } from 'src/models/User/models';
-import { Connection } from 'typeorm';
+
 import Faker from 'faker';
 
-export async function insertNewUser(db: Connection) {
-  const newUser = db.getRepository(User).create({
-    username: Faker.internet.userName('test', 'ting'),
-    password: Faker.internet.password(),
-    dob: Faker.date.past(20),
+export async function insertNewUser(prisma: PrismaClient) {
+  return await prisma.user.create({
+    data: {
+      username: Faker.internet.userName('test', 'ting'),
+      password: Faker.internet.password(),
+      dob: Faker.date.past(20),
+      email: Faker.internet.email(),
+    },
   });
-  return await db.getRepository(User).save(newUser);
 }
 
-export async function insertNewShop(db: Connection) {
-  const shopRepo = db.getRepository(Shop);
-  const newShop = shopRepo.create({
-    username: Faker.internet.userName('test', 'ting'),
-    password: Faker.internet.password(),
-    dob: Faker.date.past(20),
+export async function insertNewShop(prisma: PrismaClient) {
+  return await prisma.shop.create({
+    data: {
+      username: Faker.internet.userName('test', 'ting'),
+      password: Faker.internet.password(),
+      email: Faker.internet.email(),
+    },
   });
-  return await db.getRepository(Shop).save(newShop);
 }

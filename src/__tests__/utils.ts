@@ -1,8 +1,8 @@
+import { PrismaClient } from '@prisma/client';
 import { ShopResolver } from './../User/resolver';
 import { UserResolver } from 'src/User/resolver';
 import { ShoppingItemResolver } from 'src/ShoppingItem/resolver';
 import { buildSchema } from 'type-graphql';
-import DataLoader from 'dataloader';
 import uuid_v4 from 'uuid/v4';
 import { createConnection, Any, Connection } from 'typeorm';
 import { ApolloServer } from 'apollo-server';
@@ -10,8 +10,8 @@ import { join, map } from 'lodash';
 import CartResolver from 'src/Cart/resolvers';
 
 //TODO: Change out the context, or find a better way to create it. Now mimics prod.
+const prisma = new PrismaClient();
 export async function createTestServer({ context = {} } = {}) {
-  const db = await createConnection('test');
   let server;
   try {
     server = new ApolloServer({
@@ -20,23 +20,23 @@ export async function createTestServer({ context = {} } = {}) {
         validate: false,
       }),
       context: () => ({
-        db,
         requestId: uuid_v4(),
+        prisma,
       }),
     });
   } catch (e) {
     console.log(e);
   }
 
-  return { server, db };
+  return { server, prisma };
 }
 
-export async function resetDb(db: Connection) {
-  const entities = map(await db.entityMetadatas, (metadata) => metadata.tableName);
+export async function resetDb() {
+  const tableNames = ['Cart', 'CartItemCount', 'Shop', 'ShopItem', 'User'];
 
-  const allTableNameString = join(entities, ', ');
+  const allTableNameString = join(tableNames, ', ');
   try {
-    await db.manager.query(`TRUNCATE TABLE ${allTableNameString} CASCADE;`);
+    await prisma.queryRaw(`TRUNCATE TABLE ${allTableNameString} CASCADE;`);
   } catch (error) {
     throw new Error(`ERROR: Cleaning test db: ${error}`);
   }

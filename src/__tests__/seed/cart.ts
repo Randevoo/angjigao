@@ -1,45 +1,65 @@
+import { PrismaClient, CartItemCount, User, Cart, ShopItem } from '@prisma/client';
 import { ShoppingItem } from 'src/models/ShoppingItem/models';
-import { sumBy } from 'lodash';
-import { Cart, CartItemCount } from 'src/models/Cart/Cart';
-import { User } from 'src/models/User/models';
-import { Connection } from 'typeorm';
-import { MultiCart } from 'src/models/Cart/MultiCart';
+import { sumBy, map } from 'lodash';
 
 interface CartArgs {
   cartItemCounts?: CartItemCount[];
   owner: User;
-  multi_cart?: MultiCart;
-  charge_id?: string;
+  chargeId?: string;
 }
 
 interface CartItemCountArgs {
   cart?: Cart;
   count?: number;
-  item: ShoppingItem;
+  shopItem: ShopItem;
 }
 
-export async function insertNewCart(db: Connection, args: CartArgs) {
-  const cartRepo = db.getRepository(Cart);
-  const { cartItemCounts, owner, multi_cart, charge_id } = args;
-  const newCart = cartRepo.create({
-    cartItemCounts: cartItemCounts ?? [],
-    owner,
-    charge_id,
-    multi_cart,
+export async function insertNewCart(prisma: PrismaClient, args: CartArgs) {
+  const { cartItemCounts, owner, chargeId } = args;
+  if (cartItemCounts) {
+    return await prisma.cart.create({
+      data: {
+        chargeId,
+        cartItemCounts: { connect: map(cartItemCounts, (itemCount) => ({ id: itemCount.id })) },
+        owner: {
+          connect: {
+            id: owner.id,
+          },
+        },
+        price: sumBy(cartItemCounts, (itemCounts) => itemCounts.price),
+      },
+    });
+  }
+  return await prisma.cart.create({
+    data: {
+      chargeId,
+      cartItemCounts: { create: [] },
+      price: 0,
+      owner: {
+        connect: {
+          id: owner.id,
+        },
+      },
+    },
   });
-  newCart.price = sumBy(newCart.cartItemCounts, (cartItemCount) => cartItemCount.price);
-
-  return await cartRepo.save(newCart);
 }
 
-export async function insertNewCartItemCount(db: Connection, args: CartItemCountArgs) {
-  const cartItemCountRepo = db.getRepository(CartItemCount);
-  const { cart, count, item } = args;
-  const newCartItemCount = cartItemCountRepo.create({
-    cart,
-    count: count ?? 1,
-    item,
+export async function insertNewCartItemCount(prisma: PrismaClient, args: CartItemCountArgs) {
+  const { cart, count, shopItem } = args;
+  return await prisma.cartItemCount.create({
+    data: {
+      count: count ?? 1,
+      shopItem: {
+        connect: {
+          id: shopItem.id,
+        },
+      },
+      cart: {
+        connect: {
+          id: cart.id,
+        },
+      },
+      price: shopItem.price * (count ?? 1),
+    },
   });
-  newCartItemCount.price = item.price * newCartItemCount.count;
-  return await cartItemCountRepo.save(newCartItemCount);
 }

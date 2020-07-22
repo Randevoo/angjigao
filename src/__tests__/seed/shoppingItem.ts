@@ -1,7 +1,6 @@
-import { Shop } from 'src/models/User/models';
+import { PrismaClient, Shop } from '@prisma/client';
 import Faker from 'faker';
 import { ShoppingItem } from 'src/models/ShoppingItem/models';
-import { Connection } from 'typeorm';
 
 interface ShoppingItemFactoryArgs {
   name?: string;
@@ -12,16 +11,22 @@ interface ShoppingItemFactoryArgs {
   categories?: string[];
 }
 
-export async function insertNewShoppingItem(db: Connection, seedArgs: ShoppingItemFactoryArgs) {
-  const itemRepo = db.getRepository(ShoppingItem);
+export async function insertNewShoppingItem(
+  prisma: PrismaClient,
+  seedArgs: ShoppingItemFactoryArgs,
+) {
   const { name, price, description, image_url, shop, categories } = seedArgs;
-  const newItem = itemRepo.create({
-    name: name ?? Faker.commerce.productName(),
-    price: price ?? Faker.random.number(),
-    description: description ?? Faker.lorem.paragraphs(2),
-    image_url: image_url ?? Faker.image.imageUrl(),
-    categories: categories ?? [],
-    shop,
+  return await prisma.shopItem.create({
+    data: {
+      name: name ?? Faker.commerce.productName(),
+      price: price ?? Faker.random.number(),
+      description: description ?? Faker.lorem.paragraphs(2),
+      imageUrl: image_url ?? Faker.image.imageUrl(),
+      Shop: {
+        connect: {
+          id: shop.id,
+        },
+      },
+    },
   });
-  return await itemRepo.save(newItem);
 }
