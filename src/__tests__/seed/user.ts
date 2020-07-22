@@ -10,6 +10,12 @@ export async function insertNewUser(prisma: PrismaClient) {
       password: Faker.internet.password(),
       dob: Faker.date.past(20),
       email: Faker.internet.email(),
+      cart: {
+        create: {},
+      },
+    },
+    include: {
+      cart: true,
     },
   });
 }

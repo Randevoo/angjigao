@@ -1,9 +1,20 @@
+import { CartItemCount } from '~prisma/models/CartItemCount';
+import { Cart } from '~prisma/models/Cart';
 import { AddToCartInput, RemoveFromCartInput } from './inputs';
-import { Context } from './../index';
-import { Resolver, Mutation, Ctx, Arg } from 'type-graphql';
-import { Cart } from 'src/models/Cart/Cart';
-import { isNil, concat, find, sumBy, now } from 'lodash';
+import { Context } from 'src/index';
+import { Resolver, Mutation, Ctx, Arg, Root, FieldResolver } from 'type-graphql';
+import { isNil, find, sumBy } from 'lodash';
 import { GraphQLError } from 'graphql';
+import { ShopItem } from '~prisma/models/ShopItem';
+import { shopItemLoader } from 'src/dataloaders';
+
+@Resolver((type) => CartItemCount)
+export class CartItemCountResolver {
+  @FieldResolver(() => ShopItem)
+  async shopItem(@Root() cartItemCount: CartItemCount, @Ctx() { prisma }: Context) {
+    return await shopItemLoader(prisma).load(cartItemCount.itemId);
+  }
+}
 
 @Resolver(() => Cart)
 export default class CartResolver {
@@ -93,7 +104,6 @@ export default class CartResolver {
     });
 
     let buyerCart = buyer.cart;
-
     // Create cart when user is created
 
     const cartItemCount = find(
@@ -116,14 +126,6 @@ export default class CartResolver {
               id: buyerCart.id,
             },
           },
-        },
-      });
-      return await prisma.cart.update({
-        where: {
-          id: buyerCart.id,
-        },
-        data: {
-          price: buyerCart.price + item.price,
         },
       });
     } else {

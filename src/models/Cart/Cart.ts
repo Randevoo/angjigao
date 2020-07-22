@@ -1,6 +1,6 @@
 import { ShoppingItem } from 'src/models/ShoppingItem/models';
 import { User } from 'src/models/User/models';
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType, FieldResolver } from 'type-graphql';
 import {
   PrimaryGeneratedColumn,
   Column,
@@ -13,7 +13,6 @@ import {
 } from 'typeorm';
 import { MultiCart } from './MultiCart';
 
-@Entity()
 @ObjectType({ description: 'Object representing a Cart' })
 export class Cart {
   @PrimaryGeneratedColumn('uuid')

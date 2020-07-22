@@ -9,27 +9,14 @@ interface CartArgs {
 }
 
 interface CartItemCountArgs {
-  cart?: Cart;
+  cart: Cart;
   count?: number;
   shopItem: ShopItem;
 }
 
 export async function insertNewCart(prisma: PrismaClient, args: CartArgs) {
-  const { cartItemCounts, owner, chargeId } = args;
-  if (cartItemCounts) {
-    return await prisma.cart.create({
-      data: {
-        chargeId,
-        cartItemCounts: { connect: map(cartItemCounts, (itemCount) => ({ id: itemCount.id })) },
-        owner: {
-          connect: {
-            id: owner.id,
-          },
-        },
-        price: sumBy(cartItemCounts, (itemCounts) => itemCounts.price),
-      },
-    });
-  }
+  const { owner, chargeId } = args;
+
   return await prisma.cart.create({
     data: {
       chargeId,
@@ -46,7 +33,7 @@ export async function insertNewCart(prisma: PrismaClient, args: CartArgs) {
 
 export async function insertNewCartItemCount(prisma: PrismaClient, args: CartItemCountArgs) {
   const { cart, count, shopItem } = args;
-  return await prisma.cartItemCount.create({
+  const itemCount = await prisma.cartItemCount.create({
     data: {
       count: count ?? 1,
       shopItem: {
@@ -60,6 +47,21 @@ export async function insertNewCartItemCount(prisma: PrismaClient, args: CartIte
         },
       },
       price: shopItem.price * (count ?? 1),
+    },
+  });
+  const price = (
+    await prisma.cart.findOne({
+      where: {
+        id: cart.id,
+      },
+    })
+  ).price;
+  await prisma.cart.update({
+    where: {
+      id: cart.id,
+    },
+    data: {
+      price: price + shopItem.price,
     },
   });
 }

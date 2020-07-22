@@ -1,0 +1,85 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "UpdateField",
+      "model": "User",
+      "field": "cart",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "User"
+        },
+        "directive": "map"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Model",
+          "model": "User"
+        },
+        "directive": "map"
+      },
+      "argument": "",
+      "value": "\"UserTable\""
+    },
+    {
+      "tag": "CreateField",
+      "model": "ShopItem",
+      "field": "shop",
+      "type": "Shop",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "ShopItem",
+          "field": "shop"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "ShopItem",
+          "field": "shop"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[shopId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "ShopItem",
+          "field": "shop"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "ShopItem",
+      "field": "Shop"
+    }
+  ]
+}

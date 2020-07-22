@@ -1,11 +1,12 @@
+import 'reflect-metadata';
+import { CartRelationsResolver } from '~prisma/resolvers/relations/Cart/CartRelationsResolver';
+import { FindOneUserResolver } from '~prisma/resolvers/crud/User/FindOneUserResolver';
 import uuid_v4 from 'uuid/v4';
 import dotenv from 'dotenv';
 dotenv.config();
 import * as path from 'path';
 import { buildSchema } from 'type-graphql';
-import { ShoppingItemResolver } from 'src/ShoppingItem/resolver';
 import { ApolloServer } from 'apollo-server';
-import { UserResolver, ShopResolver } from 'src/User/resolver';
 import { PrismaClient } from '@prisma/client';
 
 import CartResolver from './Cart/resolvers';
@@ -20,7 +21,7 @@ export interface Context {
 const startServer = async () => {
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [ShoppingItemResolver, UserResolver, ShopResolver, CartResolver],
+      resolvers: [CartResolver, FindOneUserResolver, CartRelationsResolver],
       emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
       validate: false,
     }),

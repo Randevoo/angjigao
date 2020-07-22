@@ -13,7 +13,7 @@ const addToCartMutation = gql`
       id
       price
       cartItemCounts {
-        item {
+        shopItem {
           id
         }
         count
@@ -25,10 +25,11 @@ const addToCartMutation = gql`
 
 describe('Cart', () => {
   let client: ApolloServerTestClient;
-  let prisma: PrismaClient;
+  let db: PrismaClient;
   before(async () => {
     const { server, prisma } = await createTestServer();
     client = createTestClient(server);
+    db = prisma;
   });
 
   afterEach(async () => {
@@ -36,16 +37,16 @@ describe('Cart', () => {
   });
 
   after(async () => {
-    await prisma.disconnect();
+    await db.disconnect();
   });
 
   describe('Resolvers', () => {
     describe('Mutations', () => {
-      describe('addToCart', () => {
+      describe.only('addToCart', () => {
         it('should be able to add to cart for a new user', async () => {
-          const user = await insertNewUser(prisma);
-          const shop = await insertNewShop(prisma);
-          const item = await insertNewShoppingItem(prisma, { shop });
+          const user = await insertNewUser(db);
+          const shop = await insertNewShop(db);
+          const item = await insertNewShoppingItem(db, { shop });
           const { data, errors } = await client.mutate({
             mutation: addToCartMutation,
             variables: {
@@ -53,36 +54,30 @@ describe('Cart', () => {
               buyerId: user.id,
             },
           });
-          console.log(errors);
+          // console.log(errors);
           expect(errors).to.be.undefined;
           const { addToCart } = data;
           expect(addToCart.id).to.not.be.undefined;
           expect(addToCart.price).to.be.equal(item.price);
           expect(addToCart.cartItemCounts).to.have.lengthOf(1);
-          expect(addToCart.cartItemCounts[0].item.id).to.be.equal(item.id);
+          expect(addToCart.cartItemCounts[0].shopItem.id).to.be.equal(item.id);
           expect(addToCart.cartItemCounts[0].count).to.be.equal(1);
           expect(addToCart.cartItemCounts[0].price).to.be.equal(item.price);
         });
 
         it('should be able to add to cart for a user who already has an existing item in cart', async () => {
-          const user = await insertNewUser(prisma);
-          const shop = await insertNewShop(prisma);
-          const firstItem = await insertNewShoppingItem(prisma, { shop });
-          const secondItem = await insertNewShoppingItem(prisma, { shop });
-          const firstCartItem = await insertNewCartItemCount(prisma, {
+          const user = await insertNewUser(db);
+          const shop = await insertNewShop(db);
+          const firstItem = await insertNewShoppingItem(db, { shop });
+          const secondItem = await insertNewShoppingItem(db, { shop });
+
+          await insertNewCartItemCount(db, {
             shopItem: firstItem,
             count: 1,
+            cart: user.cart,
           });
 
-          await insertNewCart(prisma, {
-            owner: user,
-            cartItemCounts: [firstCartItem],
-          });
-
-          const {
-            data: { addToCart },
-            errors,
-          } = await client.mutate({
+          const { data, errors } = await client.mutate({
             mutation: addToCartMutation,
             variables: {
               itemId: secondItem.id,
@@ -91,23 +86,21 @@ describe('Cart', () => {
           });
 
           expect(errors).to.be.undefined;
+          const { addToCart } = data;
           expect(addToCart.id).to.not.be.undefined;
           expect(addToCart.price).to.be.equal(firstItem.price + secondItem.price);
           expect(addToCart.cartItemCounts).to.have.lengthOf(2);
         });
 
         it('should be able to add to cart for a user who already the same existing item in cart', async () => {
-          const user = await insertNewUser(prisma);
-          const shop = await insertNewShop(prisma);
-          const shopItem = await insertNewShoppingItem(prisma, { shop });
-          const firstCartItem = await insertNewCartItemCount(prisma, {
+          const user = await insertNewUser(db);
+          const shop = await insertNewShop(db);
+          const shopItem = await insertNewShoppingItem(db, { shop });
+
+          await insertNewCartItemCount(db, {
             shopItem,
             count: 1,
-          });
-
-          await insertNewCart(prisma, {
-            owner: user,
-            cartItemCounts: [firstCartItem],
+            cart: user.cart,
           });
 
           const {
@@ -126,7 +119,7 @@ describe('Cart', () => {
           expect(addToCart.price).to.be.equal(shopItem.price * 2);
 
           expect(addToCart.cartItemCounts).to.have.lengthOf(1);
-          expect(addToCart.cartItemCounts[0].item.id).to.be.equal(shopItem.id);
+          expect(addToCart.cartItemCounts[0].shopItem.id).to.be.equal(shopItem.id);
           expect(addToCart.cartItemCounts[0].count).to.be.equal(2);
           expect(addToCart.cartItemCounts[0].price).to.be.equal(2 * shopItem.price);
         });

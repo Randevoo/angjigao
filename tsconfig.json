@@ -10,9 +10,12 @@
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "strictFunctionTypes": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "~prisma/*": ["./prisma/generated/type-graphql/*"]
+    }
   },
   "include": ["src", "babel.config.js"]
 }

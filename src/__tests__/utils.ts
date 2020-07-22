@@ -1,7 +1,7 @@
+import 'reflect-metadata';
+import { CartRelationsResolver } from '~prisma/resolvers/relations/Cart/CartRelationsResolver';
+import { FindOneUserResolver } from '~prisma/resolvers/crud/User/FindOneUserResolver';
 import { PrismaClient } from '@prisma/client';
-import { ShopResolver } from './../User/resolver';
-import { UserResolver } from 'src/User/resolver';
-import { ShoppingItemResolver } from 'src/ShoppingItem/resolver';
 import { buildSchema } from 'type-graphql';
 import uuid_v4 from 'uuid/v4';
 import { createConnection, Any, Connection } from 'typeorm';
@@ -16,7 +16,7 @@ export async function createTestServer({ context = {} } = {}) {
   try {
     server = new ApolloServer({
       schema: await buildSchema({
-        resolvers: [ShoppingItemResolver, UserResolver, ShopResolver, CartResolver],
+        resolvers: [CartResolver, FindOneUserResolver, CartRelationsResolver],
         validate: false,
       }),
       context: () => ({
@@ -32,11 +32,11 @@ export async function createTestServer({ context = {} } = {}) {
 }
 
 export async function resetDb() {
-  const tableNames = ['Cart', 'CartItemCount', 'Shop', 'ShopItem', 'User'];
-
-  const allTableNameString = join(tableNames, ', ');
+  const tableNames = ['Cart', 'CartItemCount', 'Shop', 'ShopItem', 'UserTable'];
+  const tableNamesWithQuote = map(tableNames, (tableName) => `"${tableName}"`);
+  const allTableNameString = join(tableNamesWithQuote, ', ');
   try {
-    await prisma.queryRaw(`TRUNCATE TABLE ${allTableNameString} CASCADE;`);
+    await prisma.executeRaw(`TRUNCATE TABLE ${allTableNameString} CASCADE;`);
   } catch (error) {
     throw new Error(`ERROR: Cleaning test db: ${error}`);
   }

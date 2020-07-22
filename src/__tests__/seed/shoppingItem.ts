@@ -22,7 +22,7 @@ export async function insertNewShoppingItem(
       price: price ?? Faker.random.number(),
       description: description ?? Faker.lorem.paragraphs(2),
       imageUrl: image_url ?? Faker.image.imageUrl(),
-      Shop: {
+      shop: {
         connect: {
           id: shop.id,
         },
