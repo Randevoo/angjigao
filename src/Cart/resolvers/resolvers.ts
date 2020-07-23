@@ -1,13 +1,32 @@
 import { CartItemCount } from '~prisma/models/CartItemCount';
 import { Cart } from '~prisma/models/Cart';
-import { AddToCartInput, RemoveFromCartInput } from './inputs';
+import { AddToCartInput, RemoveFromCartInput, FindMultiCartByUserIdInput } from '../inputs';
 import { Context } from 'src/index';
-import { Resolver, Mutation, Ctx, Arg, Root, FieldResolver } from 'type-graphql';
+import { Resolver, Mutation, Ctx, Arg, Root, FieldResolver, Query } from 'type-graphql';
 import { isNil, find, sumBy } from 'lodash';
 import { GraphQLError } from 'graphql';
 import { ShopItem } from '~prisma/models/ShopItem';
 import { shopItemLoader } from 'src/dataloaders';
-import moment from 'moment';
+import { MultiCart } from '~prisma/models/MultiCart';
+
+@Resolver((type) => MultiCart)
+export class MultiCartResolver {
+  @Query(() => MultiCart)
+  async findMultiCartsByUserId(
+    @Arg('findMultiCartByUserIdInput') args: FindMultiCartByUserIdInput,
+    @Ctx() { prisma }: Context,
+  ) {
+    return await prisma.multiCart.findMany({
+      where: {
+        carts: {
+          some: {
+            ownerId: args.user_id,
+          },
+        },
+      },
+    });
+  }
+}
 
 @Resolver((type) => CartItemCount)
 export class CartItemCountResolver {

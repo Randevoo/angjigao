@@ -85,7 +85,7 @@ describe('Cart', () => {
           expect(removeFromCart.cartItemCounts[0].count).to.be.equal(1);
           expect(removeFromCart.cartItemCounts[0].price).to.be.equal(shopItem.price);
         });
-        it.only('should be able to remove from cart from an item which only has count of one', async () => {
+        it('should be able to remove from cart from an item which only has count of one', async () => {
           const user = await insertNewUser(db);
           const shop = await insertNewShop(db);
           const shopItem = await insertNewShoppingItem(db, { shop });
@@ -106,8 +106,7 @@ describe('Cart', () => {
           expect(errors).to.be.undefined;
           const { removeFromCart } = data;
           expect(removeFromCart.id).to.not.be.undefined;
-          expect(removeFromCart.price).to.be.equal(shopItem.price);
-          console.log();
+          expect(removeFromCart.price).to.be.equal(0);
           expect(removeFromCart.cartItemCounts).to.be.empty;
         });
       });

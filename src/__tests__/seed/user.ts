@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { User, Shop } from 'src/models/User/models';
 
 import Faker from 'faker';
 

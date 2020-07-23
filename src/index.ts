@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { MultiCartRelationsResolver } from '~prisma/resolvers/relations/MultiCart/MultiCartRelationsResolver';
 import { CartRelationsResolver } from '~prisma/resolvers/relations/Cart/CartRelationsResolver';
 import { FindOneUserResolver } from '~prisma/resolvers/crud/User/FindOneUserResolver';
 import uuid_v4 from 'uuid/v4';
@@ -9,7 +10,7 @@ import { buildSchema } from 'type-graphql';
 import { ApolloServer } from 'apollo-server';
 import { PrismaClient } from '@prisma/client';
 
-import CartResolver from './Cart/resolvers';
+import CartResolver from './Cart/resolvers/resolvers';
 
 const prisma = new PrismaClient();
 
@@ -21,7 +22,12 @@ export interface Context {
 const startServer = async () => {
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [CartResolver, FindOneUserResolver, CartRelationsResolver],
+      resolvers: [
+        CartResolver,
+        FindOneUserResolver,
+        CartRelationsResolver,
+        MultiCartRelationsResolver,
+      ],
       emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
       validate: false,
     }),

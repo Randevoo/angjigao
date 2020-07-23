@@ -1,6 +1,4 @@
 import { PrismaClient, CartItemCount, User, Cart, ShopItem } from '@prisma/client';
-import { ShoppingItem } from 'src/models/ShoppingItem/models';
-import { sumBy, map } from 'lodash';
 
 interface CartArgs {
   cartItemCounts?: CartItemCount[];

@@ -16,3 +16,9 @@ export class RemoveFromCartInput {
   @Field()
   buyer_id: string;
 }
+
+@InputType()
+export class FindMultiCartByUserIdInput {
+  @Field()
+  user_id: string;
+}

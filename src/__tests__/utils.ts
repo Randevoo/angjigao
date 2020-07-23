@@ -7,7 +7,7 @@ import uuid_v4 from 'uuid/v4';
 import { createConnection, Any, Connection } from 'typeorm';
 import { ApolloServer } from 'apollo-server';
 import { join, map } from 'lodash';
-import CartResolver from 'src/Cart/resolvers';
+import CartResolver from 'src/Cart/resolvers/resolvers';
 
 //TODO: Change out the context, or find a better way to create it. Now mimics prod.
 const prisma = new PrismaClient();

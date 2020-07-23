@@ -1,6 +1,5 @@
 import { PrismaClient, Shop } from '@prisma/client';
 import Faker from 'faker';
-import { ShoppingItem } from 'src/models/ShoppingItem/models';
 
 interface ShoppingItemFactoryArgs {
   name?: string;
