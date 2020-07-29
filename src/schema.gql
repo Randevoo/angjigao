@@ -19,6 +19,19 @@ type Cart {
   MultiCart: MultiCart
 }
 
+input CartCreateOneWithoutCartItemCountsInput {
+  create: CartCreateWithoutCartItemCountsInput
+  connect: CartWhereUniqueInput
+}
+
+input CartCreateWithoutCartItemCountsInput {
+  id: String
+  chargeId: String
+  price: Float
+  owner: UserCreateOneWithoutCartInput!
+  MultiCart: MultiCartCreateOneWithoutCartsInput
+}
+
 input CartFilter {
   every: CartWhereInput
   some: CartWhereInput
@@ -33,6 +46,19 @@ type CartItemCount {
   count: Int!
   deletedAt: DateTime
   shopItem: ShopItem!
+}
+
+input CartItemCountCreateManyWithoutShopItemInput {
+  create: [CartItemCountCreateWithoutShopItemInput!]
+  connect: [CartItemCountWhereUniqueInput!]
+}
+
+input CartItemCountCreateWithoutShopItemInput {
+  id: String
+  price: Float!
+  count: Int!
+  deletedAt: DateTime
+  cart: CartCreateOneWithoutCartItemCountsInput!
 }
 
 input CartItemCountFilter {
@@ -110,6 +136,10 @@ input DateTimeFilter {
   gte: DateTime
 }
 
+input FindMultiCartByUserIdInput {
+  user_id: String!
+}
+
 input FloatFilter {
   equals: Float
   not: Float
@@ -138,6 +168,16 @@ type MultiCart {
   carts(where: CartWhereInput, orderBy: CartOrderByInput, cursor: CartWhereUniqueInput, take: Int, skip: Int): [Cart!]
 }
 
+input MultiCartCreateOneWithoutCartsInput {
+  create: MultiCartCreateWithoutCartsInput
+  connect: MultiCartWhereUniqueInput
+}
+
+input MultiCartCreateWithoutCartsInput {
+  id: String
+  chargeId: String
+}
+
 input MultiCartWhereInput {
   id: UUIDFilter
   carts: CartFilter
@@ -147,7 +187,13 @@ input MultiCartWhereInput {
   NOT: [MultiCartWhereInput!]
 }
 
+input MultiCartWhereUniqueInput {
+  id: String
+}
+
 type Mutation {
+  createShop(data: ShopCreateInput!): Shop!
+  createShopItem(data: ShopItemCreateInput!): ShopItem!
   removeFromCart(removeFromCartInput: RemoveFromCartInput!): Cart!
   addToCart(addToCartInput: AddToCartInput!): Cart!
 }
@@ -183,12 +229,42 @@ enum OrderByArg {
 }
 
 type Query {
+  shopItem(where: ShopItemWhereUniqueInput!): ShopItem
+  shopItems(where: ShopItemWhereInput, orderBy: ShopItemOrderByInput, cursor: ShopItemWhereUniqueInput, take: Int, skip: Int): [ShopItem!]!
   user(where: UserWhereUniqueInput!): User
+  findMultiCartsByUserId(findMultiCartByUserIdInput: FindMultiCartByUserIdInput!): MultiCart!
 }
 
 input RemoveFromCartInput {
   item_id: String!
   buyer_id: String!
+}
+
+type Shop {
+  id: String!
+  email: String!
+  username: String!
+  password: String!
+}
+
+input ShopCreateInput {
+  id: String
+  email: String!
+  username: String!
+  password: String!
+  shopItems: ShopItemCreateManyWithoutShopInput
+}
+
+input ShopCreateOneWithoutShopItemsInput {
+  create: ShopCreateWithoutShopItemsInput
+  connect: ShopWhereUniqueInput
+}
+
+input ShopCreateWithoutShopItemsInput {
+  id: String
+  email: String!
+  username: String!
+  password: String!
 }
 
 type ShopItem {
@@ -199,12 +275,50 @@ type ShopItem {
   price: Float!
   imageUrl: String!
   shopId: String!
+  shop: Shop!
+  cartItemCounts(where: CartItemCountWhereInput, orderBy: CartItemCountOrderByInput, cursor: CartItemCountWhereUniqueInput, take: Int, skip: Int): [CartItemCount!]
+}
+
+input ShopItemCreateInput {
+  id: String
+  createdAt: DateTime
+  name: String!
+  description: String!
+  price: Float!
+  imageUrl: String!
+  shop: ShopCreateOneWithoutShopItemsInput!
+  cartItemCounts: CartItemCountCreateManyWithoutShopItemInput
+}
+
+input ShopItemCreateManyWithoutShopInput {
+  create: [ShopItemCreateWithoutShopInput!]
+  connect: [ShopItemWhereUniqueInput!]
+}
+
+input ShopItemCreateWithoutShopInput {
+  id: String
+  createdAt: DateTime
+  name: String!
+  description: String!
+  price: Float!
+  imageUrl: String!
+  cartItemCounts: CartItemCountCreateManyWithoutShopItemInput
 }
 
 input ShopItemFilter {
   every: ShopItemWhereInput
   some: ShopItemWhereInput
   none: ShopItemWhereInput
+}
+
+input ShopItemOrderByInput {
+  id: OrderByArg
+  createdAt: OrderByArg
+  name: OrderByArg
+  description: OrderByArg
+  price: OrderByArg
+  imageUrl: OrderByArg
+  shopId: OrderByArg
 }
 
 input ShopItemWhereInput {
@@ -222,6 +336,10 @@ input ShopItemWhereInput {
   shop: ShopWhereInput
 }
 
+input ShopItemWhereUniqueInput {
+  id: String
+}
+
 input ShopWhereInput {
   id: UUIDFilter
   email: StringFilter
@@ -231,6 +349,12 @@ input ShopWhereInput {
   AND: [ShopWhereInput!]
   OR: [ShopWhereInput!]
   NOT: [ShopWhereInput!]
+}
+
+input ShopWhereUniqueInput {
+  id: String
+  email: String
+  username: String
 }
 
 input StringFilter {
@@ -249,6 +373,19 @@ input StringFilter {
 
 type User {
   id: String!
+  email: String!
+  username: String!
+  password: String!
+  dob: DateTime!
+}
+
+input UserCreateOneWithoutCartInput {
+  create: UserCreateWithoutCartInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutCartInput {
+  id: String
   email: String!
   username: String!
   password: String!

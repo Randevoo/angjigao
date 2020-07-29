@@ -100,6 +100,7 @@ export default class CartResolver {
     @Arg('addToCartInput') addToCartInput: AddToCartInput,
     @Ctx() { prisma }: Context,
   ) {
+    console.log('addToCart called');
     const item = await prisma.shopItem.findOne({
       where: {
         id: addToCartInput.item_id,

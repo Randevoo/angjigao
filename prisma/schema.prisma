@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://winson@localhost:5432/ecoscale?schema=public"
+  url      = env("DATABASE_URL")
 }
 
 generator client {

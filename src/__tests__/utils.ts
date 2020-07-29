@@ -1,4 +1,6 @@
 import 'reflect-metadata';
+import dotenv from 'dotenv';
+dotenv.config({ path: '../../.env.test' });
 import { CartRelationsResolver } from '~prisma/resolvers/relations/Cart/CartRelationsResolver';
 import { FindOneUserResolver } from '~prisma/resolvers/crud/User/FindOneUserResolver';
 import { PrismaClient } from '@prisma/client';

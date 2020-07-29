@@ -1,10 +1,15 @@
 import 'reflect-metadata';
+import { FindOneShopItemResolver } from '~prisma/resolvers/crud/ShopItem/FindOneShopItemResolver';
+import { ShopItemRelationsResolver } from '~prisma/resolvers/relations/ShopItem/ShopItemRelationsResolver';
+import { FindManyShopItemResolver } from '~prisma/resolvers/crud/ShopItem/FindManyShopItemResolver';
+import { CreateShopResolver } from '~prisma/resolvers/crud/Shop/CreateShopResolver';
+import { CreateShopItemResolver } from '~prisma/resolvers/crud/ShopItem/CreateShopItemResolver';
+import dotenv from 'dotenv';
+dotenv.config({ path: './.env.dev.local' });
 import { MultiCartRelationsResolver } from '~prisma/resolvers/relations/MultiCart/MultiCartRelationsResolver';
 import { CartRelationsResolver } from '~prisma/resolvers/relations/Cart/CartRelationsResolver';
 import { FindOneUserResolver } from '~prisma/resolvers/crud/User/FindOneUserResolver';
 import uuid_v4 from 'uuid/v4';
-import dotenv from 'dotenv';
-dotenv.config();
 import * as path from 'path';
 import { buildSchema } from 'type-graphql';
 import { ApolloServer } from 'apollo-server';
@@ -27,6 +32,11 @@ const startServer = async () => {
         FindOneUserResolver,
         CartRelationsResolver,
         MultiCartRelationsResolver,
+        CreateShopItemResolver,
+        CreateShopResolver,
+        FindManyShopItemResolver,
+        ShopItemRelationsResolver,
+        FindOneShopItemResolver,
       ],
       emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
       validate: false,

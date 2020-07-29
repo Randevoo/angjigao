@@ -3,3 +3,5 @@
 firebase_admin_key_prod.json
 /dist
 /prisma/generated
+.env
+.env.*
