@@ -9,7 +9,6 @@ dotenv.config({ path: './.env.dev.local' });
 import { MultiCartRelationsResolver } from '~prisma/resolvers/relations/MultiCart/MultiCartRelationsResolver';
 import { CartRelationsResolver } from '~prisma/resolvers/relations/Cart/CartRelationsResolver';
 import { FindOneUserResolver } from '~prisma/resolvers/crud/User/FindOneUserResolver';
-import uuid_v4 from 'uuid/v4';
 import * as path from 'path';
 import { buildSchema } from 'type-graphql';
 import { ApolloServer } from 'apollo-server';
@@ -42,7 +41,6 @@ const startServer = async () => {
       validate: false,
     }),
     context: () => ({
-      requestId: uuid_v4(),
       prisma,
     }),
     introspection: true,
