@@ -13,7 +13,7 @@ import * as path from 'path';
 import { buildSchema } from 'type-graphql';
 import { ApolloServer } from 'apollo-server';
 import { PrismaClient } from '@prisma/client';
-
+import FirebaseAdmin from 'firebase-admin';
 import CartResolver from './Cart/resolvers/resolvers';
 
 const prisma = new PrismaClient();
@@ -22,6 +22,10 @@ export interface Context {
   prisma: PrismaClient;
   requestId: string;
 }
+const admin = FirebaseAdmin;
+admin.initializeApp({
+  credential: admin.credential.cert('firebase-private-key.json'),
+});
 
 const startServer = async () => {
   const server = new ApolloServer({
@@ -42,6 +46,7 @@ const startServer = async () => {
     }),
     context: () => ({
       prisma,
+      admin,
     }),
     introspection: true,
     playground: true,

@@ -5,3 +5,4 @@ firebase_admin_key_prod.json
 /prisma/generated
 .env
 .env.*
+firebase-private-key.json
