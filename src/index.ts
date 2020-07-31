@@ -11,9 +11,9 @@ import { CartRelationsResolver } from '~prisma/resolvers/relations/Cart/CartRela
 import { FindOneUserResolver } from '~prisma/resolvers/crud/User/FindOneUserResolver';
 import * as path from 'path';
 import { buildSchema } from 'type-graphql';
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer, AuthenticationError } from 'apollo-server';
 import { PrismaClient } from '@prisma/client';
-import FirebaseAdmin from 'firebase-admin';
+import * as admin from 'firebase-admin';
 import CartResolver from './Cart/resolvers/resolvers';
 
 const prisma = new PrismaClient();
@@ -22,7 +22,7 @@ export interface Context {
   prisma: PrismaClient;
   requestId: string;
 }
-const admin = FirebaseAdmin;
+
 admin.initializeApp({
   credential: admin.credential.cert('firebase-private-key.json'),
 });
@@ -44,14 +44,20 @@ const startServer = async () => {
       emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
       validate: false,
     }),
-    context: () => ({
-      prisma,
-      admin,
-    }),
+    context: async ({ req }) => {
+      const token = req.headers.authorization || '';
+      const user = await admin
+        .auth()
+        .verifyIdToken(token)
+        .catch(() => {
+          throw new AuthenticationError('Please log in again');
+        });
+
+      return { prisma, admin, user };
+    },
     introspection: true,
     playground: true,
   });
-
   // The `listen` method launches a web server.
   server.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
     console.log(`🚀  Server ready at ${url}`);
