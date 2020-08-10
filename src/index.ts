@@ -1,3 +1,4 @@
+import { isNil } from 'lodash';
 import 'reflect-metadata';
 import { FindOneShopItemResolver } from '~prisma/resolvers/crud/ShopItem/FindOneShopItemResolver';
 import { ShopItemRelationsResolver } from '~prisma/resolvers/relations/ShopItem/ShopItemRelationsResolver';
@@ -15,21 +16,25 @@ import { ApolloServer, AuthenticationError } from 'apollo-server';
 import { PrismaClient } from '@prisma/client';
 import * as admin from 'firebase-admin';
 import CartResolver from './Cart/resolvers/resolvers';
+import UserResolver from './User/resolvers/resolvers';
 
 const prisma = new PrismaClient();
 
 export interface Context {
   prisma: PrismaClient;
-  requestId: string;
+  auth: admin.auth.Auth;
+  user?: admin.auth.DecodedIdToken;
 }
-
-admin.initializeApp({
+const app = admin.initializeApp({
   credential: admin.credential.cert('firebase-private-key.json'),
 });
 
 const startServer = async () => {
   const server = new ApolloServer({
     schema: await buildSchema({
+      authChecker: ({ context }) => {
+        return !isNil(context.user);
+      },
       resolvers: [
         CartResolver,
         FindOneUserResolver,
@@ -40,20 +45,19 @@ const startServer = async () => {
         FindManyShopItemResolver,
         ShopItemRelationsResolver,
         FindOneShopItemResolver,
+        UserResolver,
       ],
       emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
       validate: false,
     }),
     context: async ({ req }) => {
       const token = req.headers.authorization || '';
-      const user = await admin
-        .auth()
-        .verifyIdToken(token)
-        .catch(() => {
-          throw new AuthenticationError('Please log in again');
-        });
-
-      return { prisma, admin, user };
+      try {
+        const user = await app.auth().verifyIdToken(token);
+        return { prisma, auth: app.auth(), user };
+      } catch (e) {
+        return { prisma, auth: app.auth() };
+      }
     },
     introspection: true,
     playground: true,

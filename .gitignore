@@ -6,3 +6,4 @@ firebase_admin_key_prod.json
 .env
 .env.*
 firebase-private-key.json
+.DS_Store
