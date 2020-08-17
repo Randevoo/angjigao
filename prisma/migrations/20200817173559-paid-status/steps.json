@@ -1,0 +1,103 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateEnum",
+      "enum": "PaymentStatus",
+      "values": [
+        "UNPAID",
+        "AWAITING_CATURE",
+        "PAID",
+        "REFUNDED"
+      ]
+    },
+    {
+      "tag": "CreateField",
+      "model": "Cart",
+      "field": "paymentIntentId",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Cart",
+      "field": "paymentStatus",
+      "type": "PaymentStatus",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "Cart",
+          "field": "paymentStatus"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Cart",
+          "field": "paymentStatus"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "UNPAID"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Cart",
+      "field": "chargeId"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MultiCart",
+      "field": "paymentIntentId",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MultiCart",
+      "field": "paymentStatus",
+      "type": "PaymentStatus",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MultiCart",
+          "field": "paymentStatus"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MultiCart",
+          "field": "paymentStatus"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "UNPAID"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "MultiCart",
+      "field": "chargeId"
+    }
+  ]
+}

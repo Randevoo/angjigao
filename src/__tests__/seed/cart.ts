@@ -3,7 +3,7 @@ import { PrismaClient, CartItemCount, User, Cart, ShopItem } from '@prisma/clien
 interface CartArgs {
   cartItemCounts?: CartItemCount[];
   owner: User;
-  chargeId?: string;
+  paymentIntentId?: string;
 }
 
 interface CartItemCountArgs {
@@ -13,11 +13,11 @@ interface CartItemCountArgs {
 }
 
 export async function insertNewCart(prisma: PrismaClient, args: CartArgs) {
-  const { owner, chargeId } = args;
+  const { owner, paymentIntentId } = args;
 
   return await prisma.cart.create({
     data: {
-      chargeId,
+      paymentIntentId,
       cartItemCounts: { create: [] },
       price: 0,
       owner: {

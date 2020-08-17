@@ -194,6 +194,7 @@ input MultiCartWhereUniqueInput {
 type Mutation {
   createShop(data: ShopCreateInput!): Shop!
   createShopItem(data: ShopItemCreateInput!): ShopItem!
+  payCurrentCart(payCurrentCartInput: PayCurrentCartInput!): Cart!
   removeFromCart(removeFromCartInput: RemoveFromCartInput!): Cart!
   addToCart(addToCartInput: AddToCartInput!): Cart!
   signUp(signUpInput: SignUpInput!): User!
@@ -227,6 +228,12 @@ input NullableStringFilter {
 enum OrderByArg {
   asc
   desc
+}
+
+input PayCurrentCartInput {
+  user_id: String!
+  cart_id: String!
+  payment_method_id: String!
 }
 
 type Query {
@@ -394,6 +401,7 @@ type User {
   username: String!
   password: String!
   dob: DateTime!
+  stripe_cust_id: String!
   cart: Cart!
 }
 
@@ -408,6 +416,7 @@ input UserCreateWithoutCartInput {
   username: String!
   password: String!
   dob: DateTime!
+  stripe_cust_id: String
 }
 
 input UserWhereInput {
@@ -416,6 +425,7 @@ input UserWhereInput {
   username: StringFilter
   password: StringFilter
   dob: DateTimeFilter
+  stripe_cust_id: StringFilter
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

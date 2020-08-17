@@ -1,3 +1,4 @@
+import { PayCurrentCartInput } from './../inputs';
 import { CartItemCount } from '~prisma/models/CartItemCount';
 import { Cart } from '~prisma/models/Cart';
 import { AddToCartInput, RemoveFromCartInput, FindMultiCartByUserIdInput } from '../inputs';
@@ -8,6 +9,7 @@ import { GraphQLError } from 'graphql';
 import { ShopItem } from '~prisma/models/ShopItem';
 import { shopItemLoader } from 'src/dataloaders';
 import { MultiCart } from '~prisma/models/MultiCart';
+import { PaymentStatus } from '~prisma/enums/PaymentStatus';
 
 @Resolver((type) => MultiCart)
 export class MultiCartResolver {
@@ -50,6 +52,40 @@ export default class CartResolver {
         },
       })
     )[0];
+  }
+
+  @Mutation(() => Cart)
+  async payCurrentCart(
+    @Arg('payCurrentCartInput') input: PayCurrentCartInput,
+    @Ctx() { prisma, stripe }: Context,
+  ) {
+    const user = await prisma.user.findOne({
+      where: {
+        id: input.user_id,
+      },
+    });
+    const cart = await prisma.cart.findOne({
+      where: {
+        id: input.cart_id,
+      },
+    });
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: cart.price,
+      currency: 'SGD',
+      payment_method: input.payment_method_id,
+      capture_method: 'manual',
+    });
+
+    return await prisma.cart.update({
+      where: {
+        id: input.cart_id,
+      },
+      data: {
+        paymentIntentId: paymentIntent.id,
+        paymentStatus: PaymentStatus.AWAITING_CATURE,
+      },
+    });
   }
 
   @Mutation(() => Cart)

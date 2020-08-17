@@ -1270,6 +1270,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.22.tgz#23ea4d88189cec7d58f9e6b66f786b215eb61bdc"
   integrity sha512-emeGcJvdiZ4Z3ohbmw93E/64jRzUHAItSHt8nF7M4TGgQTiWqFVGB8KNpLGFmUHmHLvjvBgFwVlqNcq+VuGv9g==
 
+"@types/node@>=8.1.0":
+  version "14.0.27"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.27.tgz#a151873af5a5e851b51b3b065c9e63390a9e0eb1"
+  integrity sha512-kVrqXhbclHNHGu9ztnAwSncIgJv/FaxmzXJvGXNdcCpV1b8u1/Mi6z6m0vwy0LzKeXFTPLH0NzwmoJ3fNCIq0g==
+
 "@types/node@^10.1.0", "@types/node@^10.10.0":
   version "10.17.28"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.28.tgz#0e36d718a29355ee51cec83b42d921299200f6d9"
@@ -2521,10 +2526,10 @@ dotenv@^6.2.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
   integrity sha512-HygQCKUBSFl8wKQZBSemMywRWcEDNidvNbjGVyZu3nbZ8qq9ubiPoGLMdRDpfSrpkkm9BXYFkpKxxFX38o/76w==
 
-dotenv@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.1.0.tgz#d811e178652bfb8a1e593c6dd704ec7e90d85ea2"
-  integrity sha512-GUE3gqcDCaMltj2++g6bRQ5rBJWtkWTmqmD0fo1RnnMuUqHNCt2oTPeDnS9n6fKYvlhn7AeBkb38lymBtWBQdA==
+dotenv@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
+  integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
 duplexify@^3.5.0, duplexify@^3.6.0:
   version "3.7.1"
@@ -5490,11 +5495,12 @@ strip-json-comments@^2.0.0, strip-json-comments@~2.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
 
-stripe@^7.13.0:
-  version "7.13.0"
-  resolved "https://registry.yarnpkg.com/stripe/-/stripe-7.13.0.tgz#82f9730a1a956ec93323f510b823578dbfbe8451"
-  integrity sha512-txnnBWAcwIsQ4/P3gYp74C0O9hONDVjKBlPTSG4GheDTZ0V5rkpoFYbuv4g8LvmrPMCZmz3chZ/nunnrTli4Iw==
+stripe@^8.86.0:
+  version "8.86.0"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-8.86.0.tgz#24578736e742a178527d20657f0777e04ba66552"
+  integrity sha512-E7Njw+h50TZys2G8QBipIbYQzDVC9L9WT+4Zb1JBepS5ZkWrAJxbk9DXETrs23xj/3jzSevjMelfy3YxN0qFZQ==
   dependencies:
+    "@types/node" ">=8.1.0"
     qs "^6.6.0"
 
 stubs@^3.0.0:

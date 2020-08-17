@@ -22,3 +22,15 @@ export class FindMultiCartByUserIdInput {
   @Field()
   user_id: string;
 }
+
+@InputType()
+export class PayCurrentCartInput {
+  @Field()
+  user_id: string;
+
+  @Field()
+  cart_id: string;
+
+  @Field()
+  payment_method_id: string;
+}

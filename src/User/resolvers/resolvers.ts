@@ -4,6 +4,7 @@ import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
 import { User } from '~prisma/models/User';
 import { ApolloError } from 'apollo-server';
 import { hashSync } from 'bcrypt';
+import Stripe from 'stripe';
 
 @Resolver((type) => User)
 export default class UserResolver {
@@ -19,7 +20,7 @@ export default class UserResolver {
     });
   }
   @Mutation(() => User)
-  async signUp(@Arg('signUpInput') args: SignUpInput, @Ctx() { prisma, auth }: Context) {
+  async signUp(@Arg('signUpInput') args: SignUpInput, @Ctx() { prisma, auth, stripe }: Context) {
     const { email, password, displayName, firstName, lastName, dob } = args;
     let userId;
     try {
@@ -32,6 +33,15 @@ export default class UserResolver {
     } catch (e) {
       throw new ApolloError(e.message);
     }
+    let cust: Stripe.Customer;
+    try {
+      cust = await stripe.customers.create({
+        email,
+        name: `${firstName} ${lastName}`,
+      });
+    } catch (e) {
+      throw new ApolloError(e.message);
+    }
     const hashedPassword = hashSync(password, 10);
     return await prisma.user.create({
       data: {
@@ -40,6 +50,7 @@ export default class UserResolver {
         password: hashedPassword,
         username: displayName,
         dob,
+        stripe_cust_id: cust.id,
         cart: {
           create: {
             cartItemCounts: {

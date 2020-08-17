@@ -5,7 +5,7 @@ import { gql } from 'apollo-server';
 import { expect } from 'chai';
 import { insertNewUser, insertNewShop } from './seed/user';
 import { insertNewShoppingItem } from './seed/shoppingItem';
-import { insertNewCart, insertNewCartItemCount } from './seed/cart';
+import {  insertNewCartItemCount } from './seed/cart';
 
 const removeFromCartMutation = gql`
   mutation($itemId: String!, $buyerId: String!) {

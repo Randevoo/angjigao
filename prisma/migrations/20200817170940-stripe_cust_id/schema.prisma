@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -14,13 +14,6 @@ generator client {
 generator typegraphql {
   provider = "node node_modules/typegraphql-prisma/generator.js"
   output   = "../prisma/generated/type-graphql"
-}
-
-enum PaymentStatus {
-  UNPAID
-  AWAITING_CATURE
-  PAID
-  REFUNDED
 }
 
 model User {
@@ -55,22 +48,20 @@ model ShopItem {
 }
 
 model MultiCart {
-  id              String        @default(uuid()) @id
-  carts           Cart[]
-  paymentIntentId String?
-  paymentStatus   PaymentStatus @default(UNPAID)
+  id       String  @default(uuid()) @id
+  carts    Cart[]
+  chargeId String?
 }
 
 model Cart {
-  id              String          @default(uuid()) @id
-  ownerId         String
-  owner           User            @relation(fields: [ownerId], references: [id])
-  paymentIntentId String?
-  price           Float           @default(0)
-  cartItemCounts  CartItemCount[]
-  MultiCart       MultiCart?      @relation(fields: [multiCartId], references: [id])
-  multiCartId     String?
-  paymentStatus   PaymentStatus   @default(UNPAID)
+  id             String          @default(uuid()) @id
+  ownerId        String
+  owner          User            @relation(fields: [ownerId], references: [id])
+  chargeId       String?
+  price          Float           @default(0)
+  cartItemCounts CartItemCount[]
+  MultiCart      MultiCart?      @relation(fields: [multiCartId], references: [id])
+  multiCartId    String?
 }
 
 model CartItemCount {
