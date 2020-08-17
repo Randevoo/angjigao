@@ -1,5 +1,6 @@
-import { isNil } from 'lodash';
 import 'reflect-metadata';
+import { UserRelationsResolver } from '~prisma/resolvers/relations/User/UserRelationsResolver';
+import { isNil } from 'lodash';
 import { FindOneShopItemResolver } from '~prisma/resolvers/crud/ShopItem/FindOneShopItemResolver';
 import { ShopItemRelationsResolver } from '~prisma/resolvers/relations/ShopItem/ShopItemRelationsResolver';
 import { FindManyShopItemResolver } from '~prisma/resolvers/crud/ShopItem/FindManyShopItemResolver';
@@ -46,6 +47,7 @@ const startServer = async () => {
         ShopItemRelationsResolver,
         FindOneShopItemResolver,
         UserResolver,
+        UserRelationsResolver,
       ],
       emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
       validate: false,

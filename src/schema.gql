@@ -234,6 +234,8 @@ type Query {
   shopItems(where: ShopItemWhereInput, orderBy: ShopItemOrderByInput, cursor: ShopItemWhereUniqueInput, take: Int, skip: Int): [ShopItem!]!
   user(where: UserWhereUniqueInput!): User
   findMultiCartsByUserId(findMultiCartByUserIdInput: FindMultiCartByUserIdInput!): MultiCart!
+  findCartFromOwnerId(ownerId: String!): Cart!
+  findUserById(id: String!): User!
 }
 
 input RemoveFromCartInput {
@@ -392,6 +394,7 @@ type User {
   username: String!
   password: String!
   dob: DateTime!
+  cart: Cart!
 }
 
 input UserCreateOneWithoutCartInput {

@@ -3,25 +3,37 @@ import { SignUpInput, SignInInput } from './../inputs';
 import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
 import { User } from '~prisma/models/User';
 import { ApolloError } from 'apollo-server';
+import { hashSync } from 'bcrypt';
 
 @Resolver((type) => User)
 export default class UserResolver {
+  @Query(() => User)
+  async findUserById(@Arg('id') id: string, @Ctx() { prisma, auth }: Context) {
+    return await prisma.user.findOne({
+      where: {
+        id,
+      },
+      include: {
+        cart: true,
+      },
+    });
+  }
   @Mutation(() => User)
   async signUp(@Arg('signUpInput') args: SignUpInput, @Ctx() { prisma, auth }: Context) {
-    const { email, password, displayName, dob } = args;
-    let userId, hashedPassword;
+    const { email, password, displayName, firstName, lastName, dob } = args;
+    let userId;
     try {
-      const { uid, passwordHash } = await auth.createUser({
+      const { uid } = await auth.createUser({
         email,
         password,
         displayName,
       });
       userId = uid;
-      hashedPassword = passwordHash;
     } catch (e) {
       throw new ApolloError(e.message);
     }
-    return prisma.user.create({
+    const hashedPassword = hashSync(password, 10);
+    return await prisma.user.create({
       data: {
         id: userId,
         email,
@@ -33,6 +45,13 @@ export default class UserResolver {
             cartItemCounts: {
               create: [],
             },
+          },
+        },
+      },
+      include: {
+        cart: {
+          select: {
+            id: true,
           },
         },
       },

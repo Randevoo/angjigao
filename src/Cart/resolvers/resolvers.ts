@@ -38,6 +38,20 @@ export class CartItemCountResolver {
 
 @Resolver(() => Cart)
 export default class CartResolver {
+  @Query(() => Cart)
+  async findCartFromOwnerId(@Arg('ownerId') userId: string, @Ctx() { prisma }: Context) {
+    return (
+      await prisma.cart.findMany({
+        where: {
+          ownerId: userId,
+        },
+        include: {
+          cartItemCounts: true,
+        },
+      })
+    )[0];
+  }
+
   @Mutation(() => Cart)
   async removeFromCart(
     @Arg('removeFromCartInput') removeFromCartInput: RemoveFromCartInput,
@@ -100,7 +114,6 @@ export default class CartResolver {
     @Arg('addToCartInput') addToCartInput: AddToCartInput,
     @Ctx() { prisma }: Context,
   ) {
-    console.log('addToCart called');
     const item = await prisma.shopItem.findOne({
       where: {
         id: addToCartInput.item_id,
