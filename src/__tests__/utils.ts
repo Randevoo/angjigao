@@ -1,36 +1,46 @@
 import 'reflect-metadata';
+import path from 'path';
 import dotenv from 'dotenv';
-dotenv.config({ path: '../../.env.test' });
-import { CartRelationsResolver } from '~prisma/resolvers/relations/Cart/CartRelationsResolver';
-import { FindOneUserResolver } from '~prisma/resolvers/crud/User/FindOneUserResolver';
+dotenv.config({ path: path.join(path.dirname(__filename), '../../.env.test') });
+import { resolvers } from 'src/commonUtils';
 import { PrismaClient } from '@prisma/client';
 import { buildSchema } from 'type-graphql';
-import uuid_v4 from 'uuid/v4';
-import { createConnection, Any, Connection } from 'typeorm';
 import { ApolloServer } from 'apollo-server';
 import { join, map } from 'lodash';
-import CartResolver from 'src/Cart/resolvers/resolvers';
+import Stripe from 'stripe';
+import * as admin from 'firebase-admin';
 
 //TODO: Change out the context, or find a better way to create it. Now mimics prod.
 const prisma = new PrismaClient();
+const stripe = new Stripe(process.env.STRIPE_KEY, {
+  apiVersion: null,
+});
+
+const app = admin.initializeApp({
+  credential: admin.credential.cert(
+    path.join(path.dirname(__filename), '../../firebase-private-key-test.json'),
+  ),
+});
+
 export async function createTestServer({ context = {} } = {}) {
   let server;
   try {
     server = new ApolloServer({
       schema: await buildSchema({
-        resolvers: [CartResolver, FindOneUserResolver, CartRelationsResolver],
+        resolvers,
         validate: false,
       }),
       context: () => ({
-        requestId: uuid_v4(),
         prisma,
+        stripe,
+        auth: app.auth(),
       }),
     });
   } catch (e) {
     console.log(e);
   }
 
-  return { server, prisma };
+  return { server, prisma, stripe, auth: app.auth() };
 }
 
 export async function resetDb() {

@@ -2,7 +2,7 @@ import { PayCurrentCartInput } from './../inputs';
 import { CartItemCount } from '~prisma/models/CartItemCount';
 import { Cart } from '~prisma/models/Cart';
 import { AddToCartInput, RemoveFromCartInput, FindMultiCartByUserIdInput } from '../inputs';
-import { Context } from 'src/index';
+import { Context } from 'src/commonUtils';
 import { Resolver, Mutation, Ctx, Arg, Root, FieldResolver, Query } from 'type-graphql';
 import { isNil, find, sumBy } from 'lodash';
 import { GraphQLError } from 'graphql';

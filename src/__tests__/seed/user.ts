@@ -8,6 +8,7 @@ export async function insertNewUser(prisma: PrismaClient) {
       username: Faker.internet.userName('test', 'ting'),
       password: Faker.internet.password(),
       dob: Faker.date.past(20),
+      stripe_cust_id: Faker.random.uuid(),
       email: Faker.internet.email(),
       cart: {
         create: {},

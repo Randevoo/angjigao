@@ -20,12 +20,3 @@ export class SignUpInput {
   @Field()
   dob: Date;
 }
-
-@InputType()
-export class SignInInput {
-  @Field()
-  email: string;
-
-  @Field()
-  password: string;
-}

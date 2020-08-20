@@ -1,5 +1,5 @@
-import { Context } from 'src/index';
-import { SignUpInput, SignInInput } from './../inputs';
+import { Context } from 'src/commonUtils';
+import { SignUpInput } from './../inputs';
 import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
 import { User } from '~prisma/models/User';
 import { ApolloError } from 'apollo-server';

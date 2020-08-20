@@ -11,9 +11,10 @@ input AddToCartInput {
 type Cart {
   id: String!
   ownerId: String!
-  chargeId: String
+  paymentIntentId: String
   price: Float!
   multiCartId: String
+  paymentStatus: PaymentStatus!
   owner: User!
   cartItemCounts(where: CartItemCountWhereInput, orderBy: CartItemCountOrderByInput, cursor: CartItemCountWhereUniqueInput, take: Int, skip: Int): [CartItemCount!]
   MultiCart: MultiCart
@@ -26,8 +27,9 @@ input CartCreateOneWithoutCartItemCountsInput {
 
 input CartCreateWithoutCartItemCountsInput {
   id: String
-  chargeId: String
+  paymentIntentId: String
   price: Float
+  paymentStatus: PaymentStatus
   owner: UserCreateOneWithoutCartInput!
   MultiCart: MultiCartCreateOneWithoutCartsInput
 }
@@ -97,18 +99,20 @@ input CartItemCountWhereUniqueInput {
 input CartOrderByInput {
   id: OrderByArg
   ownerId: OrderByArg
-  chargeId: OrderByArg
+  paymentIntentId: OrderByArg
   price: OrderByArg
   multiCartId: OrderByArg
+  paymentStatus: OrderByArg
 }
 
 input CartWhereInput {
   id: UUIDFilter
   ownerId: StringFilter
-  chargeId: NullableStringFilter
+  paymentIntentId: NullableStringFilter
   price: FloatFilter
   cartItemCounts: CartItemCountFilter
   multiCartId: NullableStringFilter
+  paymentStatus: PaymentStatusFilter
   AND: [CartWhereInput!]
   OR: [CartWhereInput!]
   NOT: [CartWhereInput!]
@@ -164,7 +168,8 @@ input IntFilter {
 
 type MultiCart {
   id: String!
-  chargeId: String
+  paymentIntentId: String
+  paymentStatus: PaymentStatus!
   carts(where: CartWhereInput, orderBy: CartOrderByInput, cursor: CartWhereUniqueInput, take: Int, skip: Int): [Cart!]
 }
 
@@ -175,13 +180,15 @@ input MultiCartCreateOneWithoutCartsInput {
 
 input MultiCartCreateWithoutCartsInput {
   id: String
-  chargeId: String
+  paymentIntentId: String
+  paymentStatus: PaymentStatus
 }
 
 input MultiCartWhereInput {
   id: UUIDFilter
   carts: CartFilter
-  chargeId: NullableStringFilter
+  paymentIntentId: NullableStringFilter
+  paymentStatus: PaymentStatusFilter
   AND: [MultiCartWhereInput!]
   OR: [MultiCartWhereInput!]
   NOT: [MultiCartWhereInput!]
@@ -234,6 +241,20 @@ input PayCurrentCartInput {
   user_id: String!
   cart_id: String!
   payment_method_id: String!
+}
+
+enum PaymentStatus {
+  UNPAID
+  AWAITING_CATURE
+  PAID
+  REFUNDED
+}
+
+input PaymentStatusFilter {
+  equals: PaymentStatus
+  not: PaymentStatus
+  in: [PaymentStatus!]
+  notIn: [PaymentStatus!]
 }
 
 type Query {
