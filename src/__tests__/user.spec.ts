@@ -87,7 +87,7 @@ describe('User', () => {
         await fbAuth.deleteUsers(allUsersUid);
       });
 
-      describe.only('signUpUser', () => {
+      describe('signUpUser', () => {
         it('should be able to sign up user with the correct data', async () => {
           const { data, errors } = await client.mutate({
             mutation: signUpUserMutation,

@@ -55,10 +55,10 @@ model ShopItem {
 }
 
 model MultiCart {
-  id              String        @default(uuid()) @id
-  carts           Cart[]
-  paymentIntentId String?
-  paymentStatus   PaymentStatus @default(UNPAID)
+  id               String            @default(uuid()) @id
+  carts            Cart[]
+  paymentIntentId  String?
+  PaymentMultiCart PaymentMultiCart?
 }
 
 model Cart {
@@ -70,7 +70,7 @@ model Cart {
   cartItemCounts  CartItemCount[]
   MultiCart       MultiCart?      @relation(fields: [multiCartId], references: [id])
   multiCartId     String?
-  paymentStatus   PaymentStatus   @default(UNPAID)
+  PaymentCart     PaymentCart?
 }
 
 model CartItemCount {
@@ -82,4 +82,20 @@ model CartItemCount {
   price     Float
   count     Int
   deletedAt DateTime?
+}
+
+model PaymentCart {
+  id              String        @default(uuid()) @id
+  paymentStatus   PaymentStatus @default(UNPAID)
+  cartId          String
+  cart            Cart          @relation(fields: [cartId], references: [id])
+  paymentIntentId String
+}
+
+model PaymentMultiCart {
+  id              String        @default(uuid()) @id
+  paymentStatus   PaymentStatus @default(UNPAID)
+  multiCartId     String
+  multiCart       MultiCart     @relation(fields: [multiCartId], references: [id])
+  paymentIntentId String
 }
