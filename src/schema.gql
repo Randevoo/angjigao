@@ -14,10 +14,10 @@ type Cart {
   paymentIntentId: String
   price: Float!
   multiCartId: String
-  paymentStatus: PaymentStatus!
   owner: User!
-  cartItemCounts(where: CartItemCountWhereInput, orderBy: CartItemCountOrderByInput, cursor: CartItemCountWhereUniqueInput, take: Int, skip: Int): [CartItemCount!]
+  cartItemCounts(where: CartItemCountWhereInput, orderBy: [CartItemCountOrderByInput!], cursor: CartItemCountWhereUniqueInput, take: Int, skip: Int, distinct: [CartItemCountDistinctFieldEnum!]): [CartItemCount!]
   MultiCart: MultiCart
+  PaymentCart: PaymentCart
 }
 
 input CartCreateOneWithoutCartItemCountsInput {
@@ -29,15 +29,17 @@ input CartCreateWithoutCartItemCountsInput {
   id: String
   paymentIntentId: String
   price: Float
-  paymentStatus: PaymentStatus
   owner: UserCreateOneWithoutCartInput!
   MultiCart: MultiCartCreateOneWithoutCartsInput
+  PaymentCart: PaymentCartCreateOneWithoutCartInput
 }
 
-input CartFilter {
-  every: CartWhereInput
-  some: CartWhereInput
-  none: CartWhereInput
+enum CartDistinctFieldEnum {
+  id
+  ownerId
+  paymentIntentId
+  price
+  multiCartId
 }
 
 type CartItemCount {
@@ -63,61 +65,75 @@ input CartItemCountCreateWithoutShopItemInput {
   cart: CartCreateOneWithoutCartItemCountsInput!
 }
 
-input CartItemCountFilter {
+enum CartItemCountDistinctFieldEnum {
+  id
+  cartId
+  itemId
+  price
+  count
+  deletedAt
+}
+
+input CartItemCountListRelationFilter {
   every: CartItemCountWhereInput
   some: CartItemCountWhereInput
   none: CartItemCountWhereInput
 }
 
 input CartItemCountOrderByInput {
-  id: OrderByArg
-  cartId: OrderByArg
-  itemId: OrderByArg
-  price: OrderByArg
-  count: OrderByArg
-  deletedAt: OrderByArg
+  id: SortOrder
+  cartId: SortOrder
+  itemId: SortOrder
+  price: SortOrder
+  count: SortOrder
+  deletedAt: SortOrder
 }
 
 input CartItemCountWhereInput {
-  id: UUIDFilter
-  cartId: StringFilter
-  itemId: StringFilter
-  price: FloatFilter
-  count: IntFilter
-  deletedAt: NullableDateTimeFilter
   AND: [CartItemCountWhereInput!]
   OR: [CartItemCountWhereInput!]
   NOT: [CartItemCountWhereInput!]
+  id: StringFilter
+  cartId: StringFilter
   cart: CartWhereInput
+  itemId: StringFilter
   shopItem: ShopItemWhereInput
+  price: FloatFilter
+  count: IntFilter
+  deletedAt: DateTimeNullableFilter
 }
 
 input CartItemCountWhereUniqueInput {
   id: String
 }
 
+input CartListRelationFilter {
+  every: CartWhereInput
+  some: CartWhereInput
+  none: CartWhereInput
+}
+
 input CartOrderByInput {
-  id: OrderByArg
-  ownerId: OrderByArg
-  paymentIntentId: OrderByArg
-  price: OrderByArg
-  multiCartId: OrderByArg
-  paymentStatus: OrderByArg
+  id: SortOrder
+  ownerId: SortOrder
+  paymentIntentId: SortOrder
+  price: SortOrder
+  multiCartId: SortOrder
 }
 
 input CartWhereInput {
-  id: UUIDFilter
-  ownerId: StringFilter
-  paymentIntentId: NullableStringFilter
-  price: FloatFilter
-  cartItemCounts: CartItemCountFilter
-  multiCartId: NullableStringFilter
-  paymentStatus: PaymentStatusFilter
   AND: [CartWhereInput!]
   OR: [CartWhereInput!]
   NOT: [CartWhereInput!]
+  id: StringFilter
+  ownerId: StringFilter
   owner: UserWhereInput
+  paymentIntentId: StringNullableFilter
+  price: FloatFilter
+  cartItemCounts: CartItemCountListRelationFilter
   MultiCart: MultiCartWhereInput
+  multiCartId: StringNullableFilter
+  PaymentCart: PaymentCartWhereInput
 }
 
 input CartWhereUniqueInput {
@@ -131,13 +147,31 @@ scalar DateTime
 
 input DateTimeFilter {
   equals: DateTime
-  not: DateTime
   in: [DateTime!]
   notIn: [DateTime!]
   lt: DateTime
   lte: DateTime
   gt: DateTime
   gte: DateTime
+  not: NestedDateTimeFilter
+}
+
+input DateTimeNullableFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: NestedDateTimeNullableFilter
+}
+
+input EnumPaymentStatusFilter {
+  equals: PaymentStatus
+  in: [PaymentStatus!]
+  notIn: [PaymentStatus!]
+  not: NestedEnumPaymentStatusFilter
 }
 
 input FindMultiCartByUserIdInput {
@@ -146,31 +180,31 @@ input FindMultiCartByUserIdInput {
 
 input FloatFilter {
   equals: Float
-  not: Float
   in: [Float!]
   notIn: [Float!]
   lt: Float
   lte: Float
   gt: Float
   gte: Float
+  not: NestedFloatFilter
 }
 
 input IntFilter {
   equals: Int
-  not: Int
   in: [Int!]
   notIn: [Int!]
   lt: Int
   lte: Int
   gt: Int
   gte: Int
+  not: NestedIntFilter
 }
 
 type MultiCart {
   id: String!
   paymentIntentId: String
-  paymentStatus: PaymentStatus!
-  carts(where: CartWhereInput, orderBy: CartOrderByInput, cursor: CartWhereUniqueInput, take: Int, skip: Int): [Cart!]
+  carts(where: CartWhereInput, orderBy: [CartOrderByInput!], cursor: CartWhereUniqueInput, take: Int, skip: Int, distinct: [CartDistinctFieldEnum!]): [Cart!]
+  PaymentMultiCart: PaymentMultiCart
 }
 
 input MultiCartCreateOneWithoutCartsInput {
@@ -181,17 +215,17 @@ input MultiCartCreateOneWithoutCartsInput {
 input MultiCartCreateWithoutCartsInput {
   id: String
   paymentIntentId: String
-  paymentStatus: PaymentStatus
+  PaymentMultiCart: PaymentMultiCartCreateOneWithoutMultiCartInput
 }
 
 input MultiCartWhereInput {
-  id: UUIDFilter
-  carts: CartFilter
-  paymentIntentId: NullableStringFilter
-  paymentStatus: PaymentStatusFilter
   AND: [MultiCartWhereInput!]
   OR: [MultiCartWhereInput!]
   NOT: [MultiCartWhereInput!]
+  id: StringFilter
+  carts: CartListRelationFilter
+  paymentIntentId: StringNullableFilter
+  PaymentMultiCart: PaymentMultiCartWhereInput
 }
 
 input MultiCartWhereUniqueInput {
@@ -199,28 +233,67 @@ input MultiCartWhereUniqueInput {
 }
 
 type Mutation {
-  createShop(data: ShopCreateInput!): Shop!
-  createShopItem(data: ShopItemCreateInput!): ShopItem!
+  signUp(signUpInput: SignUpInput!): User!
   payCurrentCart(payCurrentCartInput: PayCurrentCartInput!): Cart!
   removeFromCart(removeFromCartInput: RemoveFromCartInput!): Cart!
   addToCart(addToCartInput: AddToCartInput!): Cart!
-  signUp(signUpInput: SignUpInput!): User!
+  createShop(data: ShopCreateInput!): Shop!
+  createShopItem(data: ShopItemCreateInput!): ShopItem!
 }
 
-input NullableDateTimeFilter {
+input NestedDateTimeFilter {
   equals: DateTime
-  not: DateTime
   in: [DateTime!]
   notIn: [DateTime!]
   lt: DateTime
   lte: DateTime
   gt: DateTime
   gte: DateTime
+  not: NestedDateTimeFilter
 }
 
-input NullableStringFilter {
+input NestedDateTimeNullableFilter {
+  equals: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  gt: DateTime
+  gte: DateTime
+  not: NestedDateTimeNullableFilter
+}
+
+input NestedEnumPaymentStatusFilter {
+  equals: PaymentStatus
+  in: [PaymentStatus!]
+  notIn: [PaymentStatus!]
+  not: NestedEnumPaymentStatusFilter
+}
+
+input NestedFloatFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: NestedFloatFilter
+}
+
+input NestedIntFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: NestedIntFilter
+}
+
+input NestedStringFilter {
   equals: String
-  not: String
   in: [String!]
   notIn: [String!]
   lt: String
@@ -230,17 +303,93 @@ input NullableStringFilter {
   contains: String
   startsWith: String
   endsWith: String
+  not: NestedStringFilter
 }
 
-enum OrderByArg {
-  asc
-  desc
+input NestedStringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringNullableFilter
 }
 
 input PayCurrentCartInput {
   user_id: String!
   cart_id: String!
   payment_method_id: String!
+}
+
+type PaymentCart {
+  id: String!
+  paymentStatus: PaymentStatus!
+  cartId: String!
+  paymentIntentId: String!
+}
+
+input PaymentCartCreateOneWithoutCartInput {
+  create: PaymentCartCreateWithoutCartInput
+  connect: PaymentCartWhereUniqueInput
+}
+
+input PaymentCartCreateWithoutCartInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String!
+}
+
+input PaymentCartWhereInput {
+  AND: [PaymentCartWhereInput!]
+  OR: [PaymentCartWhereInput!]
+  NOT: [PaymentCartWhereInput!]
+  id: StringFilter
+  paymentStatus: EnumPaymentStatusFilter
+  cartId: StringFilter
+  cart: CartWhereInput
+  paymentIntentId: StringFilter
+}
+
+input PaymentCartWhereUniqueInput {
+  id: String
+}
+
+type PaymentMultiCart {
+  id: String!
+  paymentStatus: PaymentStatus!
+  multiCartId: String!
+  paymentIntentId: String!
+}
+
+input PaymentMultiCartCreateOneWithoutMultiCartInput {
+  create: PaymentMultiCartCreateWithoutMultiCartInput
+  connect: PaymentMultiCartWhereUniqueInput
+}
+
+input PaymentMultiCartCreateWithoutMultiCartInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String!
+}
+
+input PaymentMultiCartWhereInput {
+  AND: [PaymentMultiCartWhereInput!]
+  OR: [PaymentMultiCartWhereInput!]
+  NOT: [PaymentMultiCartWhereInput!]
+  id: StringFilter
+  paymentStatus: EnumPaymentStatusFilter
+  multiCartId: StringFilter
+  multiCart: MultiCartWhereInput
+  paymentIntentId: StringFilter
+}
+
+input PaymentMultiCartWhereUniqueInput {
+  id: String
 }
 
 enum PaymentStatus {
@@ -250,20 +399,71 @@ enum PaymentStatus {
   REFUNDED
 }
 
-input PaymentStatusFilter {
-  equals: PaymentStatus
-  not: PaymentStatus
-  in: [PaymentStatus!]
-  notIn: [PaymentStatus!]
-}
-
 type Query {
-  shopItem(where: ShopItemWhereUniqueInput!): ShopItem
-  shopItems(where: ShopItemWhereInput, orderBy: ShopItemOrderByInput, cursor: ShopItemWhereUniqueInput, take: Int, skip: Int): [ShopItem!]!
-  user(where: UserWhereUniqueInput!): User
+  findUserById(id: String!): User!
   findMultiCartsByUserId(findMultiCartByUserIdInput: FindMultiCartByUserIdInput!): MultiCart!
   findCartFromOwnerId(ownerId: String!): Cart!
-  findUserById(id: String!): User!
+  shopItem(where: ShopItemWhereUniqueInput!): ShopItem
+  shopItems(where: ShopItemWhereInput, orderBy: [ShopItemOrderByInput!], cursor: ShopItemWhereUniqueInput, take: Int, skip: Int, distinct: [ShopItemDistinctFieldEnum!]): [ShopItem!]!
+  user(where: UserWhereUniqueInput!): User
+}
+
+type Refund {
+  id: String!
+  shopItemId: String!
+  description: String!
+  paymentIntentId: String!
+  stripeRefundId: String!
+}
+
+input RefundCreateManyWithoutShopItemInput {
+  create: [RefundCreateWithoutShopItemInput!]
+  connect: [RefundWhereUniqueInput!]
+}
+
+input RefundCreateWithoutShopItemInput {
+  id: String
+  description: String!
+  paymentIntentId: String!
+  stripeRefundId: String!
+}
+
+enum RefundDistinctFieldEnum {
+  id
+  shopItemId
+  description
+  paymentIntentId
+  stripeRefundId
+}
+
+input RefundListRelationFilter {
+  every: RefundWhereInput
+  some: RefundWhereInput
+  none: RefundWhereInput
+}
+
+input RefundOrderByInput {
+  id: SortOrder
+  shopItemId: SortOrder
+  description: SortOrder
+  paymentIntentId: SortOrder
+  stripeRefundId: SortOrder
+}
+
+input RefundWhereInput {
+  AND: [RefundWhereInput!]
+  OR: [RefundWhereInput!]
+  NOT: [RefundWhereInput!]
+  id: StringFilter
+  shopItem: ShopItemWhereInput
+  shopItemId: StringFilter
+  description: StringFilter
+  paymentIntentId: StringFilter
+  stripeRefundId: StringFilter
+}
+
+input RefundWhereUniqueInput {
+  id: String
 }
 
 input RemoveFromCartInput {
@@ -307,7 +507,8 @@ type ShopItem {
   imageUrl: String!
   shopId: String!
   shop: Shop!
-  cartItemCounts(where: CartItemCountWhereInput, orderBy: CartItemCountOrderByInput, cursor: CartItemCountWhereUniqueInput, take: Int, skip: Int): [CartItemCount!]
+  cartItemCounts(where: CartItemCountWhereInput, orderBy: [CartItemCountOrderByInput!], cursor: CartItemCountWhereUniqueInput, take: Int, skip: Int, distinct: [CartItemCountDistinctFieldEnum!]): [CartItemCount!]
+  refunds(where: RefundWhereInput, orderBy: [RefundOrderByInput!], cursor: RefundWhereUniqueInput, take: Int, skip: Int, distinct: [RefundDistinctFieldEnum!]): [Refund!]
 }
 
 input ShopItemCreateInput {
@@ -319,6 +520,7 @@ input ShopItemCreateInput {
   imageUrl: String!
   shop: ShopCreateOneWithoutShopItemsInput!
   cartItemCounts: CartItemCountCreateManyWithoutShopItemInput
+  refunds: RefundCreateManyWithoutShopItemInput
 }
 
 input ShopItemCreateManyWithoutShopInput {
@@ -334,37 +536,49 @@ input ShopItemCreateWithoutShopInput {
   price: Float!
   imageUrl: String!
   cartItemCounts: CartItemCountCreateManyWithoutShopItemInput
+  refunds: RefundCreateManyWithoutShopItemInput
 }
 
-input ShopItemFilter {
+enum ShopItemDistinctFieldEnum {
+  id
+  createdAt
+  name
+  description
+  price
+  imageUrl
+  shopId
+}
+
+input ShopItemListRelationFilter {
   every: ShopItemWhereInput
   some: ShopItemWhereInput
   none: ShopItemWhereInput
 }
 
 input ShopItemOrderByInput {
-  id: OrderByArg
-  createdAt: OrderByArg
-  name: OrderByArg
-  description: OrderByArg
-  price: OrderByArg
-  imageUrl: OrderByArg
-  shopId: OrderByArg
+  id: SortOrder
+  createdAt: SortOrder
+  name: SortOrder
+  description: SortOrder
+  price: SortOrder
+  imageUrl: SortOrder
+  shopId: SortOrder
 }
 
 input ShopItemWhereInput {
-  id: UUIDFilter
+  AND: [ShopItemWhereInput!]
+  OR: [ShopItemWhereInput!]
+  NOT: [ShopItemWhereInput!]
+  id: StringFilter
   createdAt: DateTimeFilter
   name: StringFilter
   description: StringFilter
   price: FloatFilter
   imageUrl: StringFilter
-  shopId: StringFilter
-  cartItemCounts: CartItemCountFilter
-  AND: [ShopItemWhereInput!]
-  OR: [ShopItemWhereInput!]
-  NOT: [ShopItemWhereInput!]
   shop: ShopWhereInput
+  shopId: StringFilter
+  cartItemCounts: CartItemCountListRelationFilter
+  refunds: RefundListRelationFilter
 }
 
 input ShopItemWhereUniqueInput {
@@ -372,25 +586,20 @@ input ShopItemWhereUniqueInput {
 }
 
 input ShopWhereInput {
-  id: UUIDFilter
-  email: StringFilter
-  username: StringFilter
-  password: StringFilter
-  shopItems: ShopItemFilter
   AND: [ShopWhereInput!]
   OR: [ShopWhereInput!]
   NOT: [ShopWhereInput!]
+  id: StringFilter
+  email: StringFilter
+  username: StringFilter
+  password: StringFilter
+  shopItems: ShopItemListRelationFilter
 }
 
 input ShopWhereUniqueInput {
   id: String
   email: String
   username: String
-}
-
-input SignInInput {
-  email: String!
-  password: String!
 }
 
 input SignUpInput {
@@ -402,9 +611,13 @@ input SignUpInput {
   dob: DateTime!
 }
 
+enum SortOrder {
+  asc
+  desc
+}
+
 input StringFilter {
   equals: String
-  not: String
   in: [String!]
   notIn: [String!]
   lt: String
@@ -414,6 +627,21 @@ input StringFilter {
   contains: String
   startsWith: String
   endsWith: String
+  not: NestedStringFilter
+}
+
+input StringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringNullableFilter
 }
 
 type User {
@@ -441,34 +669,20 @@ input UserCreateWithoutCartInput {
 }
 
 input UserWhereInput {
-  id: UUIDFilter
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+  id: StringFilter
   email: StringFilter
   username: StringFilter
   password: StringFilter
   dob: DateTimeFilter
-  stripe_cust_id: StringFilter
-  AND: [UserWhereInput!]
-  OR: [UserWhereInput!]
-  NOT: [UserWhereInput!]
   cart: CartWhereInput
+  stripe_cust_id: StringFilter
 }
 
 input UserWhereUniqueInput {
   id: String
   email: String
   username: String
-}
-
-input UUIDFilter {
-  equals: String
-  not: String
-  in: [String!]
-  notIn: [String!]
-  lt: String
-  lte: String
-  gt: String
-  gte: String
-  contains: String
-  startsWith: String
-  endsWith: String
 }

@@ -1,5 +1,5 @@
-import { resolvers } from './commonUtils';
 import 'reflect-metadata';
+import { resolvers } from './commonUtils';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env.dev.local' });
@@ -18,7 +18,7 @@ const stripe = new Stripe(process.env.STRIPE_KEY, {
 const app = admin.initializeApp({
   credential: admin.credential.cert('firebase-private-key.json'),
 });
-console.log('index.ts run');
+
 const startServer = async () => {
   const server = new ApolloServer({
     schema: await buildSchema({

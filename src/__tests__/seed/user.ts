@@ -10,12 +10,6 @@ export async function insertNewUser(prisma: PrismaClient) {
       dob: Faker.date.past(20),
       stripe_cust_id: Faker.random.uuid(),
       email: Faker.internet.email(),
-      cart: {
-        create: {},
-      },
-    },
-    include: {
-      cart: true,
     },
   });
 }

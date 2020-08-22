@@ -9,8 +9,8 @@
   "author": "Winson <winsonheng@hotmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@prisma/cli": "^2.3.0",
-    "@prisma/client": "^2.3.0",
+    "@prisma/cli": "^2.5.0",
+    "@prisma/client": "^2.5.0",
     "@types/bcrypt": "^3.0.0",
     "@types/chai": "^4.2.11",
     "@types/dotenv": "^6.1.1",
@@ -48,7 +48,7 @@
     "tsconfig-paths": "^3.9.0",
     "type-graphql": "^0.17.5",
     "typedi": "^0.8.0",
-    "typegraphql-prisma": "^0.4.0",
+    "typegraphql-prisma": "^0.4.2",
     "typescript": "^3.6.3"
   },
   "scripts": {
@@ -56,7 +56,7 @@
     "serve": "ts-node-dev -r tsconfig-paths/register -r esm ./src/index.ts",
     "build": "npx tsc",
     "start": "node -r ts-node/register -r tsconfig-paths/register dist/index.js",
-    "generateMigration": "prisma migrate save --experimental --name",
+    "generateMigration": "dotenv -e .env.test -- npx prisma migrate save --experimental --name",
     "migrateDev": "dotenv -e .env.dev.local -- npx prisma migrate up --experimental",
     "migrateTest": "dotenv -e .env.test -- npx prisma migrate up --experimental",
     "codegen": "prisma generate",

@@ -1,6 +1,6 @@
 import { InputType, Field } from 'type-graphql';
 @InputType()
-export class AddToCartInput {
+export class AddToOrderInput {
   @Field()
   item_id: string;
 
@@ -9,7 +9,7 @@ export class AddToCartInput {
 }
 
 @InputType()
-export class RemoveFromCartInput {
+export class RemoveFromOrderInput {
   @Field()
   item_id: string;
 
@@ -18,18 +18,18 @@ export class RemoveFromCartInput {
 }
 
 @InputType()
-export class FindMultiCartByUserIdInput {
+export class FindMultiOrderByUserIdInput {
   @Field()
   user_id: string;
 }
 
 @InputType()
-export class PayCurrentCartInput {
+export class PayCurrentOrderInput {
   @Field()
   user_id: string;
 
   @Field()
-  cart_id: string;
+  order_id: string;
 
   @Field()
   payment_method_id: string;

@@ -9,13 +9,10 @@ import Stripe from 'stripe';
 @Resolver((type) => User)
 export default class UserResolver {
   @Query(() => User)
-  async findUserById(@Arg('id') id: string, @Ctx() { prisma, auth }: Context) {
+  async findUserById(@Arg('id') id: string, @Ctx() { prisma }: Context) {
     return await prisma.user.findOne({
       where: {
         id,
-      },
-      include: {
-        cart: true,
       },
     });
   }
@@ -51,20 +48,6 @@ export default class UserResolver {
         username: displayName,
         dob,
         stripe_cust_id: cust.id,
-        cart: {
-          create: {
-            cartItemCounts: {
-              create: [],
-            },
-          },
-        },
-      },
-      include: {
-        cart: {
-          select: {
-            id: true,
-          },
-        },
       },
     });
   }

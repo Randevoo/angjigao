@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 // This file is here because importing index causes index to run. We use this
 // for typings and shared between test and actual initialization.
 import UserResolver from 'src/User/resolvers/resolvers';
-import CartResolver from 'src/Cart/resolvers/resolvers';
+import CartResolver from 'src/Order/resolvers/resolvers';
 import { UserRelationsResolver } from '~prisma/resolvers/relations/User/UserRelationsResolver';
 import { FindOneShopItemResolver } from '~prisma/resolvers/crud/ShopItem/FindOneShopItemResolver';
 import { ShopItemRelationsResolver } from '~prisma/resolvers/relations/ShopItem/ShopItemRelationsResolver';
