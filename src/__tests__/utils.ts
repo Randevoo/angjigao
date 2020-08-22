@@ -44,7 +44,7 @@ export async function createTestServer({ context = {} } = {}) {
 }
 
 export async function resetDb() {
-  const tableNames = ['Cart', 'CartItemCount', 'Shop', 'ShopItem', 'UserTable'];
+  const tableNames = ['Order', 'CartItemCount', 'Shop', 'ShopItem', 'UserTable', 'MultiOrder'];
   const tableNamesWithQuote = map(tableNames, (tableName) => `"${tableName}"`);
   const allTableNameString = join(tableNamesWithQuote, ', ');
   try {

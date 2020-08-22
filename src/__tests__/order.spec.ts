@@ -5,13 +5,13 @@ import { gql } from 'apollo-server';
 import { expect } from 'chai';
 import { insertNewUser, insertNewShop } from './seed/user';
 import { insertNewShoppingItem } from './seed/shoppingItem';
-import { insertNewCartItemCount } from './seed/cart';
+import { insertNewCartItemCount } from './seed/order';
 
 const removeFromOrderMutation = gql`
   mutation($itemId: String!, $buyerId: String!) {
     removeFromOrder(removeFromOrderInput: { item_id: $itemId, buyer_id: $buyerId }) {
       id
-      cartItemCounts {
+      cartItemCount {
         shopItem {
           id
         }
@@ -28,7 +28,7 @@ const addToOrderMutation = gql`
     addToOrder(addToOrderInput: { item_id: $itemId, buyer_id: $buyerId }) {
       id
       price
-      cartItemCounts {
+      cartItemCount {
         shopItem {
           id
         }
@@ -104,8 +104,7 @@ describe('Cart', () => {
           console.log(errors);
           expect(errors).to.be.undefined;
           const { removeFromOrder } = data;
-          expect(removeFromOrder.id).to.not.be.undefined;
-          expect(removeFromOrder.price).to.be.equal(0);
+          expect(removeFromOrder).to.be.null;
         });
       });
       describe('addToCart', () => {
@@ -120,8 +119,9 @@ describe('Cart', () => {
               buyerId: user.id,
             },
           });
-
+          console.log(errors);
           expect(errors).to.be.undefined;
+
           const { addToOrder } = data;
           expect(addToOrder).to.have.lengthOf(1);
           expect(addToOrder[0].id).to.not.be.undefined;

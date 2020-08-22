@@ -1,3 +1,5 @@
+import { MultiOrderRelationsResolver } from './../prisma/generated/type-graphql/resolvers/relations/MultiOrder/MultiOrderRelationsResolver';
+import { OrderRelationsResolver } from './../prisma/generated/type-graphql/resolvers/relations/Order/OrderRelationsResolver';
 import { PrismaClient } from '@prisma/client';
 import * as admin from 'firebase-admin';
 // This file is here because importing index causes index to run. We use this
@@ -10,16 +12,14 @@ import { ShopItemRelationsResolver } from '~prisma/resolvers/relations/ShopItem/
 import { FindManyShopItemResolver } from '~prisma/resolvers/crud/ShopItem/FindManyShopItemResolver';
 import { CreateShopResolver } from '~prisma/resolvers/crud/Shop/CreateShopResolver';
 import { CreateShopItemResolver } from '~prisma/resolvers/crud/ShopItem/CreateShopItemResolver';
-import { MultiCartRelationsResolver } from '~prisma/resolvers/relations/MultiCart/MultiCartRelationsResolver';
-import { CartRelationsResolver } from '~prisma/resolvers/relations/Cart/CartRelationsResolver';
 import { FindOneUserResolver } from '~prisma/resolvers/crud/User/FindOneUserResolver';
 import Stripe from 'stripe';
 
 export const resolvers = [
   CartResolver,
   FindOneUserResolver,
-  CartRelationsResolver,
-  MultiCartRelationsResolver,
+  OrderRelationsResolver,
+  MultiOrderRelationsResolver,
   CreateShopItemResolver,
   CreateShopResolver,
   FindManyShopItemResolver,
