@@ -14,6 +14,7 @@ import { CreateShopResolver } from '~prisma/resolvers/crud/Shop/CreateShopResolv
 import { CreateShopItemResolver } from '~prisma/resolvers/crud/ShopItem/CreateShopItemResolver';
 import { FindOneUserResolver } from '~prisma/resolvers/crud/User/FindOneUserResolver';
 import Stripe from 'stripe';
+import PaymentResolver from './Payments/resolvers/resolvers';
 
 export const resolvers = [
   CartResolver,
@@ -27,6 +28,7 @@ export const resolvers = [
   FindOneShopItemResolver,
   UserResolver,
   UserRelationsResolver,
+  PaymentResolver,
 ];
 
 export interface Context {

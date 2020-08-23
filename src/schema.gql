@@ -3,48 +3,14 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-input AddToCartInput {
+input AddToOrderInput {
   item_id: String!
   buyer_id: String!
 }
 
-type Cart {
-  id: String!
-  ownerId: String!
-  paymentIntentId: String
-  price: Float!
-  multiCartId: String
-  owner: User!
-  cartItemCounts(where: CartItemCountWhereInput, orderBy: [CartItemCountOrderByInput!], cursor: CartItemCountWhereUniqueInput, take: Int, skip: Int, distinct: [CartItemCountDistinctFieldEnum!]): [CartItemCount!]
-  MultiCart: MultiCart
-  PaymentCart: PaymentCart
-}
-
-input CartCreateOneWithoutCartItemCountsInput {
-  create: CartCreateWithoutCartItemCountsInput
-  connect: CartWhereUniqueInput
-}
-
-input CartCreateWithoutCartItemCountsInput {
-  id: String
-  paymentIntentId: String
-  price: Float
-  owner: UserCreateOneWithoutCartInput!
-  MultiCart: MultiCartCreateOneWithoutCartsInput
-  PaymentCart: PaymentCartCreateOneWithoutCartInput
-}
-
-enum CartDistinctFieldEnum {
-  id
-  ownerId
-  paymentIntentId
-  price
-  multiCartId
-}
-
 type CartItemCount {
   id: String!
-  cartId: String!
+  orderId: String!
   itemId: String!
   price: Float!
   count: Int!
@@ -62,12 +28,12 @@ input CartItemCountCreateWithoutShopItemInput {
   price: Float!
   count: Int!
   deletedAt: DateTime
-  cart: CartCreateOneWithoutCartItemCountsInput!
+  order: OrderCreateOneWithoutCartItemCountInput!
 }
 
 enum CartItemCountDistinctFieldEnum {
   id
-  cartId
+  orderId
   itemId
   price
   count
@@ -82,7 +48,7 @@ input CartItemCountListRelationFilter {
 
 input CartItemCountOrderByInput {
   id: SortOrder
-  cartId: SortOrder
+  orderId: SortOrder
   itemId: SortOrder
   price: SortOrder
   count: SortOrder
@@ -94,8 +60,8 @@ input CartItemCountWhereInput {
   OR: [CartItemCountWhereInput!]
   NOT: [CartItemCountWhereInput!]
   id: StringFilter
-  cartId: StringFilter
-  cart: CartWhereInput
+  orderId: StringFilter
+  order: OrderWhereInput
   itemId: StringFilter
   shopItem: ShopItemWhereInput
   price: FloatFilter
@@ -104,39 +70,6 @@ input CartItemCountWhereInput {
 }
 
 input CartItemCountWhereUniqueInput {
-  id: String
-}
-
-input CartListRelationFilter {
-  every: CartWhereInput
-  some: CartWhereInput
-  none: CartWhereInput
-}
-
-input CartOrderByInput {
-  id: SortOrder
-  ownerId: SortOrder
-  paymentIntentId: SortOrder
-  price: SortOrder
-  multiCartId: SortOrder
-}
-
-input CartWhereInput {
-  AND: [CartWhereInput!]
-  OR: [CartWhereInput!]
-  NOT: [CartWhereInput!]
-  id: StringFilter
-  ownerId: StringFilter
-  owner: UserWhereInput
-  paymentIntentId: StringNullableFilter
-  price: FloatFilter
-  cartItemCounts: CartItemCountListRelationFilter
-  MultiCart: MultiCartWhereInput
-  multiCartId: StringNullableFilter
-  PaymentCart: PaymentCartWhereInput
-}
-
-input CartWhereUniqueInput {
   id: String
 }
 
@@ -174,7 +107,7 @@ input EnumPaymentStatusFilter {
   not: NestedEnumPaymentStatusFilter
 }
 
-input FindMultiCartByUserIdInput {
+input FindMultiOrderByUserIdInput {
   user_id: String!
 }
 
@@ -189,6 +122,10 @@ input FloatFilter {
   not: NestedFloatFilter
 }
 
+input GetPaymentInfoInput {
+  stripe_cust_id: String!
+}
+
 input IntFilter {
   equals: Int
   in: [Int!]
@@ -200,43 +137,43 @@ input IntFilter {
   not: NestedIntFilter
 }
 
-type MultiCart {
+type MultiOrder {
   id: String!
   paymentIntentId: String
-  carts(where: CartWhereInput, orderBy: [CartOrderByInput!], cursor: CartWhereUniqueInput, take: Int, skip: Int, distinct: [CartDistinctFieldEnum!]): [Cart!]
-  PaymentMultiCart: PaymentMultiCart
+  orders(where: OrderWhereInput, orderBy: [OrderOrderByInput!], cursor: OrderWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDistinctFieldEnum!]): [Order!]
+  PaymentMultiOrder: PaymentMultiOrder
 }
 
-input MultiCartCreateOneWithoutCartsInput {
-  create: MultiCartCreateWithoutCartsInput
-  connect: MultiCartWhereUniqueInput
+input MultiOrderCreateOneWithoutOrdersInput {
+  create: MultiOrderCreateWithoutOrdersInput
+  connect: MultiOrderWhereUniqueInput
 }
 
-input MultiCartCreateWithoutCartsInput {
+input MultiOrderCreateWithoutOrdersInput {
   id: String
   paymentIntentId: String
-  PaymentMultiCart: PaymentMultiCartCreateOneWithoutMultiCartInput
+  PaymentMultiOrder: PaymentMultiOrderCreateOneWithoutMultiOrderInput
 }
 
-input MultiCartWhereInput {
-  AND: [MultiCartWhereInput!]
-  OR: [MultiCartWhereInput!]
-  NOT: [MultiCartWhereInput!]
+input MultiOrderWhereInput {
+  AND: [MultiOrderWhereInput!]
+  OR: [MultiOrderWhereInput!]
+  NOT: [MultiOrderWhereInput!]
   id: StringFilter
-  carts: CartListRelationFilter
+  orders: OrderListRelationFilter
   paymentIntentId: StringNullableFilter
-  PaymentMultiCart: PaymentMultiCartWhereInput
+  PaymentMultiOrder: PaymentMultiOrderWhereInput
 }
 
-input MultiCartWhereUniqueInput {
+input MultiOrderWhereUniqueInput {
   id: String
 }
 
 type Mutation {
   signUp(signUpInput: SignUpInput!): User!
-  payCurrentCart(payCurrentCartInput: PayCurrentCartInput!): Cart!
-  removeFromCart(removeFromCartInput: RemoveFromCartInput!): Cart!
-  addToCart(addToCartInput: AddToCartInput!): Cart!
+  payCurrentOrder(payCurrentOrderInput: PayCurrentOrderInput!): Order!
+  removeFromOrder(removeFromOrderInput: RemoveFromOrderInput!): Order
+  addToOrder(addToOrderInput: AddToOrderInput!): [Order!]!
   createShop(data: ShopCreateInput!): Shop!
   createShopItem(data: ShopItemCreateInput!): ShopItem!
 }
@@ -320,75 +257,156 @@ input NestedStringNullableFilter {
   not: NestedStringNullableFilter
 }
 
-input PayCurrentCartInput {
+type Order {
+  id: String!
+  ownerId: String!
+  paymentIntentId: String
+  price: Float!
+  multiOrderId: String
+  deletedAt: DateTime
+  owner: User!
+  cartItemCount: CartItemCount!
+  MultiOrder: MultiOrder
+  PaymentOrder: PaymentOrder
+}
+
+input OrderCreateOneWithoutCartItemCountInput {
+  create: OrderCreateWithoutCartItemCountInput
+  connect: OrderWhereUniqueInput
+}
+
+input OrderCreateWithoutCartItemCountInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+  owner: UserCreateOneWithoutOrdersInput!
+  MultiOrder: MultiOrderCreateOneWithoutOrdersInput
+  PaymentOrder: PaymentOrderCreateOneWithoutOrderInput
+}
+
+enum OrderDistinctFieldEnum {
+  id
+  ownerId
+  paymentIntentId
+  price
+  multiOrderId
+  deletedAt
+}
+
+input OrderListRelationFilter {
+  every: OrderWhereInput
+  some: OrderWhereInput
+  none: OrderWhereInput
+}
+
+input OrderOrderByInput {
+  id: SortOrder
+  ownerId: SortOrder
+  paymentIntentId: SortOrder
+  price: SortOrder
+  multiOrderId: SortOrder
+  deletedAt: SortOrder
+}
+
+input OrderWhereInput {
+  AND: [OrderWhereInput!]
+  OR: [OrderWhereInput!]
+  NOT: [OrderWhereInput!]
+  id: StringFilter
+  ownerId: StringFilter
+  owner: UserWhereInput
+  paymentIntentId: StringNullableFilter
+  price: FloatFilter
+  cartItemCount: CartItemCountWhereInput
+  MultiOrder: MultiOrderWhereInput
+  multiOrderId: StringNullableFilter
+  PaymentOrder: PaymentOrderWhereInput
+  deletedAt: DateTimeNullableFilter
+}
+
+input OrderWhereUniqueInput {
+  id: String
+}
+
+input PayCurrentOrderInput {
   user_id: String!
-  cart_id: String!
+  order_id: String!
   payment_method_id: String!
 }
 
-type PaymentCart {
+type PaymentMethod {
+  id: String!
+  billing_details: StripeCardBillingDetails!
+  card: StripeCard!
+  created: Float!
+  customer: String!
+  livemode: Boolean!
+}
+
+type PaymentMultiOrder {
   id: String!
   paymentStatus: PaymentStatus!
-  cartId: String!
+  multiOrderId: String!
   paymentIntentId: String!
 }
 
-input PaymentCartCreateOneWithoutCartInput {
-  create: PaymentCartCreateWithoutCartInput
-  connect: PaymentCartWhereUniqueInput
+input PaymentMultiOrderCreateOneWithoutMultiOrderInput {
+  create: PaymentMultiOrderCreateWithoutMultiOrderInput
+  connect: PaymentMultiOrderWhereUniqueInput
 }
 
-input PaymentCartCreateWithoutCartInput {
+input PaymentMultiOrderCreateWithoutMultiOrderInput {
   id: String
   paymentStatus: PaymentStatus
   paymentIntentId: String!
 }
 
-input PaymentCartWhereInput {
-  AND: [PaymentCartWhereInput!]
-  OR: [PaymentCartWhereInput!]
-  NOT: [PaymentCartWhereInput!]
+input PaymentMultiOrderWhereInput {
+  AND: [PaymentMultiOrderWhereInput!]
+  OR: [PaymentMultiOrderWhereInput!]
+  NOT: [PaymentMultiOrderWhereInput!]
   id: StringFilter
   paymentStatus: EnumPaymentStatusFilter
-  cartId: StringFilter
-  cart: CartWhereInput
+  multiOrderId: StringFilter
+  multiOrder: MultiOrderWhereInput
   paymentIntentId: StringFilter
 }
 
-input PaymentCartWhereUniqueInput {
+input PaymentMultiOrderWhereUniqueInput {
   id: String
 }
 
-type PaymentMultiCart {
+type PaymentOrder {
   id: String!
   paymentStatus: PaymentStatus!
-  multiCartId: String!
+  orderId: String!
   paymentIntentId: String!
 }
 
-input PaymentMultiCartCreateOneWithoutMultiCartInput {
-  create: PaymentMultiCartCreateWithoutMultiCartInput
-  connect: PaymentMultiCartWhereUniqueInput
+input PaymentOrderCreateOneWithoutOrderInput {
+  create: PaymentOrderCreateWithoutOrderInput
+  connect: PaymentOrderWhereUniqueInput
 }
 
-input PaymentMultiCartCreateWithoutMultiCartInput {
+input PaymentOrderCreateWithoutOrderInput {
   id: String
   paymentStatus: PaymentStatus
   paymentIntentId: String!
 }
 
-input PaymentMultiCartWhereInput {
-  AND: [PaymentMultiCartWhereInput!]
-  OR: [PaymentMultiCartWhereInput!]
-  NOT: [PaymentMultiCartWhereInput!]
+input PaymentOrderWhereInput {
+  AND: [PaymentOrderWhereInput!]
+  OR: [PaymentOrderWhereInput!]
+  NOT: [PaymentOrderWhereInput!]
   id: StringFilter
   paymentStatus: EnumPaymentStatusFilter
-  multiCartId: StringFilter
-  multiCart: MultiCartWhereInput
+  orderId: StringFilter
+  order: OrderWhereInput
   paymentIntentId: StringFilter
 }
 
-input PaymentMultiCartWhereUniqueInput {
+input PaymentOrderWhereUniqueInput {
   id: String
 }
 
@@ -401,11 +419,12 @@ enum PaymentStatus {
 
 type Query {
   findUserById(id: String!): User!
-  findMultiCartsByUserId(findMultiCartByUserIdInput: FindMultiCartByUserIdInput!): MultiCart!
-  findCartFromOwnerId(ownerId: String!): Cart!
+  findMultiCartsByUserId(findMultiCartByUserIdInput: FindMultiOrderByUserIdInput!): MultiOrder!
+  findOrdersFromOwnerId(ownerId: String!): [Order!]!
   shopItem(where: ShopItemWhereUniqueInput!): ShopItem
   shopItems(where: ShopItemWhereInput, orderBy: [ShopItemOrderByInput!], cursor: ShopItemWhereUniqueInput, take: Int, skip: Int, distinct: [ShopItemDistinctFieldEnum!]): [ShopItem!]!
   user(where: UserWhereUniqueInput!): User
+  getPaymentInfo(getPaymentInfoInput: GetPaymentInfoInput!): [PaymentMethod!]!
 }
 
 type Refund {
@@ -466,7 +485,7 @@ input RefundWhereUniqueInput {
   id: String
 }
 
-input RemoveFromCartInput {
+input RemoveFromOrderInput {
   item_id: String!
   buyer_id: String!
 }
@@ -644,6 +663,43 @@ input StringNullableFilter {
   not: NestedStringNullableFilter
 }
 
+type StripeCard {
+  brand: String!
+  country: String!
+  description: String!
+  exp_month: Float!
+  exp_year: Float!
+  fingerprint: String!
+  funding: String!
+  iin: String!
+  issuer: String!
+  last4: String!
+}
+
+type StripeCardBillingAddress {
+  city: String!
+  country: String!
+  line1: String!
+  line2: String!
+  postal_code: String!
+  state: String!
+}
+
+type StripeCardBillingDetails {
+  email: String!
+  name: String!
+  phone: String!
+}
+
+type StripeCardNetworks {
+  available: [String!]!
+  preferred: String!
+}
+
+type StripeCardThreeDSecureUsage {
+  supported: Boolean!
+}
+
 type User {
   id: String!
   email: String!
@@ -651,15 +707,15 @@ type User {
   password: String!
   dob: DateTime!
   stripe_cust_id: String!
-  cart: Cart!
+  orders(where: OrderWhereInput, orderBy: [OrderOrderByInput!], cursor: OrderWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDistinctFieldEnum!]): [Order!]
 }
 
-input UserCreateOneWithoutCartInput {
-  create: UserCreateWithoutCartInput
+input UserCreateOneWithoutOrdersInput {
+  create: UserCreateWithoutOrdersInput
   connect: UserWhereUniqueInput
 }
 
-input UserCreateWithoutCartInput {
+input UserCreateWithoutOrdersInput {
   id: String
   email: String!
   username: String!
@@ -677,7 +733,7 @@ input UserWhereInput {
   username: StringFilter
   password: StringFilter
   dob: DateTimeFilter
-  cart: CartWhereInput
+  orders: OrderListRelationFilter
   stripe_cust_id: StringFilter
 }
 
