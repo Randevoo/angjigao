@@ -1,11 +1,14 @@
 import { classToPlain, plainToClass } from 'class-transformer';
-import { Arg, Ctx, Mutation, Query } from 'type-graphql';
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 
+import { Order } from '~prisma/models';
 import { Context } from 'src/commonUtils';
+import { PayCurrentOrderInput } from 'src/Order/inputs';
 import { PaymentMethod } from 'src/Payments/models/PaymentMethod';
 
 import { AddPaymentInfoInput, GetPaymentInfoInput } from '../inputs';
 
+@Resolver()
 export default class PaymentResolver {
   @Query(() => [PaymentMethod])
   async getPaymentInfo(
@@ -41,5 +44,33 @@ export default class PaymentResolver {
     }
 
     return plainToClass(PaymentMethod, classToPlain(paymentMethod));
+  }
+
+  @Mutation(() => Order)
+  async payCurrentOrder(
+    @Arg('payCurrentOrderInput') input: PayCurrentOrderInput,
+    @Ctx() { prisma, stripe }: Context,
+  ): Promise<Order> {
+    const cart = await prisma.order.findOne({
+      where: {
+        id: input.order_id,
+      },
+    });
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: cart.price,
+      currency: 'SGD',
+      payment_method: input.payment_method_id,
+      capture_method: 'manual',
+    });
+
+    return await prisma.order.update({
+      where: {
+        id: input.order_id,
+      },
+      data: {
+        paymentIntentId: paymentIntent.id,
+      },
+    });
   }
 }

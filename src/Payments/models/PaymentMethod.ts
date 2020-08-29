@@ -34,7 +34,7 @@ class StripeCardThreeDSecureUsage implements Stripe.PaymentMethod.Card.ThreeDSec
 }
 @ObjectType()
 class StripeCardNetworks implements Stripe.PaymentMethod.Card.Networks {
-  @Field((type) => [String])
+  @Field(() => [String])
   available: string[];
   @Field()
   preferred: string;

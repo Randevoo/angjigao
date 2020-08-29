@@ -7,14 +7,9 @@ import { GraphQLError } from 'graphql';
 import { Context } from 'src/commonUtils';
 import { shopItemLoader } from 'src/dataloaders';
 
-import {
-  AddToOrderInput,
-  FindMultiOrderByUserIdInput,
-  PayCurrentOrderInput,
-  RemoveFromOrderInput,
-} from '../inputs';
+import { AddToOrderInput, FindMultiOrderByUserIdInput, RemoveFromOrderInput } from '../inputs';
 
-@Resolver((type) => MultiOrder)
+@Resolver(() => MultiOrder)
 export class MultiCartResolver {
   @Query(() => MultiOrder)
   async findMultiCartsByUserId(
@@ -57,34 +52,6 @@ export default class OrderResolver {
       },
       include: {
         cartItemCount: true,
-      },
-    });
-  }
-
-  @Mutation(() => Order)
-  async payCurrentOrder(
-    @Arg('payCurrentOrderInput') input: PayCurrentOrderInput,
-    @Ctx() { prisma, stripe }: Context,
-  ): Promise<Order> {
-    const cart = await prisma.order.findOne({
-      where: {
-        id: input.order_id,
-      },
-    });
-
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: cart.price,
-      currency: 'SGD',
-      payment_method: input.payment_method_id,
-      capture_method: 'manual',
-    });
-
-    return await prisma.order.update({
-      where: {
-        id: input.order_id,
-      },
-      data: {
-        paymentIntentId: paymentIntent.id,
       },
     });
   }
