@@ -21,6 +21,7 @@ module.exports = {
     browser: true,
     node: true,
   },
+  ignorePatterns: ['/prisma/generated'],
   rules: {
     'simple-import-sort/sort': [
       'error',
@@ -28,7 +29,7 @@ module.exports = {
         groups: [
           ['^\\u0000'],
           // Packages.
-          // Things that start with a letter (or digit or underscore), or `@` followed by a letter.
+          // Things that start with a letter (or digit or underscore), or `@` followed by a letter and not src
           ['^@?\\w(?=)[^\\bsrc\\b]'],
           // Absolute imports and other imports such as Vue-style `@/foo`.
           // Anything that does not start with a dot.

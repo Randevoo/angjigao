@@ -1,16 +1,18 @@
-import { Order, MultiOrder, CartItemCount, ShopItem } from '~prisma/models';
+import { find, isNil } from 'lodash';
+import moment from 'moment';
+import { Arg, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
+
+import { CartItemCount, MultiOrder, Order, ShopItem } from '~prisma/models';
+import { GraphQLError } from 'graphql';
+import { Context } from 'src/commonUtils';
+import { shopItemLoader } from 'src/dataloaders';
+
 import {
   AddToOrderInput,
-  RemoveFromOrderInput,
   FindMultiOrderByUserIdInput,
   PayCurrentOrderInput,
+  RemoveFromOrderInput,
 } from '../inputs';
-import { Context } from 'src/commonUtils';
-import { Resolver, Mutation, Ctx, Arg, Root, FieldResolver, Query } from 'type-graphql';
-import { isNil, find } from 'lodash';
-import { GraphQLError } from 'graphql';
-import { shopItemLoader } from 'src/dataloaders';
-import moment from 'moment';
 
 @Resolver((type) => MultiOrder)
 export class MultiCartResolver {
@@ -18,7 +20,7 @@ export class MultiCartResolver {
   async findMultiCartsByUserId(
     @Arg('findMultiCartByUserIdInput') args: FindMultiOrderByUserIdInput,
     @Ctx() { prisma }: Context,
-  ) {
+  ): Promise<Array<MultiOrder>> {
     return await prisma.multiOrder.findMany({
       where: {
         orders: {
@@ -31,10 +33,13 @@ export class MultiCartResolver {
   }
 }
 
-@Resolver((type) => CartItemCount)
+@Resolver(() => CartItemCount)
 export class CartItemCountResolver {
   @FieldResolver(() => ShopItem)
-  async shopItem(@Root() cartItemCount: CartItemCount, @Ctx() { prisma }: Context) {
+  async shopItem(
+    @Root() cartItemCount: CartItemCount,
+    @Ctx() { prisma }: Context,
+  ): Promise<ShopItem> {
     return await shopItemLoader(prisma).load(cartItemCount.itemId);
   }
 }
@@ -42,7 +47,10 @@ export class CartItemCountResolver {
 @Resolver(() => Order)
 export default class OrderResolver {
   @Query(() => [Order])
-  async findOrdersFromOwnerId(@Arg('ownerId') userId: string, @Ctx() { prisma }: Context) {
+  async findOrdersFromOwnerId(
+    @Arg('ownerId') userId: string,
+    @Ctx() { prisma }: Context,
+  ): Promise<Array<Order>> {
     return await prisma.order.findMany({
       where: {
         ownerId: userId,
@@ -57,12 +65,7 @@ export default class OrderResolver {
   async payCurrentOrder(
     @Arg('payCurrentOrderInput') input: PayCurrentOrderInput,
     @Ctx() { prisma, stripe }: Context,
-  ) {
-    const user = await prisma.user.findOne({
-      where: {
-        id: input.user_id,
-      },
-    });
+  ): Promise<Order> {
     const cart = await prisma.order.findOne({
       where: {
         id: input.order_id,
@@ -90,7 +93,7 @@ export default class OrderResolver {
   async removeFromOrder(
     @Arg('removeFromOrderInput') removeFromOrderInput: RemoveFromOrderInput,
     @Ctx() { prisma }: Context,
-  ) {
+  ): Promise<Order | null> {
     const cartItemCountArr = await prisma.cartItemCount.findMany({
       where: {
         AND: [
@@ -155,7 +158,7 @@ export default class OrderResolver {
   async addToOrder(
     @Arg('addToOrderInput') addToCartInput: AddToOrderInput,
     @Ctx() { prisma }: Context,
-  ) {
+  ): Promise<Array<Order>> {
     const item = await prisma.shopItem.findOne({
       where: {
         id: addToCartInput.item_id,

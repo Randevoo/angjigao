@@ -1,15 +1,17 @@
-import { Context } from 'src/commonUtils';
-import { SignUpInput } from './../inputs';
-import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
-import { User } from '~prisma/models/User';
 import { ApolloError } from 'apollo-server';
-import { hashSync } from 'bcrypt';
 import Stripe from 'stripe';
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 
-@Resolver((type) => User)
+import { User } from '~prisma/models/User';
+import { hashSync } from 'bcrypt';
+import { Context } from 'src/commonUtils';
+
+import { SignUpInput } from './../inputs';
+
+@Resolver(() => User)
 export default class UserResolver {
   @Query(() => User)
-  async findUserById(@Arg('id') id: string, @Ctx() { prisma }: Context) {
+  async findUserById(@Arg('id') id: string, @Ctx() { prisma }: Context): Promise<User> {
     return await prisma.user.findOne({
       where: {
         id,
@@ -17,7 +19,10 @@ export default class UserResolver {
     });
   }
   @Mutation(() => User)
-  async signUp(@Arg('signUpInput') args: SignUpInput, @Ctx() { prisma, auth, stripe }: Context) {
+  async signUp(
+    @Arg('signUpInput') args: SignUpInput,
+    @Ctx() { prisma, auth, stripe }: Context,
+  ): Promise<User> {
     const { email, password, displayName, firstName, lastName, dob } = args;
     let userId;
     try {
