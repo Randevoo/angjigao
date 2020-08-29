@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { ObjectType, Field } from 'type-graphql';
+import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
 class StripeCardBillingAddress implements Stripe.Address {
@@ -18,6 +18,7 @@ class StripeCardBillingAddress implements Stripe.Address {
 }
 @ObjectType()
 class StripeCardBillingDetails implements Stripe.PaymentMethod.BillingDetails {
+  @Field()
   address: StripeCardBillingAddress;
   @Field()
   email: string;
@@ -26,6 +27,19 @@ class StripeCardBillingDetails implements Stripe.PaymentMethod.BillingDetails {
   @Field()
   phone: string;
 }
+@ObjectType()
+class StripeCardThreeDSecureUsage implements Stripe.PaymentMethod.Card.ThreeDSecureUsage {
+  @Field()
+  supported: boolean;
+}
+@ObjectType()
+class StripeCardNetworks implements Stripe.PaymentMethod.Card.Networks {
+  @Field((type) => [String])
+  available: string[];
+  @Field()
+  preferred: string;
+}
+
 @ObjectType()
 class StripeCard implements Stripe.PaymentMethod.Card {
   @Field()
@@ -49,24 +63,13 @@ class StripeCard implements Stripe.PaymentMethod.Card {
   issuer?: string;
   @Field()
   last4: string;
-
+  @Field()
   networks: StripeCardNetworks;
+  @Field()
   three_d_secure_usage: StripeCardThreeDSecureUsage;
 
   // Not used
   wallet: Stripe.PaymentMethod.Card.Wallet;
-}
-@ObjectType()
-class StripeCardNetworks implements Stripe.PaymentMethod.Card.Networks {
-  @Field((type) => [String])
-  available: string[];
-  @Field()
-  preferred: string;
-}
-@ObjectType()
-class StripeCardThreeDSecureUsage implements Stripe.PaymentMethod.Card.ThreeDSecureUsage {
-  @Field()
-  supported: boolean;
 }
 
 @ObjectType()

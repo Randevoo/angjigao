@@ -1,14 +1,18 @@
 import 'reflect-metadata';
-import { resolvers } from './commonUtils';
-import Stripe from 'stripe';
+
+import { ApolloServer } from 'apollo-server';
 import dotenv from 'dotenv';
-dotenv.config({ path: './.env.dev.local' });
+import * as admin from 'firebase-admin';
 import { isNil } from 'lodash';
 import * as path from 'path';
+import Stripe from 'stripe';
 import { buildSchema } from 'type-graphql';
-import { ApolloServer } from 'apollo-server';
+
 import { PrismaClient } from '@prisma/client';
-import * as admin from 'firebase-admin';
+
+import { resolvers } from './commonUtils';
+
+dotenv.config({ path: './.env.dev.local' });
 
 const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_KEY, {

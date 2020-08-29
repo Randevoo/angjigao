@@ -3,6 +3,12 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input AddPaymentInfoInput {
+  stripe_cust_id: String!
+  token: String!
+  default: Boolean
+}
+
 input AddToOrderInput {
   item_id: String!
   buyer_id: String!
@@ -176,6 +182,7 @@ type Mutation {
   addToOrder(addToOrderInput: AddToOrderInput!): [Order!]!
   createShop(data: ShopCreateInput!): Shop!
   createShopItem(data: ShopItemCreateInput!): ShopItem!
+  addPaymentInfo(addPaymentInfoInput: AddPaymentInfoInput!): PaymentMethod!
 }
 
 input NestedDateTimeFilter {
@@ -674,6 +681,8 @@ type StripeCard {
   iin: String!
   issuer: String!
   last4: String!
+  networks: StripeCardNetworks!
+  three_d_secure_usage: StripeCardThreeDSecureUsage!
 }
 
 type StripeCardBillingAddress {
@@ -686,6 +695,7 @@ type StripeCardBillingAddress {
 }
 
 type StripeCardBillingDetails {
+  address: StripeCardBillingAddress!
   email: String!
   name: String!
   phone: String!

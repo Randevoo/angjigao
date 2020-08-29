@@ -1,7 +1,8 @@
 module.exports = {
-  plugins: ['@typescript-eslint', 'prettier'],
+  root: true,
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'prettier', 'simple-import-sort'],
   extends: [
-    'airbnb-typescript/base',
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
     'prettier',
@@ -21,14 +22,21 @@ module.exports = {
     node: true,
   },
   rules: {
-    'sort-imports': [
+    'simple-import-sort/sort': [
       'error',
       {
-        ignoreCase: false,
-        ignoreDeclarationSort: false,
-        ignoreMemberSort: false,
-        memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
-        allowSeparatedGroups: false,
+        groups: [
+          ['^\\u0000'],
+          // Packages.
+          // Things that start with a letter (or digit or underscore), or `@` followed by a letter.
+          ['^@?\\w(?=)[^\\bsrc\\b]'],
+          // Absolute imports and other imports such as Vue-style `@/foo`.
+          // Anything that does not start with a dot.
+          ['^[^.]'],
+          // Relative imports.
+          // Anything that starts with a dot.
+          ['^\\.'],
+        ],
       },
     ],
   },
