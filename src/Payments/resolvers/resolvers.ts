@@ -6,7 +6,7 @@ import { Context } from 'src/commonUtils';
 import { PayCurrentOrderInput } from 'src/Order/inputs';
 import { PaymentMethod } from 'src/Payments/models/PaymentMethod';
 
-import { AddPaymentInfoInput, GetPaymentInfoInput } from '../inputs';
+import { AddPaymentInfoInput, DeletePaymentInfoInput, GetPaymentInfoInput } from '../inputs';
 
 @Resolver()
 export default class PaymentResolver {
@@ -43,6 +43,16 @@ export default class PaymentResolver {
       });
     }
 
+    return plainToClass(PaymentMethod, classToPlain(paymentMethod));
+  }
+
+  @Mutation(() => PaymentMethod)
+  async deletePaymentInfo(
+    @Arg('deletePaymentInfoInput') args: DeletePaymentInfoInput,
+    @Ctx() { stripe }: Context,
+  ): Promise<PaymentMethod> {
+    console.log(args.paymentMethodId);
+    const paymentMethod = await stripe.paymentMethods.detach(args.paymentMethodId);
     return plainToClass(PaymentMethod, classToPlain(paymentMethod));
   }
 

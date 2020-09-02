@@ -14,3 +14,9 @@ export class AddPaymentInfoInput {
   @Field({ nullable: true })
   default?: boolean;
 }
+
+@InputType()
+export class DeletePaymentInfoInput {
+  @Field()
+  paymentMethodId: string;
+}
