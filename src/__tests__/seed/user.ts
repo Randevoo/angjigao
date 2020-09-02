@@ -1,20 +1,24 @@
-import { PrismaClient } from '@prisma/client';
-
 import Faker from 'faker';
 
-export async function insertNewUser(prisma: PrismaClient) {
+import { PrismaClient } from '@prisma/client';
+import { Shop, User } from '~prisma/models';
+
+export async function insertNewUser(
+  prisma: PrismaClient,
+  stripe_cust_id: string = Faker.random.uuid(),
+): Promise<User> {
   return await prisma.user.create({
     data: {
       username: Faker.internet.userName('test', 'ting'),
       password: Faker.internet.password(),
       dob: Faker.date.past(20),
-      stripe_cust_id: Faker.random.uuid(),
+      stripe_cust_id,
       email: Faker.internet.email(),
     },
   });
 }
 
-export async function insertNewShop(prisma: PrismaClient) {
+export async function insertNewShop(prisma: PrismaClient): Promise<Shop> {
   return await prisma.shop.create({
     data: {
       username: Faker.internet.userName('test', 'ting'),

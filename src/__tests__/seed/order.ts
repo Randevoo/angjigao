@@ -1,4 +1,5 @@
-import { PrismaClient, CartItemCount, User, ShopItem } from '@prisma/client';
+import { PrismaClient, ShopItem } from '@prisma/client';
+import { CartItemCount } from '~prisma/models';
 
 interface CartItemCountArgs {
   ownerId: string;
@@ -6,7 +7,10 @@ interface CartItemCountArgs {
   shopItem: ShopItem;
 }
 
-export async function insertNewCartItemCount(prisma: PrismaClient, args: CartItemCountArgs) {
+export async function insertNewCartItemCount(
+  prisma: PrismaClient,
+  args: CartItemCountArgs,
+): Promise<CartItemCount> {
   const { ownerId, count, shopItem } = args;
   const itemCount = await prisma.cartItemCount.create({
     data: {

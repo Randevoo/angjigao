@@ -1,12 +1,13 @@
-import admin from 'firebase-admin';
-import { PrismaClient } from '@prisma/client';
-import { createTestClient, ApolloServerTestClient } from 'apollo-server-testing';
-import { createTestServer, resetDb } from './utils';
 import { gql } from 'apollo-server';
+import { ApolloServerTestClient, createTestClient } from 'apollo-server-testing';
 import { expect } from 'chai';
-import { insertNewUser } from './seed/user';
-import Stripe from 'stripe';
+import admin from 'firebase-admin';
 import moment from 'moment';
+
+import { PrismaClient } from '@prisma/client';
+
+import { insertNewUser } from './seed/user';
+import { createTestServer, resetDb } from './utils';
 
 const signUpUserMutation = gql`
   mutation signUpUser(
@@ -43,13 +44,11 @@ const findUserByIdQuery = gql`
 describe('User', () => {
   let client: ApolloServerTestClient;
   let db: PrismaClient;
-  let stripeClient: Stripe;
   let fbAuth: admin.auth.Auth;
   before(async () => {
-    const { server, prisma, stripe, auth } = await createTestServer();
+    const { server, prisma, auth } = await createTestServer();
     client = createTestClient(server);
     db = prisma;
-    stripeClient = stripe;
     fbAuth = auth;
   });
 

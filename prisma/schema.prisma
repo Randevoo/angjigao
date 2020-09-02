@@ -7,8 +7,8 @@ datasource db {
 }
 
 generator client {
-  provider             = "prisma-client-js"
-  experimentalFeatures = ["aggregateApi"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["aggregateApi"]
 }
 
 generator typegraphql {
@@ -31,7 +31,19 @@ model User {
   dob            DateTime
   orders         Order[]
   stripe_cust_id String   @default("")
+  address        Address  @relation(fields: [addressId], references: [id])
   @@map("UserTable")
+  addressId String
+}
+
+model Address {
+  id     String @default(uuid()) @id
+  city   String
+  line1  String
+  line2  String
+  postal String
+  state  String
+  User   User
 }
 
 model Shop {

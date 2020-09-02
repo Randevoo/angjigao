@@ -1,11 +1,13 @@
-import { PrismaClient } from '@prisma/client';
-import { createTestClient, ApolloServerTestClient } from 'apollo-server-testing';
-import { createTestServer, resetDb } from './utils';
 import { gql } from 'apollo-server';
+import { ApolloServerTestClient, createTestClient } from 'apollo-server-testing';
 import { expect } from 'chai';
-import { insertNewUser, insertNewShop } from './seed/user';
-import { insertNewShoppingItem } from './seed/shoppingItem';
+
+import { PrismaClient } from '@prisma/client';
+
 import { insertNewCartItemCount } from './seed/order';
+import { insertNewShoppingItem } from './seed/shoppingItem';
+import { insertNewShop, insertNewUser } from './seed/user';
+import { createTestServer, resetDb } from './utils';
 
 const removeFromOrderMutation = gql`
   mutation($itemId: String!, $buyerId: String!) {

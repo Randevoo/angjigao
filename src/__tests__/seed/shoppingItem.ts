@@ -1,5 +1,7 @@
-import { PrismaClient, Shop } from '@prisma/client';
 import Faker from 'faker';
+
+import { PrismaClient, Shop } from '@prisma/client';
+import { ShopItem } from '~prisma/models';
 
 interface ShoppingItemFactoryArgs {
   name?: string;
@@ -13,8 +15,8 @@ interface ShoppingItemFactoryArgs {
 export async function insertNewShoppingItem(
   prisma: PrismaClient,
   seedArgs: ShoppingItemFactoryArgs,
-) {
-  const { name, price, description, image_url, shop, categories } = seedArgs;
+): Promise<ShopItem> {
+  const { name, price, description, image_url, shop } = seedArgs;
   return await prisma.shopItem.create({
     data: {
       name: name ?? Faker.commerce.productName(),
