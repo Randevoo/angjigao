@@ -3,10 +3,60 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input AddAddressInput {
+  city: String!
+  state: String!
+  line1: String!
+  line2: String!
+  postal: String!
+}
+
 input AddPaymentInfoInput {
   stripe_cust_id: String!
   token: String!
   default: Boolean
+}
+
+type Address {
+  id: String!
+  city: String!
+  line1: String!
+  line2: String!
+  postal: String!
+  state: String!
+  userId: String!
+}
+
+input AddressCreateOneWithoutUserInput {
+  create: AddressCreateWithoutUserInput
+  connect: AddressWhereUniqueInput
+}
+
+input AddressCreateWithoutUserInput {
+  id: String
+  city: String!
+  line1: String!
+  line2: String!
+  postal: String!
+  state: String!
+}
+
+input AddressWhereInput {
+  AND: [AddressWhereInput!]
+  OR: [AddressWhereInput!]
+  NOT: [AddressWhereInput!]
+  id: StringFilter
+  city: StringFilter
+  line1: StringFilter
+  line2: StringFilter
+  postal: StringFilter
+  state: StringFilter
+  userId: StringFilter
+  user: UserWhereInput
+}
+
+input AddressWhereUniqueInput {
+  id: String
 }
 
 input AddToOrderInput {
@@ -188,6 +238,7 @@ type Mutation {
   deletePaymentInfo(deletePaymentInfoInput: DeletePaymentInfoInput!): PaymentMethod!
   payCurrentOrder(payCurrentOrderInput: PayCurrentOrderInput!): Order!
   signUp(signUpInput: SignUpInput!): User!
+  addAddress(addAddressInput: AddAddressInput!): User!
 }
 
 input NestedDateTimeFilter {
@@ -723,6 +774,7 @@ type User {
   dob: DateTime!
   stripe_cust_id: String!
   orders(where: OrderWhereInput, orderBy: [OrderOrderByInput!], cursor: OrderWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDistinctFieldEnum!]): [Order!]
+  address: Address
 }
 
 input UserCreateOneWithoutOrdersInput {
@@ -737,6 +789,7 @@ input UserCreateWithoutOrdersInput {
   password: String!
   dob: DateTime!
   stripe_cust_id: String
+  address: AddressCreateOneWithoutUserInput
 }
 
 input UserWhereInput {
@@ -750,6 +803,7 @@ input UserWhereInput {
   dob: DateTimeFilter
   orders: OrderListRelationFilter
   stripe_cust_id: StringFilter
+  address: AddressWhereInput
 }
 
 input UserWhereUniqueInput {

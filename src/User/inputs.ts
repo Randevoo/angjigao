@@ -20,21 +20,3 @@ export class SignUpInput {
   @Field()
   dob: Date;
 }
-
-@InputType()
-export class AddAddressInput {
-  @Field()
-  city: string;
-
-  @Field()
-  state: string;
-
-  @Field()
-  line1: string;
-
-  @Field()
-  line2: string;
-
-  @Field()
-  postal: string;
-}

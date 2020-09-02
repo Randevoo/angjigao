@@ -13,6 +13,7 @@ import { ShopItemRelationsResolver } from '~prisma/resolvers/relations/ShopItem/
 import { UserRelationsResolver } from '~prisma/resolvers/relations/User/UserRelationsResolver';
 import CartResolver from 'src/Order/resolvers/resolvers';
 import PaymentResolver from 'src/Payments/resolvers/resolvers';
+import AddressResolver from 'src/User/Address/resolvers/resolvers';
 import UserResolver from 'src/User/resolvers/resolvers';
 
 // This file is here because importing index causes index to run. We use this
@@ -31,6 +32,7 @@ export const resolvers = [
   UserResolver,
   UserRelationsResolver,
   PaymentResolver,
+  AddressResolver,
 ];
 
 export interface Context {

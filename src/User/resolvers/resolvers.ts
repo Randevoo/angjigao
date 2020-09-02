@@ -6,7 +6,7 @@ import { User } from '~prisma/models/User';
 import { hashSync } from 'bcrypt';
 import { Context } from 'src/commonUtils';
 
-import { AddAddressInput, SignUpInput } from './../inputs';
+import { SignUpInput } from '../inputs';
 
 @Resolver(() => User)
 export default class UserResolver {
@@ -53,25 +53,6 @@ export default class UserResolver {
         username: displayName,
         dob,
         stripe_cust_id: cust.id,
-      },
-    });
-  }
-
-  @Mutation(() => User)
-  async addAddress(
-    @Arg('addAddressInput') args: AddAddressInput,
-    @Ctx() { prisma, user }: Context,
-  ): Promise<User> {
-    return await prisma.user.update({
-      where: {
-        id: user.uid,
-      },
-      data: {
-        address: {
-          create: {
-            ...args,
-          },
-        },
       },
     });
   }
