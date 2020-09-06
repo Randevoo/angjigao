@@ -1,12 +1,21 @@
-import { Arg, Ctx, Mutation, Resolver } from 'type-graphql';
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 
 import { Address } from '~prisma/models';
 import { Context } from 'src/commonUtils';
 
-import { AddAddressInput } from '../inputs';
+import { AddAddressInput, DeleteAddressInput } from '../inputs';
 
 @Resolver(() => Address)
 export default class AddressResolver {
+  @Query(() => [Address])
+  async getAddresses(@Ctx() { prisma, user }: Context): Promise<Array<Address>> {
+    return prisma.address.findMany({
+      where: {
+        userId: user.uid,
+      },
+    });
+  }
+
   @Mutation(() => [Address])
   async addAddress(
     @Arg('addAddressInput') args: AddAddressInput,
@@ -27,6 +36,18 @@ export default class AddressResolver {
     return prisma.address.findMany({
       where: {
         userId: user.uid,
+      },
+    });
+  }
+
+  @Mutation(() => Address)
+  async removeAddress(
+    @Arg('addAddressInput') args: DeleteAddressInput,
+    @Ctx() { prisma }: Context,
+  ): Promise<Address> {
+    return prisma.address.delete({
+      where: {
+        id: args.id,
       },
     });
   }

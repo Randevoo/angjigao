@@ -2,6 +2,9 @@ import { Field, InputType } from 'type-graphql';
 @InputType()
 export class AddAddressInput {
   @Field()
+  country: string;
+
+  @Field()
   city: string;
 
   @Field()
@@ -14,5 +17,14 @@ export class AddAddressInput {
   line2: string;
 
   @Field()
-  postal: string;
+  postal_code: string;
+
+  @Field()
+  default: boolean;
+}
+
+@InputType()
+export class DeleteAddressInput {
+  @Field()
+  id: string;
 }

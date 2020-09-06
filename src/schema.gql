@@ -4,11 +4,13 @@
 # -----------------------------------------------
 
 input AddAddressInput {
+  country: String!
   city: String!
   state: String!
   line1: String!
   line2: String!
-  postal: String!
+  postal_code: String!
+  default: Boolean!
 }
 
 input AddPaymentInfoInput {
@@ -19,26 +21,60 @@ input AddPaymentInfoInput {
 
 type Address {
   id: String!
+  country: String!
   city: String!
+  state: String!
   line1: String!
   line2: String!
-  postal: String!
-  state: String!
+  postal_code: String!
   userId: String!
+  default: Boolean!
 }
 
-input AddressCreateOneWithoutUserInput {
-  create: AddressCreateWithoutUserInput
-  connect: AddressWhereUniqueInput
+input AddressCreateManyWithoutUserInput {
+  create: [AddressCreateWithoutUserInput!]
+  connect: [AddressWhereUniqueInput!]
 }
 
 input AddressCreateWithoutUserInput {
   id: String
+  country: String!
   city: String!
+  state: String!
   line1: String!
   line2: String!
-  postal: String!
-  state: String!
+  postal_code: String!
+  default: Boolean
+}
+
+enum AddressDistinctFieldEnum {
+  id
+  country
+  city
+  state
+  line1
+  line2
+  postal_code
+  userId
+  default
+}
+
+input AddressListRelationFilter {
+  every: AddressWhereInput
+  some: AddressWhereInput
+  none: AddressWhereInput
+}
+
+input AddressOrderByInput {
+  id: SortOrder
+  country: SortOrder
+  city: SortOrder
+  state: SortOrder
+  line1: SortOrder
+  line2: SortOrder
+  postal_code: SortOrder
+  userId: SortOrder
+  default: SortOrder
 }
 
 input AddressWhereInput {
@@ -46,13 +82,15 @@ input AddressWhereInput {
   OR: [AddressWhereInput!]
   NOT: [AddressWhereInput!]
   id: StringFilter
+  country: StringFilter
   city: StringFilter
+  state: StringFilter
   line1: StringFilter
   line2: StringFilter
-  postal: StringFilter
-  state: StringFilter
+  postal_code: StringFilter
   userId: StringFilter
   user: UserWhereInput
+  default: BoolFilter
 }
 
 input AddressWhereUniqueInput {
@@ -62,6 +100,11 @@ input AddressWhereUniqueInput {
 input AddToOrderInput {
   item_id: String!
   buyer_id: String!
+}
+
+input BoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
 }
 
 type CartItemCount {
@@ -156,6 +199,10 @@ input DateTimeNullableFilter {
   not: NestedDateTimeNullableFilter
 }
 
+input DeleteAddressInput {
+  id: String!
+}
+
 input DeletePaymentInfoInput {
   paymentMethodId: String!
 }
@@ -237,8 +284,14 @@ type Mutation {
   addPaymentInfo(addPaymentInfoInput: AddPaymentInfoInput!): PaymentMethod!
   deletePaymentInfo(deletePaymentInfoInput: DeletePaymentInfoInput!): PaymentMethod!
   payCurrentOrder(payCurrentOrderInput: PayCurrentOrderInput!): Order!
+  addAddress(addAddressInput: AddAddressInput!): [Address!]!
+  removeAddress(addAddressInput: DeleteAddressInput!): Address!
   signUp(signUpInput: SignUpInput!): User!
-  addAddress(addAddressInput: AddAddressInput!): User!
+}
+
+input NestedBoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
 }
 
 input NestedDateTimeFilter {
@@ -487,6 +540,7 @@ type Query {
   findMultiCartsByUserId(findMultiCartByUserIdInput: FindMultiOrderByUserIdInput!): MultiOrder!
   findOrdersFromOwnerId(ownerId: String!): [Order!]!
   getPaymentInfo(getPaymentInfoInput: GetPaymentInfoInput!): [PaymentMethod!]!
+  getAddresses: [Address!]!
   findUserById(id: String!): User!
 }
 
@@ -774,7 +828,7 @@ type User {
   dob: DateTime!
   stripe_cust_id: String!
   orders(where: OrderWhereInput, orderBy: [OrderOrderByInput!], cursor: OrderWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDistinctFieldEnum!]): [Order!]
-  address: Address
+  addresses(where: AddressWhereInput, orderBy: [AddressOrderByInput!], cursor: AddressWhereUniqueInput, take: Int, skip: Int, distinct: [AddressDistinctFieldEnum!]): [Address!]
 }
 
 input UserCreateOneWithoutOrdersInput {
@@ -789,7 +843,7 @@ input UserCreateWithoutOrdersInput {
   password: String!
   dob: DateTime!
   stripe_cust_id: String
-  address: AddressCreateOneWithoutUserInput
+  addresses: AddressCreateManyWithoutUserInput
 }
 
 input UserWhereInput {
@@ -803,7 +857,7 @@ input UserWhereInput {
   dob: DateTimeFilter
   orders: OrderListRelationFilter
   stripe_cust_id: StringFilter
-  address: AddressWhereInput
+  addresses: AddressListRelationFilter
 }
 
 input UserWhereUniqueInput {
