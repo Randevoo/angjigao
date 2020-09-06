@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 
 import { Address } from '~prisma/models';
@@ -21,18 +22,26 @@ export default class AddressResolver {
     @Arg('addAddressInput') args: AddAddressInput,
     @Ctx() { prisma, user }: Context,
   ): Promise<Array<Address>> {
-    await prisma.user.update({
-      where: {
-        id: user.uid,
-      },
+    const address = await prisma.address.create({
       data: {
-        addresses: {
-          create: {
-            ...args,
+        ...omit(args, 'default'),
+        user: {
+          connect: {
+            id: user.uid,
           },
         },
       },
     });
+    if (args.default) {
+      await prisma.user.update({
+        where: {
+          id: user.uid,
+        },
+        data: {
+          defaultAddressId: address.id,
+        },
+      });
+    }
     return prisma.address.findMany({
       where: {
         userId: user.uid,
