@@ -1,20 +1,28 @@
-import { omit } from 'lodash';
+import { map, omit } from 'lodash';
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 
 import { Address } from '~prisma/models';
 import { Context } from 'src/commonUtils';
+import AddressWithDefault from 'src/User/Address/models/AddressWithDefault';
 
 import { AddAddressInput, DeleteAddressInput } from '../inputs';
 
 @Resolver(() => Address)
 export default class AddressResolver {
-  @Query(() => [Address])
-  async getAddresses(@Ctx() { prisma, user }: Context): Promise<Array<Address>> {
-    return prisma.address.findMany({
+  @Query(() => [AddressWithDefault])
+  async getAddresses(@Ctx() { prisma, user }: Context): Promise<Array<AddressWithDefault>> {
+    const addresses = await prisma.address.findMany({
       where: {
         userId: user.uid,
       },
+      include: {
+        user: true,
+      },
     });
+    return map(addresses, (address) => ({
+      ...omit(address, ['user']),
+      default: address.user.defaultAddressId === address.id,
+    }));
   }
 
   @Mutation(() => [Address])
