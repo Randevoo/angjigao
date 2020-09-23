@@ -11,7 +11,7 @@ import { MultiOrderRelationsResolver } from '~prisma/resolvers/relations/MultiOr
 import { OrderRelationsResolver } from '~prisma/resolvers/relations/Order/OrderRelationsResolver';
 import { ShopItemRelationsResolver } from '~prisma/resolvers/relations/ShopItem/ShopItemRelationsResolver';
 import { UserRelationsResolver } from '~prisma/resolvers/relations/User/UserRelationsResolver';
-import CartResolver from 'src/Order/resolvers/resolvers';
+import OrderResolver from 'src/OrderFlow/Order/resolvers/resolvers';
 import PaymentResolver from 'src/Payments/resolvers/resolvers';
 import AddressResolver from 'src/User/Address/resolvers/resolvers';
 import UserResolver from 'src/User/resolvers/resolvers';
@@ -20,7 +20,7 @@ import UserResolver from 'src/User/resolvers/resolvers';
 // for typings and shared between test and actual initialization.
 
 export const resolvers = [
-  CartResolver,
+  OrderResolver,
   FindOneUserResolver,
   OrderRelationsResolver,
   MultiOrderRelationsResolver,
@@ -33,6 +33,7 @@ export const resolvers = [
   UserRelationsResolver,
   PaymentResolver,
   AddressResolver,
+  OrderResolver,
 ];
 
 export interface Context {

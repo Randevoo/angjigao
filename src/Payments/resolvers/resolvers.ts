@@ -3,7 +3,7 @@ import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 
 import { Order } from '~prisma/models';
 import { Context } from 'src/commonUtils';
-import { PayCurrentOrderInput } from 'src/Order/inputs';
+import { PayCurrentOrderInput } from 'src/OrderFlow/Order/inputs';
 import { PaymentMethod } from 'src/Payments/models/PaymentMethod';
 
 import { AddPaymentInfoInput, DeletePaymentInfoInput, GetPaymentInfoInput } from '../inputs';

@@ -109,71 +109,6 @@ input AddToOrderInput {
   buyer_id: String!
 }
 
-type CartItemCount {
-  id: String!
-  orderId: String!
-  itemId: String!
-  price: Float!
-  count: Int!
-  deletedAt: DateTime
-  shopItem: ShopItem!
-}
-
-input CartItemCountCreateManyWithoutShopItemInput {
-  create: [CartItemCountCreateWithoutShopItemInput!]
-  connect: [CartItemCountWhereUniqueInput!]
-}
-
-input CartItemCountCreateWithoutShopItemInput {
-  id: String
-  price: Float!
-  count: Int!
-  deletedAt: DateTime
-  order: OrderCreateOneWithoutCartItemCountInput!
-}
-
-enum CartItemCountDistinctFieldEnum {
-  id
-  orderId
-  itemId
-  price
-  count
-  deletedAt
-}
-
-input CartItemCountListRelationFilter {
-  every: CartItemCountWhereInput
-  some: CartItemCountWhereInput
-  none: CartItemCountWhereInput
-}
-
-input CartItemCountOrderByInput {
-  id: SortOrder
-  orderId: SortOrder
-  itemId: SortOrder
-  price: SortOrder
-  count: SortOrder
-  deletedAt: SortOrder
-}
-
-input CartItemCountWhereInput {
-  AND: [CartItemCountWhereInput!]
-  OR: [CartItemCountWhereInput!]
-  NOT: [CartItemCountWhereInput!]
-  id: StringFilter
-  orderId: StringFilter
-  order: OrderWhereInput
-  itemId: StringFilter
-  shopItem: ShopItemWhereInput
-  price: FloatFilter
-  count: IntFilter
-  deletedAt: DateTimeNullableFilter
-}
-
-input CartItemCountWhereUniqueInput {
-  id: String
-}
-
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
@@ -379,17 +314,17 @@ type Order {
   multiOrderId: String
   deletedAt: DateTime
   owner: User!
-  cartItemCount: CartItemCount!
+  orderItemCount: OrderItemCount!
   MultiOrder: MultiOrder
   PaymentOrder: PaymentOrder
 }
 
-input OrderCreateOneWithoutCartItemCountInput {
-  create: OrderCreateWithoutCartItemCountInput
+input OrderCreateOneWithoutOrderItemCountInput {
+  create: OrderCreateWithoutOrderItemCountInput
   connect: OrderWhereUniqueInput
 }
 
-input OrderCreateWithoutCartItemCountInput {
+input OrderCreateWithoutOrderItemCountInput {
   id: String
   paymentIntentId: String
   price: Float
@@ -406,6 +341,71 @@ enum OrderDistinctFieldEnum {
   price
   multiOrderId
   deletedAt
+}
+
+type OrderItemCount {
+  id: String!
+  orderId: String!
+  itemId: String!
+  price: Float!
+  count: Int!
+  deletedAt: DateTime
+  shopItem: ShopItem!
+}
+
+input OrderItemCountCreateManyWithoutShopItemInput {
+  create: [OrderItemCountCreateWithoutShopItemInput!]
+  connect: [OrderItemCountWhereUniqueInput!]
+}
+
+input OrderItemCountCreateWithoutShopItemInput {
+  id: String
+  price: Float!
+  count: Int!
+  deletedAt: DateTime
+  order: OrderCreateOneWithoutOrderItemCountInput!
+}
+
+enum OrderItemCountDistinctFieldEnum {
+  id
+  orderId
+  itemId
+  price
+  count
+  deletedAt
+}
+
+input OrderItemCountListRelationFilter {
+  every: OrderItemCountWhereInput
+  some: OrderItemCountWhereInput
+  none: OrderItemCountWhereInput
+}
+
+input OrderItemCountOrderByInput {
+  id: SortOrder
+  orderId: SortOrder
+  itemId: SortOrder
+  price: SortOrder
+  count: SortOrder
+  deletedAt: SortOrder
+}
+
+input OrderItemCountWhereInput {
+  AND: [OrderItemCountWhereInput!]
+  OR: [OrderItemCountWhereInput!]
+  NOT: [OrderItemCountWhereInput!]
+  id: StringFilter
+  orderId: StringFilter
+  order: OrderWhereInput
+  itemId: StringFilter
+  shopItem: ShopItemWhereInput
+  price: FloatFilter
+  count: IntFilter
+  deletedAt: DateTimeNullableFilter
+}
+
+input OrderItemCountWhereUniqueInput {
+  id: String
 }
 
 input OrderListRelationFilter {
@@ -432,7 +432,7 @@ input OrderWhereInput {
   owner: UserWhereInput
   paymentIntentId: StringNullableFilter
   price: FloatFilter
-  cartItemCount: CartItemCountWhereInput
+  orderItemCount: OrderItemCountWhereInput
   MultiOrder: MultiOrderWhereInput
   multiOrderId: StringNullableFilter
   PaymentOrder: PaymentOrderWhereInput
@@ -641,7 +641,7 @@ type ShopItem {
   imageUrl: String!
   shopId: String!
   shop: Shop!
-  cartItemCounts(where: CartItemCountWhereInput, orderBy: [CartItemCountOrderByInput!], cursor: CartItemCountWhereUniqueInput, take: Int, skip: Int, distinct: [CartItemCountDistinctFieldEnum!]): [CartItemCount!]
+  orderItemCounts(where: OrderItemCountWhereInput, orderBy: [OrderItemCountOrderByInput!], cursor: OrderItemCountWhereUniqueInput, take: Int, skip: Int, distinct: [OrderItemCountDistinctFieldEnum!]): [OrderItemCount!]
   refunds(where: RefundWhereInput, orderBy: [RefundOrderByInput!], cursor: RefundWhereUniqueInput, take: Int, skip: Int, distinct: [RefundDistinctFieldEnum!]): [Refund!]
 }
 
@@ -653,7 +653,7 @@ input ShopItemCreateInput {
   price: Float!
   imageUrl: String!
   shop: ShopCreateOneWithoutShopItemsInput!
-  cartItemCounts: CartItemCountCreateManyWithoutShopItemInput
+  orderItemCounts: OrderItemCountCreateManyWithoutShopItemInput
   refunds: RefundCreateManyWithoutShopItemInput
 }
 
@@ -669,7 +669,7 @@ input ShopItemCreateWithoutShopInput {
   description: String!
   price: Float!
   imageUrl: String!
-  cartItemCounts: CartItemCountCreateManyWithoutShopItemInput
+  orderItemCounts: OrderItemCountCreateManyWithoutShopItemInput
   refunds: RefundCreateManyWithoutShopItemInput
 }
 
@@ -711,7 +711,7 @@ input ShopItemWhereInput {
   imageUrl: StringFilter
   shop: ShopWhereInput
   shopId: StringFilter
-  cartItemCounts: CartItemCountListRelationFilter
+  orderItemCounts: OrderItemCountListRelationFilter
   refunds: RefundListRelationFilter
 }
 
