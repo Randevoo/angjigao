@@ -12,7 +12,7 @@ import { OrderRelationsResolver } from '~prisma/resolvers/relations/Order/OrderR
 import { ShopItemRelationsResolver } from '~prisma/resolvers/relations/ShopItem/ShopItemRelationsResolver';
 import { UserRelationsResolver } from '~prisma/resolvers/relations/User/UserRelationsResolver';
 import OrderResolver from 'src/OrderFlow/Order/resolvers/resolvers';
-import PaymentResolver from 'src/Payments/resolvers/resolvers';
+import PaymentInfoResolver from 'src/PaymentsInfo/resolvers/resolvers';
 import AddressResolver from 'src/User/Address/resolvers/resolvers';
 import UserResolver from 'src/User/resolvers/resolvers';
 
@@ -31,7 +31,7 @@ export const resolvers = [
   FindOneShopItemResolver,
   UserResolver,
   UserRelationsResolver,
-  PaymentResolver,
+  PaymentInfoResolver,
   AddressResolver,
   OrderResolver,
 ];
