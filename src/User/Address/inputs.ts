@@ -28,3 +28,9 @@ export class DeleteAddressInput {
   @Field()
   id: string;
 }
+
+@InputType()
+export class UpdateDefaultAddressInput {
+  @Field()
+  id: string;
+}

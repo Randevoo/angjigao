@@ -6,6 +6,7 @@ import { Context } from 'src/commonUtils';
 import AddressWithDefault from 'src/User/Address/models/AddressWithDefault';
 
 import { AddAddressInput, DeleteAddressInput } from '../inputs';
+import { UpdateDefaultAddressInput } from './../inputs';
 
 @Resolver(() => Address)
 export default class AddressResolver {
@@ -55,6 +56,27 @@ export default class AddressResolver {
         userId: user.uid,
       },
     });
+  }
+
+  @Mutation(() => Address)
+  async updateDefaultAddress(
+    @Arg('updateDefaultAddressInput') args: UpdateDefaultAddressInput,
+    @Ctx() { prisma, user }: Context,
+  ): Promise<Address> {
+    const newDefaultAddr = await prisma.address.findOne({
+      where: {
+        id: args.id,
+      },
+    });
+    await prisma.user.update({
+      where: {
+        id: user.uid,
+      },
+      data: {
+        defaultAddressId: args.id,
+      },
+    });
+    return newDefaultAddr;
   }
 
   @Mutation(() => Address)

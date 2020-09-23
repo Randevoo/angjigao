@@ -21,6 +21,7 @@ export default class PaymentResolver {
         type: 'card',
       })
     ).data;
+
     return paymentMethods.map((paymentMethod) => {
       const json = classToPlain(paymentMethod);
       return plainToClass(PaymentMethod, json);

@@ -60,7 +60,7 @@ describe('addPaymentInfoResolver', () => {
     await db.$disconnect();
     console.log('db disconnected');
   });
-  it('should be able to find a valid user with a given id', async () => {
+  it('should be able to find valid payment infos with a given id', async () => {
     const { data, errors } = await client.query({
       query: getPaymentInfoQuery,
       variables: {
@@ -69,6 +69,6 @@ describe('addPaymentInfoResolver', () => {
     });
     expect(errors).to.be.undefined;
     const { getPaymentInfo } = data;
-    expect(getPaymentInfo.id).to.not.be.undefined;
+    expect(getPaymentInfo[0].id).to.not.be.undefined;
   });
 });

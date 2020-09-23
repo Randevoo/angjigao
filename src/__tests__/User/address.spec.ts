@@ -43,6 +43,14 @@ const removeAddressMutation = gql`
   }
 `;
 
+const updateDefaultAddressMutation = gql`
+  mutation updateDefaultAddress($id: String!) {
+    updateDefaultAddress(updateDefaultAddressInput: { id: $id }) {
+      id
+    }
+  }
+`;
+
 describe('User', () => {
   let client: ApolloServerTestClient;
   let db: PrismaClient;
@@ -64,8 +72,29 @@ describe('User', () => {
 
   describe('Resolvers', () => {
     describe('Mutation', () => {
+      describe('updateDefaultAddress', () => {
+        it('should be able update default address of user', async () => {
+          await insertNewAddress(db, user.id, true);
+          const addrToBeDefaulted = await insertNewAddress(db, user.id, false);
+          const { data, errors } = await client.mutate({
+            mutation: updateDefaultAddressMutation,
+            variables: {
+              id: addrToBeDefaulted.id,
+            },
+          });
+          expect(errors).to.be.undefined;
+          const { updateDefaultAddress } = data;
+          expect(updateDefaultAddress.id).to.be.equal(addrToBeDefaulted.id);
+          const removedAddrUser = await db.user.findOne({
+            where: {
+              id: user.id,
+            },
+          });
+          expect(removedAddrUser.defaultAddressId).to.be.equal(addrToBeDefaulted.id);
+        });
+      });
       describe('removeAddress', () => {
-        it.only('should be able to remove default address from user', async () => {
+        it('should be able to remove default address from user', async () => {
           const addrToBeRemoved = await insertNewAddress(db, user.id, true);
           const { data, errors } = await client.mutate({
             mutation: removeAddressMutation,
