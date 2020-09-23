@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import { PrismaClient } from '@prisma/client';
 
-import { insertNewCartItemCount } from './seed/order';
+import { insertNewOrderItemCount } from './seed/order';
 import { insertNewShoppingItem } from './seed/shoppingItem';
 import { insertNewShop, insertNewUser } from './seed/user';
 import { createTestServer, resetDb } from './utils';
@@ -13,7 +13,7 @@ const removeFromOrderMutation = gql`
   mutation($itemId: String!, $buyerId: String!) {
     removeFromOrder(removeFromOrderInput: { item_id: $itemId, buyer_id: $buyerId }) {
       id
-      cartItemCount {
+      orderItemCount {
         shopItem {
           id
         }
@@ -30,7 +30,7 @@ const addToOrderMutation = gql`
     addToOrder(addToOrderInput: { item_id: $itemId, buyer_id: $buyerId }) {
       id
       price
-      cartItemCount {
+      orderItemCount {
         shopItem {
           id
         }
@@ -60,12 +60,12 @@ describe('Cart', () => {
 
   describe('Resolvers', () => {
     describe('Mutations', () => {
-      describe('removeFromCart', () => {
-        it('should be able to remove from cart of an already existing item', async () => {
+      describe('removeFromOrder', () => {
+        it('should be able to remove from order of an already existing item', async () => {
           const user = await insertNewUser(db);
           const shop = await insertNewShop(db);
           const shopItem = await insertNewShoppingItem(db, { shop });
-          await insertNewCartItemCount(db, {
+          await insertNewOrderItemCount(db, {
             shopItem,
             count: 2,
             ownerId: user.id,
@@ -82,15 +82,15 @@ describe('Cart', () => {
           const { removeFromOrder } = data;
           expect(removeFromOrder.id).to.not.be.undefined;
           expect(removeFromOrder.price).to.be.equal(shopItem.price);
-          expect(removeFromOrder.cartItemCount.shopItem.id).to.be.equal(shopItem.id);
-          expect(removeFromOrder.cartItemCount.count).to.be.equal(1);
-          expect(removeFromOrder.cartItemCount.price).to.be.equal(shopItem.price);
+          expect(removeFromOrder.orderItemCount.shopItem.id).to.be.equal(shopItem.id);
+          expect(removeFromOrder.orderItemCount.count).to.be.equal(1);
+          expect(removeFromOrder.orderItemCount.price).to.be.equal(shopItem.price);
         });
         it('should be able to remove from order from an item which only has count of one', async () => {
           const user = await insertNewUser(db);
           const shop = await insertNewShop(db);
           const shopItem = await insertNewShoppingItem(db, { shop });
-          await insertNewCartItemCount(db, {
+          await insertNewOrderItemCount(db, {
             shopItem,
             count: 1,
             ownerId: user.id,
@@ -109,7 +109,7 @@ describe('Cart', () => {
           expect(removeFromOrder).to.be.null;
         });
       });
-      describe('addToCart', () => {
+      describe('addToOrder', () => {
         it('should be able to add to order for a user', async () => {
           const user = await insertNewUser(db);
           const shop = await insertNewShop(db);
@@ -128,10 +128,10 @@ describe('Cart', () => {
           expect(addToOrder).to.have.lengthOf(1);
           expect(addToOrder[0].id).to.not.be.undefined;
           expect(addToOrder[0].price).to.be.equal(item.price);
-          expect(addToOrder[0].cartItemCount).to.not.be.undefined;
-          expect(addToOrder[0].cartItemCount.shopItem.id).to.be.equal(item.id);
-          expect(addToOrder[0].cartItemCount.count).to.be.equal(1);
-          expect(addToOrder[0].cartItemCount.price).to.be.equal(item.price);
+          expect(addToOrder[0].orderItemCount).to.not.be.undefined;
+          expect(addToOrder[0].orderItemCount.shopItem.id).to.be.equal(item.id);
+          expect(addToOrder[0].orderItemCount.count).to.be.equal(1);
+          expect(addToOrder[0].orderItemCount.price).to.be.equal(item.price);
         });
 
         it('should be able to add to cart for a user who already has an existing item in order', async () => {
@@ -140,7 +140,7 @@ describe('Cart', () => {
           const firstItem = await insertNewShoppingItem(db, { shop });
           const secondItem = await insertNewShoppingItem(db, { shop });
 
-          await insertNewCartItemCount(db, {
+          await insertNewOrderItemCount(db, {
             shopItem: firstItem,
             count: 1,
             ownerId: user.id,
@@ -164,7 +164,7 @@ describe('Cart', () => {
           const shop = await insertNewShop(db);
           const shopItem = await insertNewShoppingItem(db, { shop });
 
-          await insertNewCartItemCount(db, {
+          await insertNewOrderItemCount(db, {
             shopItem,
             count: 1,
             ownerId: user.id,
@@ -183,9 +183,9 @@ describe('Cart', () => {
 
           expect(errors).to.be.undefined;
           expect(addToOrder).to.have.lengthOf(1);
-          expect(addToOrder[0].cartItemCount.shopItem.id).to.be.equal(shopItem.id);
-          expect(addToOrder[0].cartItemCount.count).to.be.equal(2);
-          expect(addToOrder[0].cartItemCount.price).to.be.equal(2 * shopItem.price);
+          expect(addToOrder[0].orderItemCount.shopItem.id).to.be.equal(shopItem.id);
+          expect(addToOrder[0].orderItemCount.count).to.be.equal(2);
+          expect(addToOrder[0].orderItemCount.price).to.be.equal(2 * shopItem.price);
         });
       });
     });

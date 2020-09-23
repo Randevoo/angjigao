@@ -2,7 +2,7 @@ import { find, isNil } from 'lodash';
 import moment from 'moment';
 import { Arg, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
 
-import { CartItemCount, MultiOrder, Order, ShopItem } from '~prisma/models';
+import { MultiOrder, Order, OrderItemCount, ShopItem } from '~prisma/models';
 import { GraphQLError } from 'graphql';
 import { Context } from 'src/commonUtils';
 import { shopItemLoader } from 'src/dataloaders';
@@ -13,7 +13,7 @@ import { AddToOrderInput, FindMultiOrderByUserIdInput, RemoveFromOrderInput } fr
 export class MultiCartResolver {
   @Query(() => MultiOrder)
   async findMultiCartsByUserId(
-    @Arg('findMultiCartByUserIdInput') args: FindMultiOrderByUserIdInput,
+    @Arg('findMultiOrderByUserIdInput') args: FindMultiOrderByUserIdInput,
     @Ctx() { prisma }: Context,
   ): Promise<Array<MultiOrder>> {
     return await prisma.multiOrder.findMany({
@@ -28,14 +28,14 @@ export class MultiCartResolver {
   }
 }
 
-@Resolver(() => CartItemCount)
-export class CartItemCountResolver {
+@Resolver(() => OrderItemCount)
+export class OrderItemCountResolver {
   @FieldResolver(() => ShopItem)
   async shopItem(
-    @Root() cartItemCount: CartItemCount,
+    @Root() orderItemCount: OrderItemCount,
     @Ctx() { prisma }: Context,
   ): Promise<ShopItem> {
-    return await shopItemLoader(prisma).load(cartItemCount.itemId);
+    return await shopItemLoader(prisma).load(orderItemCount.itemId);
   }
 }
 
@@ -51,7 +51,7 @@ export default class OrderResolver {
         ownerId: userId,
       },
       include: {
-        cartItemCount: true,
+        orderItemCount: true,
       },
     });
   }
@@ -61,7 +61,7 @@ export default class OrderResolver {
     @Arg('removeFromOrderInput') removeFromOrderInput: RemoveFromOrderInput,
     @Ctx() { prisma }: Context,
   ): Promise<Order | null> {
-    const cartItemCountArr = await prisma.cartItemCount.findMany({
+    const orderItemCountArr = await prisma.orderItemCount.findMany({
       where: {
         AND: [
           { itemId: removeFromOrderInput.item_id },
@@ -73,14 +73,14 @@ export default class OrderResolver {
         order: true,
       },
     });
-    if (cartItemCountArr.length === 0) {
-      throw new GraphQLError('Item not found in cart');
+    if (orderItemCountArr.length === 0) {
+      throw new GraphQLError('Item not found in order');
     }
-    const cartItemCount = cartItemCountArr[0];
-    if (cartItemCount.count < 2) {
+    const orderItemCount = orderItemCountArr[0];
+    if (orderItemCount.count < 2) {
       await prisma.order.update({
         where: {
-          id: cartItemCount.orderId,
+          id: orderItemCount.orderId,
         },
         data: {
           deletedAt: moment().toDate(),
@@ -88,13 +88,13 @@ export default class OrderResolver {
       });
       return null;
     } else {
-      await prisma.cartItemCount.update({
+      await prisma.orderItemCount.update({
         where: {
-          id: cartItemCount.id,
+          id: orderItemCount.id,
         },
         data: {
-          count: cartItemCount.count - 1,
-          price: cartItemCount.price - cartItemCount.shopItem.price,
+          count: orderItemCount.count - 1,
+          price: orderItemCount.price - orderItemCount.shopItem.price,
         },
       });
     }
@@ -103,12 +103,12 @@ export default class OrderResolver {
         owner: {
           id: removeFromOrderInput.buyer_id,
         },
-        cartItemCount: {
+        orderItemCount: {
           itemId: removeFromOrderInput.item_id,
         },
       },
       include: {
-        cartItemCount: true,
+        orderItemCount: true,
       },
     });
     return await prisma.order.update({
@@ -116,7 +116,7 @@ export default class OrderResolver {
         id: order[0].id,
       },
       data: {
-        price: order[0].cartItemCount.price,
+        price: order[0].orderItemCount.price,
       },
     });
   }
@@ -141,7 +141,7 @@ export default class OrderResolver {
             deletedAt: null,
           },
           include: {
-            cartItemCount: {
+            orderItemCount: {
               include: {
                 shopItem: true,
               },
@@ -151,10 +151,10 @@ export default class OrderResolver {
       },
     });
 
-    const order = find(buyer.orders, (order) => order.cartItemCount.shopItem.id === item.id);
+    const order = find(buyer.orders, (order) => order.orderItemCount.shopItem.id === item.id);
 
     if (isNil(order)) {
-      await prisma.cartItemCount.create({
+      await prisma.orderItemCount.create({
         data: {
           count: 1,
           price: item.price,
@@ -176,13 +176,13 @@ export default class OrderResolver {
         },
       });
     } else {
-      await prisma.cartItemCount.update({
+      await prisma.orderItemCount.update({
         where: {
-          id: order.cartItemCount.id,
+          id: order.orderItemCount.id,
         },
         data: {
-          count: order.cartItemCount.count + 1,
-          price: order.cartItemCount.price + item.price,
+          count: order.orderItemCount.count + 1,
+          price: order.orderItemCount.price + item.price,
         },
       });
     }

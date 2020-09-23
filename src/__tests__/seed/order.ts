@@ -1,18 +1,18 @@
 import { PrismaClient, ShopItem } from '@prisma/client';
-import { CartItemCount } from '~prisma/models';
+import { OrderItemCount } from '~prisma/models';
 
-interface CartItemCountArgs {
+interface OrderItemCountArgs {
   ownerId: string;
   count?: number;
   shopItem: ShopItem;
 }
 
-export async function insertNewCartItemCount(
+export async function insertNewOrderItemCount(
   prisma: PrismaClient,
-  args: CartItemCountArgs,
-): Promise<CartItemCount> {
+  args: OrderItemCountArgs,
+): Promise<OrderItemCount> {
   const { ownerId, count, shopItem } = args;
-  const itemCount = await prisma.cartItemCount.create({
+  const itemCount = await prisma.orderItemCount.create({
     data: {
       count: count ?? 1,
       shopItem: {
