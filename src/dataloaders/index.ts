@@ -1,6 +1,7 @@
-import { PrismaClient } from '@prisma/client';
 import DataLoader from 'dataloader';
 import { keyBy, map } from 'lodash';
+
+import { PrismaClient } from '@prisma/client';
 
 export const shopItemLoader = (client: PrismaClient) =>
   new DataLoader(async (ids) => {

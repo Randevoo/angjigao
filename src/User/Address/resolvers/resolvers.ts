@@ -1,4 +1,4 @@
-import { map, omit } from 'lodash';
+import { head, map, omit } from 'lodash';
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 
 import { Address } from '~prisma/models';
@@ -60,12 +60,31 @@ export default class AddressResolver {
   @Mutation(() => Address)
   async removeAddress(
     @Arg('addAddressInput') args: DeleteAddressInput,
-    @Ctx() { prisma }: Context,
+    @Ctx() { prisma, user }: Context,
   ): Promise<Address> {
-    return prisma.address.delete({
+    const removedAddress = await prisma.address.delete({
       where: {
         id: args.id,
       },
     });
+    const userWithAddressDeleted = await prisma.user.findOne({
+      where: {
+        id: user.uid,
+      },
+      include: {
+        addresses: true,
+      },
+    });
+    if (args.id === userWithAddressDeleted.defaultAddressId) {
+      await prisma.user.update({
+        where: {
+          id: user.uid,
+        },
+        data: {
+          defaultAddressId: head(userWithAddressDeleted.addresses)?.id ?? null,
+        },
+      });
+    }
+    return removedAddress;
   }
 }

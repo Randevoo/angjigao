@@ -17,7 +17,7 @@ const getPaymentInfoQuery = gql`
   }
 `;
 
-describe.only('addPaymentInfoResolver', () => {
+describe('addPaymentInfoResolver', () => {
   let client: ApolloServerTestClient;
   let db: PrismaClient;
   let user: User;
@@ -57,7 +57,7 @@ describe.only('addPaymentInfoResolver', () => {
   });
 
   after(async () => {
-    await db.disconnect();
+    await db.$disconnect();
     console.log('db disconnected');
   });
   it('should be able to find a valid user with a given id', async () => {

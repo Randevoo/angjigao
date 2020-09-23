@@ -55,7 +55,7 @@ describe('Cart', () => {
   });
 
   after(async () => {
-    await db.disconnect();
+    await db.$disconnect();
   });
 
   describe('Resolvers', () => {

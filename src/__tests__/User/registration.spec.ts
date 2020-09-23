@@ -6,8 +6,8 @@ import moment from 'moment';
 
 import { PrismaClient } from '@prisma/client';
 
-import { insertNewUser } from './seed/user';
-import { createTestServer, resetDb } from './utils';
+import { insertNewUser } from '../seed/user';
+import { createTestServer, resetDb } from '../utils';
 
 const signUpUserMutation = gql`
   mutation signUpUser(
@@ -57,7 +57,7 @@ describe('User', () => {
   });
 
   after(async () => {
-    await db.disconnect();
+    await db.$disconnect();
     console.log('db disconnected');
   });
 

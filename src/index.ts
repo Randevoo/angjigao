@@ -37,7 +37,6 @@ const startServer = async () => {
       const token = req.headers.authorization || '';
       try {
         const user = await app.auth().verifyIdToken(token);
-        console.log(user);
         return { prisma, auth: app.auth(), user, stripe };
       } catch (e) {
         return { prisma, auth: app.auth(), stripe };
