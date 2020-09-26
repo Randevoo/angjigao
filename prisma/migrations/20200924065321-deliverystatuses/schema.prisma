@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -24,7 +24,6 @@ enum PaymentStatus {
 }
 
 enum DeliveryStatus {
-  TO_BE_STARTED
   PREPARING
   READY
   SHIPPED
@@ -97,6 +96,7 @@ model Order {
   ownerId         String
   owner           User           @relation(fields: [ownerId], references: [id])
   paymentIntentId String?
+  price           Float          @default(0)
   orderItemCount  OrderItemCount
   MultiOrder      MultiOrder?    @relation(fields: [multiOrderId], references: [id])
   multiOrderId    String?
@@ -110,6 +110,7 @@ model OrderItemCount {
   order     Order     @relation(fields: [orderId], references: [id])
   itemId    String
   shopItem  ShopItem  @relation(fields: [itemId], references: [id])
+  price     Float
   count     Int
   deletedAt DateTime?
 }

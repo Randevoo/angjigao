@@ -3,22 +3,22 @@ import { ApolloServerTestClient, createTestClient } from 'apollo-server-testing'
 import { expect } from 'chai';
 
 import { PrismaClient } from '@prisma/client';
+import { User } from '~prisma/models';
 
 import { insertNewOrderItemCount } from './seed/order';
-import { insertNewShoppingItem } from './seed/shoppingItem';
-import { insertNewShop, insertNewUser } from './seed/user';
-import { createTestServer, resetDb } from './utils';
+import { insertNewShopItem } from './seed/shopItem';
+import { insertNewShop } from './seed/user';
+import { createTestServerWithUser, resetDb } from './utils';
 
 const removeFromOrderMutation = gql`
-  mutation($itemId: String!, $buyerId: String!) {
-    removeFromOrder(removeFromOrderInput: { item_id: $itemId, buyer_id: $buyerId }) {
+  mutation($itemId: String!, $orderId: String!) {
+    removeFromOrder(removeFromOrderInput: { item_id: $itemId, order_id: $orderId }) {
       id
       orderItemCount {
         shopItem {
           id
         }
         count
-        price
       }
       price
     }
@@ -26,8 +26,8 @@ const removeFromOrderMutation = gql`
 `;
 
 const addToOrderMutation = gql`
-  mutation($itemId: String!, $buyerId: String!) {
-    addToOrder(addToOrderInput: { item_id: $itemId, buyer_id: $buyerId }) {
+  mutation($itemId: String!, $orderId: String) {
+    addToOrder(addToOrderInput: { item_id: $itemId, order_id: $orderId }) {
       id
       price
       orderItemCount {
@@ -35,19 +35,22 @@ const addToOrderMutation = gql`
           id
         }
         count
-        price
       }
+      price
     }
   }
 `;
 
-describe('Cart', () => {
+describe.only('Order', () => {
   let client: ApolloServerTestClient;
   let db: PrismaClient;
-  before(async () => {
-    const { server, prisma } = await createTestServer();
+  let user: User;
+
+  beforeEach(async () => {
+    const { server, prisma, testUser } = await createTestServerWithUser();
     client = createTestClient(server);
     db = prisma;
+    user = testUser;
   });
 
   afterEach(async () => {
@@ -62,10 +65,9 @@ describe('Cart', () => {
     describe('Mutations', () => {
       describe('removeFromOrder', () => {
         it('should be able to remove from order of an already existing item', async () => {
-          const user = await insertNewUser(db);
           const shop = await insertNewShop(db);
-          const shopItem = await insertNewShoppingItem(db, { shop });
-          await insertNewOrderItemCount(db, {
+          const shopItem = await insertNewShopItem(db, { shop });
+          const orderItemCount = await insertNewOrderItemCount(db, {
             shopItem,
             count: 2,
             ownerId: user.id,
@@ -75,22 +77,20 @@ describe('Cart', () => {
             mutation: removeFromOrderMutation,
             variables: {
               itemId: shopItem.id,
-              buyerId: user.id,
+              orderId: orderItemCount.orderId,
             },
           });
+
           expect(errors).to.be.undefined;
           const { removeFromOrder } = data;
           expect(removeFromOrder.id).to.not.be.undefined;
           expect(removeFromOrder.price).to.be.equal(shopItem.price);
           expect(removeFromOrder.orderItemCount.shopItem.id).to.be.equal(shopItem.id);
-          expect(removeFromOrder.orderItemCount.count).to.be.equal(1);
-          expect(removeFromOrder.orderItemCount.price).to.be.equal(shopItem.price);
         });
         it('should be able to remove from order from an item which only has count of one', async () => {
-          const user = await insertNewUser(db);
           const shop = await insertNewShop(db);
-          const shopItem = await insertNewShoppingItem(db, { shop });
-          await insertNewOrderItemCount(db, {
+          const shopItem = await insertNewShopItem(db, { shop });
+          const orderItemCount = await insertNewOrderItemCount(db, {
             shopItem,
             count: 1,
             ownerId: user.id,
@@ -100,10 +100,10 @@ describe('Cart', () => {
             mutation: removeFromOrderMutation,
             variables: {
               itemId: shopItem.id,
-              buyerId: user.id,
+              orderId: orderItemCount.orderId,
             },
           });
-          console.log(errors);
+
           expect(errors).to.be.undefined;
           const { removeFromOrder } = data;
           expect(removeFromOrder).to.be.null;
@@ -111,34 +111,29 @@ describe('Cart', () => {
       });
       describe('addToOrder', () => {
         it('should be able to add to order for a user', async () => {
-          const user = await insertNewUser(db);
           const shop = await insertNewShop(db);
-          const item = await insertNewShoppingItem(db, { shop });
+          const item = await insertNewShopItem(db, { shop });
           const { data, errors } = await client.mutate({
             mutation: addToOrderMutation,
             variables: {
               itemId: item.id,
-              buyerId: user.id,
             },
           });
           console.log(errors);
           expect(errors).to.be.undefined;
 
           const { addToOrder } = data;
-          expect(addToOrder).to.have.lengthOf(1);
-          expect(addToOrder[0].id).to.not.be.undefined;
-          expect(addToOrder[0].price).to.be.equal(item.price);
-          expect(addToOrder[0].orderItemCount).to.not.be.undefined;
-          expect(addToOrder[0].orderItemCount.shopItem.id).to.be.equal(item.id);
-          expect(addToOrder[0].orderItemCount.count).to.be.equal(1);
-          expect(addToOrder[0].orderItemCount.price).to.be.equal(item.price);
+          expect(addToOrder.id).to.not.be.undefined;
+          expect(addToOrder.price).to.be.equal(item.price);
+          expect(addToOrder.orderItemCount).to.not.be.undefined;
+          expect(addToOrder.orderItemCount.shopItem.id).to.be.equal(item.id);
+          expect(addToOrder.orderItemCount.count).to.be.equal(1);
         });
 
         it('should be able to add to cart for a user who already has an existing item in order', async () => {
-          const user = await insertNewUser(db);
           const shop = await insertNewShop(db);
-          const firstItem = await insertNewShoppingItem(db, { shop });
-          const secondItem = await insertNewShoppingItem(db, { shop });
+          const firstItem = await insertNewShopItem(db, { shop });
+          const secondItem = await insertNewShopItem(db, { shop });
 
           await insertNewOrderItemCount(db, {
             shopItem: firstItem,
@@ -150,21 +145,19 @@ describe('Cart', () => {
             mutation: addToOrderMutation,
             variables: {
               itemId: secondItem.id,
-              buyerId: user.id,
             },
           });
 
           expect(errors).to.be.undefined;
           const { addToOrder } = data;
-          expect(addToOrder).to.have.lengthOf(2);
+          expect(addToOrder.price).to.be.equal(secondItem.price);
         });
 
         it('should be able to add to cart for a user who already the same existing item in order', async () => {
-          const user = await insertNewUser(db);
           const shop = await insertNewShop(db);
-          const shopItem = await insertNewShoppingItem(db, { shop });
+          const shopItem = await insertNewShopItem(db, { shop });
 
-          await insertNewOrderItemCount(db, {
+          const orderItemCount = await insertNewOrderItemCount(db, {
             shopItem,
             count: 1,
             ownerId: user.id,
@@ -177,15 +170,14 @@ describe('Cart', () => {
             mutation: addToOrderMutation,
             variables: {
               itemId: shopItem.id,
-              buyerId: user.id,
+              orderId: orderItemCount.orderId,
             },
           });
 
           expect(errors).to.be.undefined;
-          expect(addToOrder).to.have.lengthOf(1);
-          expect(addToOrder[0].orderItemCount.shopItem.id).to.be.equal(shopItem.id);
-          expect(addToOrder[0].orderItemCount.count).to.be.equal(2);
-          expect(addToOrder[0].orderItemCount.price).to.be.equal(2 * shopItem.price);
+          expect(addToOrder.orderItemCount.shopItem.id).to.be.equal(shopItem.id);
+          expect(addToOrder.orderItemCount.count).to.be.equal(2);
+          expect(addToOrder.price).to.be.equal(2 * shopItem.price);
         });
       });
     });

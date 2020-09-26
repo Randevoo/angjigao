@@ -15,7 +15,9 @@
     "strictFunctionTypes": true,
     "baseUrl": "./",
     "paths": {
-      "~prisma/*": ["./prisma/generated/type-graphql/*"]
+      "~prisma/models": ["./prisma/generated/type-graphql/models"],
+      "~relations": ["./prisma/generated/type-graphql/resolvers/relations"],
+      "~crud": ["./prisma/generated/type-graphql/resolvers/crud"]
     }
   },
   "include": ["src", "babel.config.js"]

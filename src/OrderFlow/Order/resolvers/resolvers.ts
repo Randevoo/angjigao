@@ -1,26 +1,25 @@
-import { find, isNil } from 'lodash';
+import { isNil, map } from 'lodash';
 import moment from 'moment';
 import { Arg, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
 
-import { MultiOrder, Order, OrderItemCount, ShopItem } from '~prisma/models';
+import { MultiOrder, OrderItemCount, ShopItem } from '~prisma/models';
 import { GraphQLError } from 'graphql';
 import { Context } from 'src/commonUtils';
 import { shopItemLoader } from 'src/dataloaders';
+import { calculatePriceFromOrder } from 'src/OrderFlow/utils';
 
-import { AddToOrderInput, FindMultiOrderByUserIdInput, RemoveFromOrderInput } from '../inputs';
+import { AddToOrderInput, RemoveFromOrderInput } from '../inputs';
+import { OrderWithPrice } from './../models';
 
 @Resolver(() => MultiOrder)
 export class MultiCartResolver {
   @Query(() => MultiOrder)
-  async findMultiCartsByUserId(
-    @Arg('findMultiOrderByUserIdInput') args: FindMultiOrderByUserIdInput,
-    @Ctx() { prisma }: Context,
-  ): Promise<Array<MultiOrder>> {
+  async findMultiOrderByUserId(@Ctx() { prisma, user }: Context): Promise<Array<MultiOrder>> {
     return await prisma.multiOrder.findMany({
       where: {
         orders: {
           some: {
-            ownerId: args.user_id,
+            ownerId: user.uid,
           },
         },
       },
@@ -39,33 +38,38 @@ export class OrderItemCountResolver {
   }
 }
 
-@Resolver(() => Order)
+@Resolver(() => OrderWithPrice)
 export default class OrderResolver {
-  @Query(() => [Order])
-  async findOrdersFromOwnerId(
-    @Arg('ownerId') userId: string,
-    @Ctx() { prisma }: Context,
-  ): Promise<Array<Order>> {
-    return await prisma.order.findMany({
+  @Query(() => [OrderWithPrice])
+  async findOrdersFromOwnerId(@Ctx() { prisma, user }: Context): Promise<Array<OrderWithPrice>> {
+    const orders = await prisma.order.findMany({
       where: {
-        ownerId: userId,
+        ownerId: user.uid,
       },
       include: {
-        orderItemCount: true,
+        orderItemCount: {
+          include: {
+            shopItem: true,
+          },
+        },
       },
     });
+    return map(orders, (order) => ({
+      ...order,
+      price: calculatePriceFromOrder(order),
+    }));
   }
 
-  @Mutation(() => Order, { nullable: true })
+  @Mutation(() => OrderWithPrice, { nullable: true })
   async removeFromOrder(
     @Arg('removeFromOrderInput') removeFromOrderInput: RemoveFromOrderInput,
     @Ctx() { prisma }: Context,
-  ): Promise<Order | null> {
+  ): Promise<OrderWithPrice | null> {
     const orderItemCountArr = await prisma.orderItemCount.findMany({
       where: {
         AND: [
           { itemId: removeFromOrderInput.item_id },
-          { order: { ownerId: removeFromOrderInput.buyer_id, deletedAt: null } },
+          { order: { id: removeFromOrderInput.order_id, deletedAt: null } },
         ],
       },
       include: {
@@ -87,77 +91,49 @@ export default class OrderResolver {
         },
       });
       return null;
-    } else {
-      await prisma.orderItemCount.update({
-        where: {
-          id: orderItemCount.id,
-        },
-        data: {
-          count: orderItemCount.count - 1,
-          price: orderItemCount.price - orderItemCount.shopItem.price,
-        },
-      });
     }
-    const order = await prisma.order.findMany({
+    await prisma.orderItemCount.update({
       where: {
-        owner: {
-          id: removeFromOrderInput.buyer_id,
-        },
-        orderItemCount: {
-          itemId: removeFromOrderInput.item_id,
-        },
-      },
-      include: {
-        orderItemCount: true,
-      },
-    });
-    return await prisma.order.update({
-      where: {
-        id: order[0].id,
+        id: orderItemCount.id,
       },
       data: {
-        price: order[0].orderItemCount.price,
+        count: orderItemCount.count - 1,
       },
     });
-  }
-
-  @Mutation(() => [Order])
-  async addToOrder(
-    @Arg('addToOrderInput') addToCartInput: AddToOrderInput,
-    @Ctx() { prisma }: Context,
-  ): Promise<Array<Order>> {
-    const item = await prisma.shopItem.findOne({
+    const order = await prisma.order.findOne({
       where: {
-        id: addToCartInput.item_id,
-      },
-    });
-    const buyer = await prisma.user.findOne({
-      where: {
-        id: addToCartInput.buyer_id,
+        id: removeFromOrderInput.order_id,
       },
       include: {
-        orders: {
-          where: {
-            deletedAt: null,
-          },
+        orderItemCount: {
           include: {
-            orderItemCount: {
-              include: {
-                shopItem: true,
-              },
-            },
+            shopItem: true,
           },
         },
       },
     });
 
-    const order = find(buyer.orders, (order) => order.orderItemCount.shopItem.id === item.id);
+    return {
+      ...order,
+      price: calculatePriceFromOrder(order),
+    };
+  }
 
-    if (isNil(order)) {
-      await prisma.orderItemCount.create({
+  @Mutation(() => OrderWithPrice)
+  async addToOrder(
+    @Arg('addToOrderInput') addToOrderInput: AddToOrderInput,
+    @Ctx() { prisma, user }: Context,
+  ): Promise<OrderWithPrice> {
+    const item = await prisma.shopItem.findOne({
+      where: {
+        id: addToOrderInput.item_id,
+      },
+    });
+
+    if (isNil(addToOrderInput.order_id)) {
+      const orderItemCount = await prisma.orderItemCount.create({
         data: {
           count: 1,
-          price: item.price,
           shopItem: {
             connect: {
               id: item.id,
@@ -167,30 +143,62 @@ export default class OrderResolver {
             create: {
               owner: {
                 connect: {
-                  id: addToCartInput.buyer_id,
+                  id: user.uid,
                 },
               },
-              price: item.price,
             },
           },
         },
       });
+      const updatedOrder = await prisma.order.findOne({
+        where: {
+          id: orderItemCount.orderId,
+        },
+        include: {
+          orderItemCount: {
+            include: {
+              shopItem: true,
+            },
+          },
+        },
+      });
+      return {
+        ...updatedOrder,
+        price: calculatePriceFromOrder(updatedOrder),
+      };
     } else {
+      const order = await prisma.order.findOne({
+        where: {
+          id: addToOrderInput.order_id,
+        },
+        include: {
+          orderItemCount: true,
+        },
+      });
       await prisma.orderItemCount.update({
         where: {
           id: order.orderItemCount.id,
         },
         data: {
           count: order.orderItemCount.count + 1,
-          price: order.orderItemCount.price + item.price,
         },
       });
     }
-    return await prisma.order.findMany({
+    const updatedOrder = await prisma.order.findOne({
       where: {
-        ownerId: addToCartInput.buyer_id,
-        deletedAt: null,
+        id: addToOrderInput.order_id,
+      },
+      include: {
+        orderItemCount: {
+          include: {
+            shopItem: true,
+          },
+        },
       },
     });
+    return {
+      ...updatedOrder,
+      price: calculatePriceFromOrder(updatedOrder),
+    };
   }
 }

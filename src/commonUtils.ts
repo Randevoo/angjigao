@@ -2,16 +2,21 @@ import * as admin from 'firebase-admin';
 import Stripe from 'stripe';
 
 import { PrismaClient } from '@prisma/client';
-import { CreateShopResolver } from '~prisma/resolvers/crud/Shop/CreateShopResolver';
-import { CreateShopItemResolver } from '~prisma/resolvers/crud/ShopItem/CreateShopItemResolver';
-import { FindManyShopItemResolver } from '~prisma/resolvers/crud/ShopItem/FindManyShopItemResolver';
-import { FindOneShopItemResolver } from '~prisma/resolvers/crud/ShopItem/FindOneShopItemResolver';
-import { FindOneUserResolver } from '~prisma/resolvers/crud/User/FindOneUserResolver';
-import { MultiOrderRelationsResolver } from '~prisma/resolvers/relations/MultiOrder/MultiOrderRelationsResolver';
-import { OrderRelationsResolver } from '~prisma/resolvers/relations/Order/OrderRelationsResolver';
-import { ShopItemRelationsResolver } from '~prisma/resolvers/relations/ShopItem/ShopItemRelationsResolver';
-import { UserRelationsResolver } from '~prisma/resolvers/relations/User/UserRelationsResolver';
+import {
+  CreateShopItemResolver,
+  CreateShopResolver,
+  FindManyShopItemResolver,
+  FindOneShopItemResolver,
+  FindOneUserResolver,
+} from '~crud';
+import {
+  MultiOrderRelationsResolver,
+  OrderRelationsResolver,
+  ShopItemRelationsResolver,
+  UserRelationsResolver,
+} from '~relations';
 import OrderResolver from 'src/OrderFlow/Order/resolvers/resolvers';
+import PaymentResolver from 'src/OrderFlow/Payment/resolvers/resolvers';
 import PaymentInfoResolver from 'src/PaymentsInfo/resolvers/resolvers';
 import AddressResolver from 'src/User/Address/resolvers/resolvers';
 import UserResolver from 'src/User/resolvers/resolvers';
@@ -34,6 +39,7 @@ export const resolvers = [
   PaymentInfoResolver,
   AddressResolver,
   OrderResolver,
+  PaymentResolver,
 ];
 
 export interface Context {

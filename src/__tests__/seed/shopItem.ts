@@ -1,18 +1,18 @@
 import Faker from 'faker';
 
-import { PrismaClient, Shop } from '@prisma/client';
-import { ShopItem } from '~prisma/models';
+import { PrismaClient } from '@prisma/client';
+import { Shop, ShopItem } from '~prisma/models';
 
 interface ShoppingItemFactoryArgs {
   name?: string;
   price?: number;
   description?: string;
   image_url?: string;
-  shop?: Shop;
+  shop: Shop;
   categories?: string[];
 }
 
-export async function insertNewShoppingItem(
+export async function insertNewShopItem(
   prisma: PrismaClient,
   seedArgs: ShoppingItemFactoryArgs,
 ): Promise<ShopItem> {

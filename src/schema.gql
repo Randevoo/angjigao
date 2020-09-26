@@ -28,11 +28,61 @@ type Address {
   line2: String!
   postal_code: String!
   userId: String!
+  user: User!
+  OrderDeliveryStatus(where: OrderDeliveryStatusWhereInput, orderBy: [OrderDeliveryStatusOrderByInput!], cursor: OrderDeliveryStatusWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDeliveryStatusDistinctFieldEnum!]): [OrderDeliveryStatus!]
+  MultiOrderDeliveryStatus(where: MultiOrderDeliveryStatusWhereInput, orderBy: [MultiOrderDeliveryStatusOrderByInput!], cursor: MultiOrderDeliveryStatusWhereUniqueInput, take: Int, skip: Int, distinct: [MultiOrderDeliveryStatusDistinctFieldEnum!]): [MultiOrderDeliveryStatus!]
+}
+
+input AddressCreateInput {
+  id: String
+  country: String!
+  city: String!
+  state: String!
+  line1: String!
+  line2: String!
+  postal_code: String!
+  user: UserCreateOneWithoutAddressesInput!
+  OrderDeliveryStatus: OrderDeliveryStatusCreateManyWithoutAddressInput
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusCreateManyWithoutAddressInput
 }
 
 input AddressCreateManyWithoutUserInput {
   create: [AddressCreateWithoutUserInput!]
   connect: [AddressWhereUniqueInput!]
+}
+
+input AddressCreateOneWithoutMultiOrderDeliveryStatusInput {
+  create: AddressCreateWithoutMultiOrderDeliveryStatusInput
+  connect: AddressWhereUniqueInput
+}
+
+input AddressCreateOneWithoutOrderDeliveryStatusInput {
+  create: AddressCreateWithoutOrderDeliveryStatusInput
+  connect: AddressWhereUniqueInput
+}
+
+input AddressCreateWithoutMultiOrderDeliveryStatusInput {
+  id: String
+  country: String!
+  city: String!
+  state: String!
+  line1: String!
+  line2: String!
+  postal_code: String!
+  user: UserCreateOneWithoutAddressesInput!
+  OrderDeliveryStatus: OrderDeliveryStatusCreateManyWithoutAddressInput
+}
+
+input AddressCreateWithoutOrderDeliveryStatusInput {
+  id: String
+  country: String!
+  city: String!
+  state: String!
+  line1: String!
+  line2: String!
+  postal_code: String!
+  user: UserCreateOneWithoutAddressesInput!
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusCreateManyWithoutAddressInput
 }
 
 input AddressCreateWithoutUserInput {
@@ -43,6 +93,8 @@ input AddressCreateWithoutUserInput {
   line1: String!
   line2: String!
   postal_code: String!
+  OrderDeliveryStatus: OrderDeliveryStatusCreateManyWithoutAddressInput
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusCreateManyWithoutAddressInput
 }
 
 enum AddressDistinctFieldEnum {
@@ -73,6 +125,141 @@ input AddressOrderByInput {
   userId: SortOrder
 }
 
+input AddressScalarWhereInput {
+  AND: [AddressScalarWhereInput!]
+  OR: [AddressScalarWhereInput!]
+  NOT: [AddressScalarWhereInput!]
+  id: StringFilter
+  country: StringFilter
+  city: StringFilter
+  state: StringFilter
+  line1: StringFilter
+  line2: StringFilter
+  postal_code: StringFilter
+  userId: StringFilter
+}
+
+input AddressUpdateInput {
+  id: String
+  country: String
+  city: String
+  state: String
+  line1: String
+  line2: String
+  postal_code: String
+  user: UserUpdateOneRequiredWithoutAddressesInput
+  OrderDeliveryStatus: OrderDeliveryStatusUpdateManyWithoutAddressInput
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusUpdateManyWithoutAddressInput
+}
+
+input AddressUpdateManyDataInput {
+  id: String
+  country: String
+  city: String
+  state: String
+  line1: String
+  line2: String
+  postal_code: String
+}
+
+input AddressUpdateManyMutationInput {
+  id: String
+  country: String
+  city: String
+  state: String
+  line1: String
+  line2: String
+  postal_code: String
+}
+
+input AddressUpdateManyWithoutUserInput {
+  create: [AddressCreateWithoutUserInput!]
+  connect: [AddressWhereUniqueInput!]
+  set: [AddressWhereUniqueInput!]
+  disconnect: [AddressWhereUniqueInput!]
+  delete: [AddressWhereUniqueInput!]
+  update: [AddressUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [AddressUpdateManyWithWhereNestedInput!]
+  deleteMany: [AddressScalarWhereInput!]
+  upsert: [AddressUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input AddressUpdateManyWithWhereNestedInput {
+  where: AddressScalarWhereInput!
+  data: AddressUpdateManyDataInput!
+}
+
+input AddressUpdateOneRequiredWithoutMultiOrderDeliveryStatusInput {
+  create: AddressCreateWithoutMultiOrderDeliveryStatusInput
+  connect: AddressWhereUniqueInput
+  update: AddressUpdateWithoutMultiOrderDeliveryStatusDataInput
+  upsert: AddressUpsertWithoutMultiOrderDeliveryStatusInput
+}
+
+input AddressUpdateOneRequiredWithoutOrderDeliveryStatusInput {
+  create: AddressCreateWithoutOrderDeliveryStatusInput
+  connect: AddressWhereUniqueInput
+  update: AddressUpdateWithoutOrderDeliveryStatusDataInput
+  upsert: AddressUpsertWithoutOrderDeliveryStatusInput
+}
+
+input AddressUpdateWithoutMultiOrderDeliveryStatusDataInput {
+  id: String
+  country: String
+  city: String
+  state: String
+  line1: String
+  line2: String
+  postal_code: String
+  user: UserUpdateOneRequiredWithoutAddressesInput
+  OrderDeliveryStatus: OrderDeliveryStatusUpdateManyWithoutAddressInput
+}
+
+input AddressUpdateWithoutOrderDeliveryStatusDataInput {
+  id: String
+  country: String
+  city: String
+  state: String
+  line1: String
+  line2: String
+  postal_code: String
+  user: UserUpdateOneRequiredWithoutAddressesInput
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusUpdateManyWithoutAddressInput
+}
+
+input AddressUpdateWithoutUserDataInput {
+  id: String
+  country: String
+  city: String
+  state: String
+  line1: String
+  line2: String
+  postal_code: String
+  OrderDeliveryStatus: OrderDeliveryStatusUpdateManyWithoutAddressInput
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusUpdateManyWithoutAddressInput
+}
+
+input AddressUpdateWithWhereUniqueWithoutUserInput {
+  where: AddressWhereUniqueInput!
+  data: AddressUpdateWithoutUserDataInput!
+}
+
+input AddressUpsertWithoutMultiOrderDeliveryStatusInput {
+  update: AddressUpdateWithoutMultiOrderDeliveryStatusDataInput!
+  create: AddressCreateWithoutMultiOrderDeliveryStatusInput!
+}
+
+input AddressUpsertWithoutOrderDeliveryStatusInput {
+  update: AddressUpdateWithoutOrderDeliveryStatusDataInput!
+  create: AddressCreateWithoutOrderDeliveryStatusInput!
+}
+
+input AddressUpsertWithWhereUniqueWithoutUserInput {
+  where: AddressWhereUniqueInput!
+  update: AddressUpdateWithoutUserDataInput!
+  create: AddressCreateWithoutUserInput!
+}
+
 input AddressWhereInput {
   AND: [AddressWhereInput!]
   OR: [AddressWhereInput!]
@@ -86,6 +273,8 @@ input AddressWhereInput {
   postal_code: StringFilter
   userId: StringFilter
   user: UserWhereInput
+  OrderDeliveryStatus: OrderDeliveryStatusListRelationFilter
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusListRelationFilter
 }
 
 input AddressWhereUniqueInput {
@@ -101,12 +290,83 @@ type AddressWithDefault {
   line2: String!
   postal_code: String!
   userId: String!
+  user: User!
+  OrderDeliveryStatus(where: OrderDeliveryStatusWhereInput, orderBy: [OrderDeliveryStatusOrderByInput!], cursor: OrderDeliveryStatusWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDeliveryStatusDistinctFieldEnum!]): [OrderDeliveryStatus!]
+  MultiOrderDeliveryStatus(where: MultiOrderDeliveryStatusWhereInput, orderBy: [MultiOrderDeliveryStatusOrderByInput!], cursor: MultiOrderDeliveryStatusWhereUniqueInput, take: Int, skip: Int, distinct: [MultiOrderDeliveryStatusDistinctFieldEnum!]): [MultiOrderDeliveryStatus!]
   default: Boolean!
 }
 
 input AddToOrderInput {
   item_id: String!
   buyer_id: String!
+}
+
+type AggregateAddress {
+  count: Int!
+}
+
+type AggregateMultiOrder {
+  count: Int!
+}
+
+type AggregateMultiOrderDeliveryStatus {
+  count: Int!
+}
+
+type AggregateOrder {
+  count: Int!
+  avg: OrderAvgAggregateOutputType
+  sum: OrderSumAggregateOutputType
+  min: OrderMinAggregateOutputType
+  max: OrderMaxAggregateOutputType
+}
+
+type AggregateOrderDeliveryStatus {
+  count: Int!
+}
+
+type AggregateOrderDeliveryStatusDescription {
+  count: Int!
+}
+
+type AggregateOrderItemCount {
+  count: Int!
+  avg: OrderItemCountAvgAggregateOutputType
+  sum: OrderItemCountSumAggregateOutputType
+  min: OrderItemCountMinAggregateOutputType
+  max: OrderItemCountMaxAggregateOutputType
+}
+
+type AggregatePaymentMultiOrder {
+  count: Int!
+}
+
+type AggregatePaymentOrder {
+  count: Int!
+}
+
+type AggregateRefund {
+  count: Int!
+}
+
+type AggregateShop {
+  count: Int!
+}
+
+type AggregateShopItem {
+  count: Int!
+  avg: ShopItemAvgAggregateOutputType
+  sum: ShopItemSumAggregateOutputType
+  min: ShopItemMinAggregateOutputType
+  max: ShopItemMaxAggregateOutputType
+}
+
+type AggregateUser {
+  count: Int!
+}
+
+type BatchPayload {
+  count: Int!
 }
 
 """
@@ -144,15 +404,25 @@ input DeletePaymentInfoInput {
   paymentMethodId: String!
 }
 
+enum DeliveryStatus {
+  PREPARING
+  READY
+  SHIPPED
+  RECEIVED
+}
+
+input EnumDeliveryStatusFilter {
+  equals: DeliveryStatus
+  in: [DeliveryStatus!]
+  notIn: [DeliveryStatus!]
+  not: NestedEnumDeliveryStatusFilter
+}
+
 input EnumPaymentStatusFilter {
   equals: PaymentStatus
   in: [PaymentStatus!]
   notIn: [PaymentStatus!]
   not: NestedEnumPaymentStatusFilter
-}
-
-input FindMultiOrderByUserIdInput {
-  user_id: String!
 }
 
 input FloatFilter {
@@ -188,8 +458,20 @@ type MultiOrder {
   PaymentMultiOrder: PaymentMultiOrder
 }
 
+input MultiOrderCreateInput {
+  id: String
+  paymentIntentId: String
+  orders: OrderCreateManyWithoutMultiOrderInput
+  PaymentMultiOrder: PaymentMultiOrderCreateOneWithoutMultiOrderInput
+}
+
 input MultiOrderCreateOneWithoutOrdersInput {
   create: MultiOrderCreateWithoutOrdersInput
+  connect: MultiOrderWhereUniqueInput
+}
+
+input MultiOrderCreateOneWithoutPaymentMultiOrderInput {
+  create: MultiOrderCreateWithoutPaymentMultiOrderInput
   connect: MultiOrderWhereUniqueInput
 }
 
@@ -197,6 +479,277 @@ input MultiOrderCreateWithoutOrdersInput {
   id: String
   paymentIntentId: String
   PaymentMultiOrder: PaymentMultiOrderCreateOneWithoutMultiOrderInput
+}
+
+input MultiOrderCreateWithoutPaymentMultiOrderInput {
+  id: String
+  paymentIntentId: String
+  orders: OrderCreateManyWithoutMultiOrderInput
+}
+
+type MultiOrderDeliveryStatus {
+  id: String!
+  addressId: String!
+  paymentMultiOrderId: String!
+  status: DeliveryStatus!
+  Address: Address!
+  PaymentMultiOrder: PaymentMultiOrder!
+  description(where: OrderDeliveryStatusDescriptionWhereInput, orderBy: [OrderDeliveryStatusDescriptionOrderByInput!], cursor: OrderDeliveryStatusDescriptionWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDeliveryStatusDescriptionDistinctFieldEnum!]): [OrderDeliveryStatusDescription!]
+}
+
+input MultiOrderDeliveryStatusCreateInput {
+  id: String
+  status: DeliveryStatus!
+  Address: AddressCreateOneWithoutMultiOrderDeliveryStatusInput!
+  PaymentMultiOrder: PaymentMultiOrderCreateOneWithoutMultiOrderDeliveryStatusInput!
+  description: OrderDeliveryStatusDescriptionCreateManyWithoutMultiOrderDeliveryStatusInput
+}
+
+input MultiOrderDeliveryStatusCreateManyWithoutAddressInput {
+  create: [MultiOrderDeliveryStatusCreateWithoutAddressInput!]
+  connect: [MultiOrderDeliveryStatusWhereUniqueInput!]
+}
+
+input MultiOrderDeliveryStatusCreateManyWithoutPaymentMultiOrderInput {
+  create: [MultiOrderDeliveryStatusCreateWithoutPaymentMultiOrderInput!]
+  connect: [MultiOrderDeliveryStatusWhereUniqueInput!]
+}
+
+input MultiOrderDeliveryStatusCreateOneWithoutDescriptionInput {
+  create: MultiOrderDeliveryStatusCreateWithoutDescriptionInput
+  connect: MultiOrderDeliveryStatusWhereUniqueInput
+}
+
+input MultiOrderDeliveryStatusCreateWithoutAddressInput {
+  id: String
+  status: DeliveryStatus!
+  PaymentMultiOrder: PaymentMultiOrderCreateOneWithoutMultiOrderDeliveryStatusInput!
+  description: OrderDeliveryStatusDescriptionCreateManyWithoutMultiOrderDeliveryStatusInput
+}
+
+input MultiOrderDeliveryStatusCreateWithoutDescriptionInput {
+  id: String
+  status: DeliveryStatus!
+  Address: AddressCreateOneWithoutMultiOrderDeliveryStatusInput!
+  PaymentMultiOrder: PaymentMultiOrderCreateOneWithoutMultiOrderDeliveryStatusInput!
+}
+
+input MultiOrderDeliveryStatusCreateWithoutPaymentMultiOrderInput {
+  id: String
+  status: DeliveryStatus!
+  Address: AddressCreateOneWithoutMultiOrderDeliveryStatusInput!
+  description: OrderDeliveryStatusDescriptionCreateManyWithoutMultiOrderDeliveryStatusInput
+}
+
+enum MultiOrderDeliveryStatusDistinctFieldEnum {
+  id
+  addressId
+  paymentMultiOrderId
+  status
+}
+
+input MultiOrderDeliveryStatusListRelationFilter {
+  every: MultiOrderDeliveryStatusWhereInput
+  some: MultiOrderDeliveryStatusWhereInput
+  none: MultiOrderDeliveryStatusWhereInput
+}
+
+input MultiOrderDeliveryStatusOrderByInput {
+  id: SortOrder
+  addressId: SortOrder
+  paymentMultiOrderId: SortOrder
+  status: SortOrder
+}
+
+input MultiOrderDeliveryStatusScalarWhereInput {
+  AND: [MultiOrderDeliveryStatusScalarWhereInput!]
+  OR: [MultiOrderDeliveryStatusScalarWhereInput!]
+  NOT: [MultiOrderDeliveryStatusScalarWhereInput!]
+  id: StringFilter
+  addressId: StringFilter
+  paymentMultiOrderId: StringFilter
+  status: EnumDeliveryStatusFilter
+}
+
+input MultiOrderDeliveryStatusUpdateInput {
+  id: String
+  status: DeliveryStatus
+  Address: AddressUpdateOneRequiredWithoutMultiOrderDeliveryStatusInput
+  PaymentMultiOrder: PaymentMultiOrderUpdateOneRequiredWithoutMultiOrderDeliveryStatusInput
+  description: OrderDeliveryStatusDescriptionUpdateManyWithoutMultiOrderDeliveryStatusInput
+}
+
+input MultiOrderDeliveryStatusUpdateManyDataInput {
+  id: String
+  status: DeliveryStatus
+}
+
+input MultiOrderDeliveryStatusUpdateManyMutationInput {
+  id: String
+  status: DeliveryStatus
+}
+
+input MultiOrderDeliveryStatusUpdateManyWithoutAddressInput {
+  create: [MultiOrderDeliveryStatusCreateWithoutAddressInput!]
+  connect: [MultiOrderDeliveryStatusWhereUniqueInput!]
+  set: [MultiOrderDeliveryStatusWhereUniqueInput!]
+  disconnect: [MultiOrderDeliveryStatusWhereUniqueInput!]
+  delete: [MultiOrderDeliveryStatusWhereUniqueInput!]
+  update: [MultiOrderDeliveryStatusUpdateWithWhereUniqueWithoutAddressInput!]
+  updateMany: [MultiOrderDeliveryStatusUpdateManyWithWhereNestedInput!]
+  deleteMany: [MultiOrderDeliveryStatusScalarWhereInput!]
+  upsert: [MultiOrderDeliveryStatusUpsertWithWhereUniqueWithoutAddressInput!]
+}
+
+input MultiOrderDeliveryStatusUpdateManyWithoutPaymentMultiOrderInput {
+  create: [MultiOrderDeliveryStatusCreateWithoutPaymentMultiOrderInput!]
+  connect: [MultiOrderDeliveryStatusWhereUniqueInput!]
+  set: [MultiOrderDeliveryStatusWhereUniqueInput!]
+  disconnect: [MultiOrderDeliveryStatusWhereUniqueInput!]
+  delete: [MultiOrderDeliveryStatusWhereUniqueInput!]
+  update: [MultiOrderDeliveryStatusUpdateWithWhereUniqueWithoutPaymentMultiOrderInput!]
+  updateMany: [MultiOrderDeliveryStatusUpdateManyWithWhereNestedInput!]
+  deleteMany: [MultiOrderDeliveryStatusScalarWhereInput!]
+  upsert: [MultiOrderDeliveryStatusUpsertWithWhereUniqueWithoutPaymentMultiOrderInput!]
+}
+
+input MultiOrderDeliveryStatusUpdateManyWithWhereNestedInput {
+  where: MultiOrderDeliveryStatusScalarWhereInput!
+  data: MultiOrderDeliveryStatusUpdateManyDataInput!
+}
+
+input MultiOrderDeliveryStatusUpdateOneWithoutDescriptionInput {
+  create: MultiOrderDeliveryStatusCreateWithoutDescriptionInput
+  connect: MultiOrderDeliveryStatusWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: MultiOrderDeliveryStatusUpdateWithoutDescriptionDataInput
+  upsert: MultiOrderDeliveryStatusUpsertWithoutDescriptionInput
+}
+
+input MultiOrderDeliveryStatusUpdateWithoutAddressDataInput {
+  id: String
+  status: DeliveryStatus
+  PaymentMultiOrder: PaymentMultiOrderUpdateOneRequiredWithoutMultiOrderDeliveryStatusInput
+  description: OrderDeliveryStatusDescriptionUpdateManyWithoutMultiOrderDeliveryStatusInput
+}
+
+input MultiOrderDeliveryStatusUpdateWithoutDescriptionDataInput {
+  id: String
+  status: DeliveryStatus
+  Address: AddressUpdateOneRequiredWithoutMultiOrderDeliveryStatusInput
+  PaymentMultiOrder: PaymentMultiOrderUpdateOneRequiredWithoutMultiOrderDeliveryStatusInput
+}
+
+input MultiOrderDeliveryStatusUpdateWithoutPaymentMultiOrderDataInput {
+  id: String
+  status: DeliveryStatus
+  Address: AddressUpdateOneRequiredWithoutMultiOrderDeliveryStatusInput
+  description: OrderDeliveryStatusDescriptionUpdateManyWithoutMultiOrderDeliveryStatusInput
+}
+
+input MultiOrderDeliveryStatusUpdateWithWhereUniqueWithoutAddressInput {
+  where: MultiOrderDeliveryStatusWhereUniqueInput!
+  data: MultiOrderDeliveryStatusUpdateWithoutAddressDataInput!
+}
+
+input MultiOrderDeliveryStatusUpdateWithWhereUniqueWithoutPaymentMultiOrderInput {
+  where: MultiOrderDeliveryStatusWhereUniqueInput!
+  data: MultiOrderDeliveryStatusUpdateWithoutPaymentMultiOrderDataInput!
+}
+
+input MultiOrderDeliveryStatusUpsertWithoutDescriptionInput {
+  update: MultiOrderDeliveryStatusUpdateWithoutDescriptionDataInput!
+  create: MultiOrderDeliveryStatusCreateWithoutDescriptionInput!
+}
+
+input MultiOrderDeliveryStatusUpsertWithWhereUniqueWithoutAddressInput {
+  where: MultiOrderDeliveryStatusWhereUniqueInput!
+  update: MultiOrderDeliveryStatusUpdateWithoutAddressDataInput!
+  create: MultiOrderDeliveryStatusCreateWithoutAddressInput!
+}
+
+input MultiOrderDeliveryStatusUpsertWithWhereUniqueWithoutPaymentMultiOrderInput {
+  where: MultiOrderDeliveryStatusWhereUniqueInput!
+  update: MultiOrderDeliveryStatusUpdateWithoutPaymentMultiOrderDataInput!
+  create: MultiOrderDeliveryStatusCreateWithoutPaymentMultiOrderInput!
+}
+
+input MultiOrderDeliveryStatusWhereInput {
+  AND: [MultiOrderDeliveryStatusWhereInput!]
+  OR: [MultiOrderDeliveryStatusWhereInput!]
+  NOT: [MultiOrderDeliveryStatusWhereInput!]
+  id: StringFilter
+  addressId: StringFilter
+  Address: AddressWhereInput
+  paymentMultiOrderId: StringFilter
+  PaymentMultiOrder: PaymentMultiOrderWhereInput
+  status: EnumDeliveryStatusFilter
+  description: OrderDeliveryStatusDescriptionListRelationFilter
+}
+
+input MultiOrderDeliveryStatusWhereUniqueInput {
+  id: String
+}
+
+enum MultiOrderDistinctFieldEnum {
+  id
+  paymentIntentId
+}
+
+input MultiOrderOrderByInput {
+  id: SortOrder
+  paymentIntentId: SortOrder
+}
+
+input MultiOrderUpdateInput {
+  id: String
+  paymentIntentId: String
+  orders: OrderUpdateManyWithoutMultiOrderInput
+  PaymentMultiOrder: PaymentMultiOrderUpdateOneWithoutMultiOrderInput
+}
+
+input MultiOrderUpdateManyMutationInput {
+  id: String
+  paymentIntentId: String
+}
+
+input MultiOrderUpdateOneRequiredWithoutPaymentMultiOrderInput {
+  create: MultiOrderCreateWithoutPaymentMultiOrderInput
+  connect: MultiOrderWhereUniqueInput
+  update: MultiOrderUpdateWithoutPaymentMultiOrderDataInput
+  upsert: MultiOrderUpsertWithoutPaymentMultiOrderInput
+}
+
+input MultiOrderUpdateOneWithoutOrdersInput {
+  create: MultiOrderCreateWithoutOrdersInput
+  connect: MultiOrderWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: MultiOrderUpdateWithoutOrdersDataInput
+  upsert: MultiOrderUpsertWithoutOrdersInput
+}
+
+input MultiOrderUpdateWithoutOrdersDataInput {
+  id: String
+  paymentIntentId: String
+  PaymentMultiOrder: PaymentMultiOrderUpdateOneWithoutMultiOrderInput
+}
+
+input MultiOrderUpdateWithoutPaymentMultiOrderDataInput {
+  id: String
+  paymentIntentId: String
+  orders: OrderUpdateManyWithoutMultiOrderInput
+}
+
+input MultiOrderUpsertWithoutOrdersInput {
+  update: MultiOrderUpdateWithoutOrdersDataInput!
+  create: MultiOrderCreateWithoutOrdersInput!
+}
+
+input MultiOrderUpsertWithoutPaymentMultiOrderInput {
+  update: MultiOrderUpdateWithoutPaymentMultiOrderDataInput!
+  create: MultiOrderCreateWithoutPaymentMultiOrderInput!
 }
 
 input MultiOrderWhereInput {
@@ -214,13 +767,90 @@ input MultiOrderWhereUniqueInput {
 }
 
 type Mutation {
+  createAddress(data: AddressCreateInput!): Address!
+  deleteAddress(where: AddressWhereUniqueInput!): Address
+  updateAddress(data: AddressUpdateInput!, where: AddressWhereUniqueInput!): Address
+  deleteManyAddress(where: AddressWhereInput): BatchPayload!
+  updateManyAddress(data: AddressUpdateManyMutationInput!, where: AddressWhereInput): BatchPayload!
+  upsertAddress(where: AddressWhereUniqueInput!, create: AddressCreateInput!, update: AddressUpdateInput!): Address!
+  createMultiOrder(data: MultiOrderCreateInput!): MultiOrder!
+  deleteMultiOrder(where: MultiOrderWhereUniqueInput!): MultiOrder
+  updateMultiOrder(data: MultiOrderUpdateInput!, where: MultiOrderWhereUniqueInput!): MultiOrder
+  deleteManyMultiOrder(where: MultiOrderWhereInput): BatchPayload!
+  updateManyMultiOrder(data: MultiOrderUpdateManyMutationInput!, where: MultiOrderWhereInput): BatchPayload!
+  upsertMultiOrder(where: MultiOrderWhereUniqueInput!, create: MultiOrderCreateInput!, update: MultiOrderUpdateInput!): MultiOrder!
+  createMultiOrderDeliveryStatus(data: MultiOrderDeliveryStatusCreateInput!): MultiOrderDeliveryStatus!
+  deleteMultiOrderDeliveryStatus(where: MultiOrderDeliveryStatusWhereUniqueInput!): MultiOrderDeliveryStatus
+  updateMultiOrderDeliveryStatus(data: MultiOrderDeliveryStatusUpdateInput!, where: MultiOrderDeliveryStatusWhereUniqueInput!): MultiOrderDeliveryStatus
+  deleteManyMultiOrderDeliveryStatus(where: MultiOrderDeliveryStatusWhereInput): BatchPayload!
+  updateManyMultiOrderDeliveryStatus(data: MultiOrderDeliveryStatusUpdateManyMutationInput!, where: MultiOrderDeliveryStatusWhereInput): BatchPayload!
+  upsertMultiOrderDeliveryStatus(where: MultiOrderDeliveryStatusWhereUniqueInput!, create: MultiOrderDeliveryStatusCreateInput!, update: MultiOrderDeliveryStatusUpdateInput!): MultiOrderDeliveryStatus!
+  createOrder(data: OrderCreateInput!): Order!
+  deleteOrder(where: OrderWhereUniqueInput!): Order
+  updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
+  deleteManyOrder(where: OrderWhereInput): BatchPayload!
+  updateManyOrder(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
+  upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
+  createOrderDeliveryStatus(data: OrderDeliveryStatusCreateInput!): OrderDeliveryStatus!
+  deleteOrderDeliveryStatus(where: OrderDeliveryStatusWhereUniqueInput!): OrderDeliveryStatus
+  updateOrderDeliveryStatus(data: OrderDeliveryStatusUpdateInput!, where: OrderDeliveryStatusWhereUniqueInput!): OrderDeliveryStatus
+  deleteManyOrderDeliveryStatus(where: OrderDeliveryStatusWhereInput): BatchPayload!
+  updateManyOrderDeliveryStatus(data: OrderDeliveryStatusUpdateManyMutationInput!, where: OrderDeliveryStatusWhereInput): BatchPayload!
+  upsertOrderDeliveryStatus(where: OrderDeliveryStatusWhereUniqueInput!, create: OrderDeliveryStatusCreateInput!, update: OrderDeliveryStatusUpdateInput!): OrderDeliveryStatus!
+  createOrderDeliveryStatusDescription(data: OrderDeliveryStatusDescriptionCreateInput!): OrderDeliveryStatusDescription!
+  deleteOrderDeliveryStatusDescription(where: OrderDeliveryStatusDescriptionWhereUniqueInput!): OrderDeliveryStatusDescription
+  updateOrderDeliveryStatusDescription(data: OrderDeliveryStatusDescriptionUpdateInput!, where: OrderDeliveryStatusDescriptionWhereUniqueInput!): OrderDeliveryStatusDescription
+  deleteManyOrderDeliveryStatusDescription(where: OrderDeliveryStatusDescriptionWhereInput): BatchPayload!
+  updateManyOrderDeliveryStatusDescription(data: OrderDeliveryStatusDescriptionUpdateManyMutationInput!, where: OrderDeliveryStatusDescriptionWhereInput): BatchPayload!
+  upsertOrderDeliveryStatusDescription(where: OrderDeliveryStatusDescriptionWhereUniqueInput!, create: OrderDeliveryStatusDescriptionCreateInput!, update: OrderDeliveryStatusDescriptionUpdateInput!): OrderDeliveryStatusDescription!
+  createOrderItemCount(data: OrderItemCountCreateInput!): OrderItemCount!
+  deleteOrderItemCount(where: OrderItemCountWhereUniqueInput!): OrderItemCount
+  updateOrderItemCount(data: OrderItemCountUpdateInput!, where: OrderItemCountWhereUniqueInput!): OrderItemCount
+  deleteManyOrderItemCount(where: OrderItemCountWhereInput): BatchPayload!
+  updateManyOrderItemCount(data: OrderItemCountUpdateManyMutationInput!, where: OrderItemCountWhereInput): BatchPayload!
+  upsertOrderItemCount(where: OrderItemCountWhereUniqueInput!, create: OrderItemCountCreateInput!, update: OrderItemCountUpdateInput!): OrderItemCount!
+  createPaymentMultiOrder(data: PaymentMultiOrderCreateInput!): PaymentMultiOrder!
+  deletePaymentMultiOrder(where: PaymentMultiOrderWhereUniqueInput!): PaymentMultiOrder
+  updatePaymentMultiOrder(data: PaymentMultiOrderUpdateInput!, where: PaymentMultiOrderWhereUniqueInput!): PaymentMultiOrder
+  deleteManyPaymentMultiOrder(where: PaymentMultiOrderWhereInput): BatchPayload!
+  updateManyPaymentMultiOrder(data: PaymentMultiOrderUpdateManyMutationInput!, where: PaymentMultiOrderWhereInput): BatchPayload!
+  upsertPaymentMultiOrder(where: PaymentMultiOrderWhereUniqueInput!, create: PaymentMultiOrderCreateInput!, update: PaymentMultiOrderUpdateInput!): PaymentMultiOrder!
+  createPaymentOrder(data: PaymentOrderCreateInput!): PaymentOrder!
+  deletePaymentOrder(where: PaymentOrderWhereUniqueInput!): PaymentOrder
+  updatePaymentOrder(data: PaymentOrderUpdateInput!, where: PaymentOrderWhereUniqueInput!): PaymentOrder
+  deleteManyPaymentOrder(where: PaymentOrderWhereInput): BatchPayload!
+  updateManyPaymentOrder(data: PaymentOrderUpdateManyMutationInput!, where: PaymentOrderWhereInput): BatchPayload!
+  upsertPaymentOrder(where: PaymentOrderWhereUniqueInput!, create: PaymentOrderCreateInput!, update: PaymentOrderUpdateInput!): PaymentOrder!
+  createRefund(data: RefundCreateInput!): Refund!
+  deleteRefund(where: RefundWhereUniqueInput!): Refund
+  updateRefund(data: RefundUpdateInput!, where: RefundWhereUniqueInput!): Refund
+  deleteManyRefund(where: RefundWhereInput): BatchPayload!
+  updateManyRefund(data: RefundUpdateManyMutationInput!, where: RefundWhereInput): BatchPayload!
+  upsertRefund(where: RefundWhereUniqueInput!, create: RefundCreateInput!, update: RefundUpdateInput!): Refund!
   createShop(data: ShopCreateInput!): Shop!
+  deleteShop(where: ShopWhereUniqueInput!): Shop
+  updateShop(data: ShopUpdateInput!, where: ShopWhereUniqueInput!): Shop
+  deleteManyShop(where: ShopWhereInput): BatchPayload!
+  updateManyShop(data: ShopUpdateManyMutationInput!, where: ShopWhereInput): BatchPayload!
+  upsertShop(where: ShopWhereUniqueInput!, create: ShopCreateInput!, update: ShopUpdateInput!): Shop!
   createShopItem(data: ShopItemCreateInput!): ShopItem!
-  removeFromOrder(removeFromOrderInput: RemoveFromOrderInput!): Order
-  addToOrder(addToOrderInput: AddToOrderInput!): [Order!]!
+  deleteShopItem(where: ShopItemWhereUniqueInput!): ShopItem
+  updateShopItem(data: ShopItemUpdateInput!, where: ShopItemWhereUniqueInput!): ShopItem
+  deleteManyShopItem(where: ShopItemWhereInput): BatchPayload!
+  updateManyShopItem(data: ShopItemUpdateManyMutationInput!, where: ShopItemWhereInput): BatchPayload!
+  upsertShopItem(where: ShopItemWhereUniqueInput!, create: ShopItemCreateInput!, update: ShopItemUpdateInput!): ShopItem!
+  createUser(data: UserCreateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  deleteManyUser(where: UserWhereInput): BatchPayload!
+  updateManyUser(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  removeFromOrder(removeFromOrderInput: RemoveFromOrderInput!): OrderWithPrice
+  addToOrder(addToOrderInput: AddToOrderInput!): [OrderWithPrice!]!
+  payUnfulfilledOrder(payUnfulfilledOrderInput: PayUnfulfilledOrderInput!): PaymentOrder!
+  payMultiOrder(payMultiOrderInput: PayMultiOrderInput!): PaymentMultiOrder!
   addPaymentInfo(addPaymentInfoInput: AddPaymentInfoInput!): PaymentMethod!
   deletePaymentInfo(deletePaymentInfoInput: DeletePaymentInfoInput!): PaymentMethod!
-  payCurrentOrder(payCurrentOrderInput: PayCurrentOrderInput!): Order!
   addAddress(addAddressInput: AddAddressInput!): [Address!]!
   updateDefaultAddress(updateDefaultAddressInput: UpdateDefaultAddressInput!): Address!
   removeAddress(addAddressInput: DeleteAddressInput!): Address!
@@ -247,6 +877,13 @@ input NestedDateTimeNullableFilter {
   gt: DateTime
   gte: DateTime
   not: NestedDateTimeNullableFilter
+}
+
+input NestedEnumDeliveryStatusFilter {
+  equals: DeliveryStatus
+  in: [DeliveryStatus!]
+  notIn: [DeliveryStatus!]
+  not: NestedEnumDeliveryStatusFilter
 }
 
 input NestedEnumPaymentStatusFilter {
@@ -319,9 +956,49 @@ type Order {
   PaymentOrder: PaymentOrder
 }
 
+type OrderAvgAggregateOutputType {
+  price: Float!
+}
+
+input OrderCreateInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+  owner: UserCreateOneWithoutOrdersInput!
+  orderItemCount: OrderItemCountCreateOneWithoutOrderInput
+  MultiOrder: MultiOrderCreateOneWithoutOrdersInput
+  PaymentOrder: PaymentOrderCreateOneWithoutOrderInput
+}
+
+input OrderCreateManyWithoutMultiOrderInput {
+  create: [OrderCreateWithoutMultiOrderInput!]
+  connect: [OrderWhereUniqueInput!]
+}
+
+input OrderCreateManyWithoutOwnerInput {
+  create: [OrderCreateWithoutOwnerInput!]
+  connect: [OrderWhereUniqueInput!]
+}
+
 input OrderCreateOneWithoutOrderItemCountInput {
   create: OrderCreateWithoutOrderItemCountInput
   connect: OrderWhereUniqueInput
+}
+
+input OrderCreateOneWithoutPaymentOrderInput {
+  create: OrderCreateWithoutPaymentOrderInput
+  connect: OrderWhereUniqueInput
+}
+
+input OrderCreateWithoutMultiOrderInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+  owner: UserCreateOneWithoutOrdersInput!
+  orderItemCount: OrderItemCountCreateOneWithoutOrderInput
+  PaymentOrder: PaymentOrderCreateOneWithoutOrderInput
 }
 
 input OrderCreateWithoutOrderItemCountInput {
@@ -332,6 +1009,399 @@ input OrderCreateWithoutOrderItemCountInput {
   owner: UserCreateOneWithoutOrdersInput!
   MultiOrder: MultiOrderCreateOneWithoutOrdersInput
   PaymentOrder: PaymentOrderCreateOneWithoutOrderInput
+}
+
+input OrderCreateWithoutOwnerInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+  orderItemCount: OrderItemCountCreateOneWithoutOrderInput
+  MultiOrder: MultiOrderCreateOneWithoutOrdersInput
+  PaymentOrder: PaymentOrderCreateOneWithoutOrderInput
+}
+
+input OrderCreateWithoutPaymentOrderInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+  owner: UserCreateOneWithoutOrdersInput!
+  orderItemCount: OrderItemCountCreateOneWithoutOrderInput
+  MultiOrder: MultiOrderCreateOneWithoutOrdersInput
+}
+
+type OrderDeliveryStatus {
+  id: String!
+  addressId: String!
+  paymentOrderId: String!
+  status: DeliveryStatus!
+  Address: Address!
+  paymentOrder: PaymentOrder!
+  description(where: OrderDeliveryStatusDescriptionWhereInput, orderBy: [OrderDeliveryStatusDescriptionOrderByInput!], cursor: OrderDeliveryStatusDescriptionWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDeliveryStatusDescriptionDistinctFieldEnum!]): [OrderDeliveryStatusDescription!]
+}
+
+input OrderDeliveryStatusCreateInput {
+  id: String
+  status: DeliveryStatus!
+  Address: AddressCreateOneWithoutOrderDeliveryStatusInput!
+  paymentOrder: PaymentOrderCreateOneWithoutOrderDeliveryStatusInput!
+  description: OrderDeliveryStatusDescriptionCreateManyWithoutOrderDeliveryStatusInput
+}
+
+input OrderDeliveryStatusCreateManyWithoutAddressInput {
+  create: [OrderDeliveryStatusCreateWithoutAddressInput!]
+  connect: [OrderDeliveryStatusWhereUniqueInput!]
+}
+
+input OrderDeliveryStatusCreateOneWithoutDescriptionInput {
+  create: OrderDeliveryStatusCreateWithoutDescriptionInput
+  connect: OrderDeliveryStatusWhereUniqueInput
+}
+
+input OrderDeliveryStatusCreateOneWithoutPaymentOrderInput {
+  create: OrderDeliveryStatusCreateWithoutPaymentOrderInput
+  connect: OrderDeliveryStatusWhereUniqueInput
+}
+
+input OrderDeliveryStatusCreateWithoutAddressInput {
+  id: String
+  status: DeliveryStatus!
+  paymentOrder: PaymentOrderCreateOneWithoutOrderDeliveryStatusInput!
+  description: OrderDeliveryStatusDescriptionCreateManyWithoutOrderDeliveryStatusInput
+}
+
+input OrderDeliveryStatusCreateWithoutDescriptionInput {
+  id: String
+  status: DeliveryStatus!
+  Address: AddressCreateOneWithoutOrderDeliveryStatusInput!
+  paymentOrder: PaymentOrderCreateOneWithoutOrderDeliveryStatusInput!
+}
+
+input OrderDeliveryStatusCreateWithoutPaymentOrderInput {
+  id: String
+  status: DeliveryStatus!
+  Address: AddressCreateOneWithoutOrderDeliveryStatusInput!
+  description: OrderDeliveryStatusDescriptionCreateManyWithoutOrderDeliveryStatusInput
+}
+
+type OrderDeliveryStatusDescription {
+  id: String!
+  timestamp: DateTime!
+  description: String!
+  orderDeliveryStatusId: String
+  multiOrderDeliveryStatusId: String
+  OrderDeliveryStatus: OrderDeliveryStatus
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatus
+}
+
+input OrderDeliveryStatusDescriptionCreateInput {
+  id: String
+  timestamp: DateTime!
+  description: String!
+  OrderDeliveryStatus: OrderDeliveryStatusCreateOneWithoutDescriptionInput
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusCreateOneWithoutDescriptionInput
+}
+
+input OrderDeliveryStatusDescriptionCreateManyWithoutMultiOrderDeliveryStatusInput {
+  create: [OrderDeliveryStatusDescriptionCreateWithoutMultiOrderDeliveryStatusInput!]
+  connect: [OrderDeliveryStatusDescriptionWhereUniqueInput!]
+}
+
+input OrderDeliveryStatusDescriptionCreateManyWithoutOrderDeliveryStatusInput {
+  create: [OrderDeliveryStatusDescriptionCreateWithoutOrderDeliveryStatusInput!]
+  connect: [OrderDeliveryStatusDescriptionWhereUniqueInput!]
+}
+
+input OrderDeliveryStatusDescriptionCreateWithoutMultiOrderDeliveryStatusInput {
+  id: String
+  timestamp: DateTime!
+  description: String!
+  OrderDeliveryStatus: OrderDeliveryStatusCreateOneWithoutDescriptionInput
+}
+
+input OrderDeliveryStatusDescriptionCreateWithoutOrderDeliveryStatusInput {
+  id: String
+  timestamp: DateTime!
+  description: String!
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusCreateOneWithoutDescriptionInput
+}
+
+enum OrderDeliveryStatusDescriptionDistinctFieldEnum {
+  id
+  timestamp
+  description
+  orderDeliveryStatusId
+  multiOrderDeliveryStatusId
+}
+
+input OrderDeliveryStatusDescriptionListRelationFilter {
+  every: OrderDeliveryStatusDescriptionWhereInput
+  some: OrderDeliveryStatusDescriptionWhereInput
+  none: OrderDeliveryStatusDescriptionWhereInput
+}
+
+input OrderDeliveryStatusDescriptionOrderByInput {
+  id: SortOrder
+  timestamp: SortOrder
+  description: SortOrder
+  orderDeliveryStatusId: SortOrder
+  multiOrderDeliveryStatusId: SortOrder
+}
+
+input OrderDeliveryStatusDescriptionScalarWhereInput {
+  AND: [OrderDeliveryStatusDescriptionScalarWhereInput!]
+  OR: [OrderDeliveryStatusDescriptionScalarWhereInput!]
+  NOT: [OrderDeliveryStatusDescriptionScalarWhereInput!]
+  id: StringFilter
+  timestamp: DateTimeFilter
+  description: StringFilter
+  orderDeliveryStatusId: StringNullableFilter
+  multiOrderDeliveryStatusId: StringNullableFilter
+}
+
+input OrderDeliveryStatusDescriptionUpdateInput {
+  id: String
+  timestamp: DateTime
+  description: String
+  OrderDeliveryStatus: OrderDeliveryStatusUpdateOneWithoutDescriptionInput
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusUpdateOneWithoutDescriptionInput
+}
+
+input OrderDeliveryStatusDescriptionUpdateManyDataInput {
+  id: String
+  timestamp: DateTime
+  description: String
+}
+
+input OrderDeliveryStatusDescriptionUpdateManyMutationInput {
+  id: String
+  timestamp: DateTime
+  description: String
+}
+
+input OrderDeliveryStatusDescriptionUpdateManyWithoutMultiOrderDeliveryStatusInput {
+  create: [OrderDeliveryStatusDescriptionCreateWithoutMultiOrderDeliveryStatusInput!]
+  connect: [OrderDeliveryStatusDescriptionWhereUniqueInput!]
+  set: [OrderDeliveryStatusDescriptionWhereUniqueInput!]
+  disconnect: [OrderDeliveryStatusDescriptionWhereUniqueInput!]
+  delete: [OrderDeliveryStatusDescriptionWhereUniqueInput!]
+  update: [OrderDeliveryStatusDescriptionUpdateWithWhereUniqueWithoutMultiOrderDeliveryStatusInput!]
+  updateMany: [OrderDeliveryStatusDescriptionUpdateManyWithWhereNestedInput!]
+  deleteMany: [OrderDeliveryStatusDescriptionScalarWhereInput!]
+  upsert: [OrderDeliveryStatusDescriptionUpsertWithWhereUniqueWithoutMultiOrderDeliveryStatusInput!]
+}
+
+input OrderDeliveryStatusDescriptionUpdateManyWithoutOrderDeliveryStatusInput {
+  create: [OrderDeliveryStatusDescriptionCreateWithoutOrderDeliveryStatusInput!]
+  connect: [OrderDeliveryStatusDescriptionWhereUniqueInput!]
+  set: [OrderDeliveryStatusDescriptionWhereUniqueInput!]
+  disconnect: [OrderDeliveryStatusDescriptionWhereUniqueInput!]
+  delete: [OrderDeliveryStatusDescriptionWhereUniqueInput!]
+  update: [OrderDeliveryStatusDescriptionUpdateWithWhereUniqueWithoutOrderDeliveryStatusInput!]
+  updateMany: [OrderDeliveryStatusDescriptionUpdateManyWithWhereNestedInput!]
+  deleteMany: [OrderDeliveryStatusDescriptionScalarWhereInput!]
+  upsert: [OrderDeliveryStatusDescriptionUpsertWithWhereUniqueWithoutOrderDeliveryStatusInput!]
+}
+
+input OrderDeliveryStatusDescriptionUpdateManyWithWhereNestedInput {
+  where: OrderDeliveryStatusDescriptionScalarWhereInput!
+  data: OrderDeliveryStatusDescriptionUpdateManyDataInput!
+}
+
+input OrderDeliveryStatusDescriptionUpdateWithoutMultiOrderDeliveryStatusDataInput {
+  id: String
+  timestamp: DateTime
+  description: String
+  OrderDeliveryStatus: OrderDeliveryStatusUpdateOneWithoutDescriptionInput
+}
+
+input OrderDeliveryStatusDescriptionUpdateWithoutOrderDeliveryStatusDataInput {
+  id: String
+  timestamp: DateTime
+  description: String
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusUpdateOneWithoutDescriptionInput
+}
+
+input OrderDeliveryStatusDescriptionUpdateWithWhereUniqueWithoutMultiOrderDeliveryStatusInput {
+  where: OrderDeliveryStatusDescriptionWhereUniqueInput!
+  data: OrderDeliveryStatusDescriptionUpdateWithoutMultiOrderDeliveryStatusDataInput!
+}
+
+input OrderDeliveryStatusDescriptionUpdateWithWhereUniqueWithoutOrderDeliveryStatusInput {
+  where: OrderDeliveryStatusDescriptionWhereUniqueInput!
+  data: OrderDeliveryStatusDescriptionUpdateWithoutOrderDeliveryStatusDataInput!
+}
+
+input OrderDeliveryStatusDescriptionUpsertWithWhereUniqueWithoutMultiOrderDeliveryStatusInput {
+  where: OrderDeliveryStatusDescriptionWhereUniqueInput!
+  update: OrderDeliveryStatusDescriptionUpdateWithoutMultiOrderDeliveryStatusDataInput!
+  create: OrderDeliveryStatusDescriptionCreateWithoutMultiOrderDeliveryStatusInput!
+}
+
+input OrderDeliveryStatusDescriptionUpsertWithWhereUniqueWithoutOrderDeliveryStatusInput {
+  where: OrderDeliveryStatusDescriptionWhereUniqueInput!
+  update: OrderDeliveryStatusDescriptionUpdateWithoutOrderDeliveryStatusDataInput!
+  create: OrderDeliveryStatusDescriptionCreateWithoutOrderDeliveryStatusInput!
+}
+
+input OrderDeliveryStatusDescriptionWhereInput {
+  AND: [OrderDeliveryStatusDescriptionWhereInput!]
+  OR: [OrderDeliveryStatusDescriptionWhereInput!]
+  NOT: [OrderDeliveryStatusDescriptionWhereInput!]
+  id: StringFilter
+  timestamp: DateTimeFilter
+  description: StringFilter
+  OrderDeliveryStatus: OrderDeliveryStatusWhereInput
+  orderDeliveryStatusId: StringNullableFilter
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusWhereInput
+  multiOrderDeliveryStatusId: StringNullableFilter
+}
+
+input OrderDeliveryStatusDescriptionWhereUniqueInput {
+  id: String
+}
+
+enum OrderDeliveryStatusDistinctFieldEnum {
+  id
+  addressId
+  paymentOrderId
+  status
+}
+
+input OrderDeliveryStatusListRelationFilter {
+  every: OrderDeliveryStatusWhereInput
+  some: OrderDeliveryStatusWhereInput
+  none: OrderDeliveryStatusWhereInput
+}
+
+input OrderDeliveryStatusOrderByInput {
+  id: SortOrder
+  addressId: SortOrder
+  paymentOrderId: SortOrder
+  status: SortOrder
+}
+
+input OrderDeliveryStatusScalarWhereInput {
+  AND: [OrderDeliveryStatusScalarWhereInput!]
+  OR: [OrderDeliveryStatusScalarWhereInput!]
+  NOT: [OrderDeliveryStatusScalarWhereInput!]
+  id: StringFilter
+  addressId: StringFilter
+  paymentOrderId: StringFilter
+  status: EnumDeliveryStatusFilter
+}
+
+input OrderDeliveryStatusUpdateInput {
+  id: String
+  status: DeliveryStatus
+  Address: AddressUpdateOneRequiredWithoutOrderDeliveryStatusInput
+  paymentOrder: PaymentOrderUpdateOneRequiredWithoutOrderDeliveryStatusInput
+  description: OrderDeliveryStatusDescriptionUpdateManyWithoutOrderDeliveryStatusInput
+}
+
+input OrderDeliveryStatusUpdateManyDataInput {
+  id: String
+  status: DeliveryStatus
+}
+
+input OrderDeliveryStatusUpdateManyMutationInput {
+  id: String
+  status: DeliveryStatus
+}
+
+input OrderDeliveryStatusUpdateManyWithoutAddressInput {
+  create: [OrderDeliveryStatusCreateWithoutAddressInput!]
+  connect: [OrderDeliveryStatusWhereUniqueInput!]
+  set: [OrderDeliveryStatusWhereUniqueInput!]
+  disconnect: [OrderDeliveryStatusWhereUniqueInput!]
+  delete: [OrderDeliveryStatusWhereUniqueInput!]
+  update: [OrderDeliveryStatusUpdateWithWhereUniqueWithoutAddressInput!]
+  updateMany: [OrderDeliveryStatusUpdateManyWithWhereNestedInput!]
+  deleteMany: [OrderDeliveryStatusScalarWhereInput!]
+  upsert: [OrderDeliveryStatusUpsertWithWhereUniqueWithoutAddressInput!]
+}
+
+input OrderDeliveryStatusUpdateManyWithWhereNestedInput {
+  where: OrderDeliveryStatusScalarWhereInput!
+  data: OrderDeliveryStatusUpdateManyDataInput!
+}
+
+input OrderDeliveryStatusUpdateOneWithoutDescriptionInput {
+  create: OrderDeliveryStatusCreateWithoutDescriptionInput
+  connect: OrderDeliveryStatusWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: OrderDeliveryStatusUpdateWithoutDescriptionDataInput
+  upsert: OrderDeliveryStatusUpsertWithoutDescriptionInput
+}
+
+input OrderDeliveryStatusUpdateOneWithoutPaymentOrderInput {
+  create: OrderDeliveryStatusCreateWithoutPaymentOrderInput
+  connect: OrderDeliveryStatusWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: OrderDeliveryStatusUpdateWithoutPaymentOrderDataInput
+  upsert: OrderDeliveryStatusUpsertWithoutPaymentOrderInput
+}
+
+input OrderDeliveryStatusUpdateWithoutAddressDataInput {
+  id: String
+  status: DeliveryStatus
+  paymentOrder: PaymentOrderUpdateOneRequiredWithoutOrderDeliveryStatusInput
+  description: OrderDeliveryStatusDescriptionUpdateManyWithoutOrderDeliveryStatusInput
+}
+
+input OrderDeliveryStatusUpdateWithoutDescriptionDataInput {
+  id: String
+  status: DeliveryStatus
+  Address: AddressUpdateOneRequiredWithoutOrderDeliveryStatusInput
+  paymentOrder: PaymentOrderUpdateOneRequiredWithoutOrderDeliveryStatusInput
+}
+
+input OrderDeliveryStatusUpdateWithoutPaymentOrderDataInput {
+  id: String
+  status: DeliveryStatus
+  Address: AddressUpdateOneRequiredWithoutOrderDeliveryStatusInput
+  description: OrderDeliveryStatusDescriptionUpdateManyWithoutOrderDeliveryStatusInput
+}
+
+input OrderDeliveryStatusUpdateWithWhereUniqueWithoutAddressInput {
+  where: OrderDeliveryStatusWhereUniqueInput!
+  data: OrderDeliveryStatusUpdateWithoutAddressDataInput!
+}
+
+input OrderDeliveryStatusUpsertWithoutDescriptionInput {
+  update: OrderDeliveryStatusUpdateWithoutDescriptionDataInput!
+  create: OrderDeliveryStatusCreateWithoutDescriptionInput!
+}
+
+input OrderDeliveryStatusUpsertWithoutPaymentOrderInput {
+  update: OrderDeliveryStatusUpdateWithoutPaymentOrderDataInput!
+  create: OrderDeliveryStatusCreateWithoutPaymentOrderInput!
+}
+
+input OrderDeliveryStatusUpsertWithWhereUniqueWithoutAddressInput {
+  where: OrderDeliveryStatusWhereUniqueInput!
+  update: OrderDeliveryStatusUpdateWithoutAddressDataInput!
+  create: OrderDeliveryStatusCreateWithoutAddressInput!
+}
+
+input OrderDeliveryStatusWhereInput {
+  AND: [OrderDeliveryStatusWhereInput!]
+  OR: [OrderDeliveryStatusWhereInput!]
+  NOT: [OrderDeliveryStatusWhereInput!]
+  id: StringFilter
+  addressId: StringFilter
+  Address: AddressWhereInput
+  paymentOrderId: StringFilter
+  paymentOrder: PaymentOrderWhereInput
+  status: EnumDeliveryStatusFilter
+  description: OrderDeliveryStatusDescriptionListRelationFilter
+}
+
+input OrderDeliveryStatusWhereUniqueInput {
+  id: String
 }
 
 enum OrderDistinctFieldEnum {
@@ -350,12 +1420,40 @@ type OrderItemCount {
   price: Float!
   count: Int!
   deletedAt: DateTime
+  order: Order!
   shopItem: ShopItem!
+}
+
+type OrderItemCountAvgAggregateOutputType {
+  price: Float!
+  count: Float!
+}
+
+input OrderItemCountCreateInput {
+  id: String
+  price: Float!
+  count: Int!
+  deletedAt: DateTime
+  order: OrderCreateOneWithoutOrderItemCountInput!
+  shopItem: ShopItemCreateOneWithoutOrderItemCountsInput!
 }
 
 input OrderItemCountCreateManyWithoutShopItemInput {
   create: [OrderItemCountCreateWithoutShopItemInput!]
   connect: [OrderItemCountWhereUniqueInput!]
+}
+
+input OrderItemCountCreateOneWithoutOrderInput {
+  create: OrderItemCountCreateWithoutOrderInput
+  connect: OrderItemCountWhereUniqueInput
+}
+
+input OrderItemCountCreateWithoutOrderInput {
+  id: String
+  price: Float!
+  count: Int!
+  deletedAt: DateTime
+  shopItem: ShopItemCreateOneWithoutOrderItemCountsInput!
 }
 
 input OrderItemCountCreateWithoutShopItemInput {
@@ -381,6 +1479,16 @@ input OrderItemCountListRelationFilter {
   none: OrderItemCountWhereInput
 }
 
+type OrderItemCountMaxAggregateOutputType {
+  price: Float!
+  count: Int!
+}
+
+type OrderItemCountMinAggregateOutputType {
+  price: Float!
+  count: Int!
+}
+
 input OrderItemCountOrderByInput {
   id: SortOrder
   orderId: SortOrder
@@ -388,6 +1496,102 @@ input OrderItemCountOrderByInput {
   price: SortOrder
   count: SortOrder
   deletedAt: SortOrder
+}
+
+input OrderItemCountScalarWhereInput {
+  AND: [OrderItemCountScalarWhereInput!]
+  OR: [OrderItemCountScalarWhereInput!]
+  NOT: [OrderItemCountScalarWhereInput!]
+  id: StringFilter
+  orderId: StringFilter
+  itemId: StringFilter
+  price: FloatFilter
+  count: IntFilter
+  deletedAt: DateTimeNullableFilter
+}
+
+type OrderItemCountSumAggregateOutputType {
+  price: Float!
+  count: Int!
+}
+
+input OrderItemCountUpdateInput {
+  id: String
+  price: Float
+  count: Int
+  deletedAt: DateTime
+  order: OrderUpdateOneRequiredWithoutOrderItemCountInput
+  shopItem: ShopItemUpdateOneRequiredWithoutOrderItemCountsInput
+}
+
+input OrderItemCountUpdateManyDataInput {
+  id: String
+  price: Float
+  count: Int
+  deletedAt: DateTime
+}
+
+input OrderItemCountUpdateManyMutationInput {
+  id: String
+  price: Float
+  count: Int
+  deletedAt: DateTime
+}
+
+input OrderItemCountUpdateManyWithoutShopItemInput {
+  create: [OrderItemCountCreateWithoutShopItemInput!]
+  connect: [OrderItemCountWhereUniqueInput!]
+  set: [OrderItemCountWhereUniqueInput!]
+  disconnect: [OrderItemCountWhereUniqueInput!]
+  delete: [OrderItemCountWhereUniqueInput!]
+  update: [OrderItemCountUpdateWithWhereUniqueWithoutShopItemInput!]
+  updateMany: [OrderItemCountUpdateManyWithWhereNestedInput!]
+  deleteMany: [OrderItemCountScalarWhereInput!]
+  upsert: [OrderItemCountUpsertWithWhereUniqueWithoutShopItemInput!]
+}
+
+input OrderItemCountUpdateManyWithWhereNestedInput {
+  where: OrderItemCountScalarWhereInput!
+  data: OrderItemCountUpdateManyDataInput!
+}
+
+input OrderItemCountUpdateOneRequiredWithoutOrderInput {
+  create: OrderItemCountCreateWithoutOrderInput
+  connect: OrderItemCountWhereUniqueInput
+  update: OrderItemCountUpdateWithoutOrderDataInput
+  upsert: OrderItemCountUpsertWithoutOrderInput
+}
+
+input OrderItemCountUpdateWithoutOrderDataInput {
+  id: String
+  price: Float
+  count: Int
+  deletedAt: DateTime
+  shopItem: ShopItemUpdateOneRequiredWithoutOrderItemCountsInput
+}
+
+input OrderItemCountUpdateWithoutShopItemDataInput {
+  id: String
+  price: Float
+  count: Int
+  deletedAt: DateTime
+  order: OrderUpdateOneRequiredWithoutOrderItemCountInput
+}
+
+input OrderItemCountUpdateWithWhereUniqueWithoutShopItemInput {
+  where: OrderItemCountWhereUniqueInput!
+  data: OrderItemCountUpdateWithoutShopItemDataInput!
+}
+
+input OrderItemCountUpsertWithoutOrderInput {
+  update: OrderItemCountUpdateWithoutOrderDataInput!
+  create: OrderItemCountCreateWithoutOrderInput!
+}
+
+input OrderItemCountUpsertWithWhereUniqueWithoutShopItemInput {
+  where: OrderItemCountWhereUniqueInput!
+  update: OrderItemCountUpdateWithoutShopItemDataInput!
+  create: OrderItemCountCreateWithoutShopItemInput!
 }
 
 input OrderItemCountWhereInput {
@@ -414,6 +1618,14 @@ input OrderListRelationFilter {
   none: OrderWhereInput
 }
 
+type OrderMaxAggregateOutputType {
+  price: Float!
+}
+
+type OrderMinAggregateOutputType {
+  price: Float!
+}
+
 input OrderOrderByInput {
   id: SortOrder
   ownerId: SortOrder
@@ -421,6 +1633,162 @@ input OrderOrderByInput {
   price: SortOrder
   multiOrderId: SortOrder
   deletedAt: SortOrder
+}
+
+input OrderScalarWhereInput {
+  AND: [OrderScalarWhereInput!]
+  OR: [OrderScalarWhereInput!]
+  NOT: [OrderScalarWhereInput!]
+  id: StringFilter
+  ownerId: StringFilter
+  paymentIntentId: StringNullableFilter
+  price: FloatFilter
+  multiOrderId: StringNullableFilter
+  deletedAt: DateTimeNullableFilter
+}
+
+type OrderSumAggregateOutputType {
+  price: Float!
+}
+
+input OrderUpdateInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+  owner: UserUpdateOneRequiredWithoutOrdersInput
+  orderItemCount: OrderItemCountUpdateOneRequiredWithoutOrderInput
+  MultiOrder: MultiOrderUpdateOneWithoutOrdersInput
+  PaymentOrder: PaymentOrderUpdateOneWithoutOrderInput
+}
+
+input OrderUpdateManyDataInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+}
+
+input OrderUpdateManyMutationInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+}
+
+input OrderUpdateManyWithoutMultiOrderInput {
+  create: [OrderCreateWithoutMultiOrderInput!]
+  connect: [OrderWhereUniqueInput!]
+  set: [OrderWhereUniqueInput!]
+  disconnect: [OrderWhereUniqueInput!]
+  delete: [OrderWhereUniqueInput!]
+  update: [OrderUpdateWithWhereUniqueWithoutMultiOrderInput!]
+  updateMany: [OrderUpdateManyWithWhereNestedInput!]
+  deleteMany: [OrderScalarWhereInput!]
+  upsert: [OrderUpsertWithWhereUniqueWithoutMultiOrderInput!]
+}
+
+input OrderUpdateManyWithoutOwnerInput {
+  create: [OrderCreateWithoutOwnerInput!]
+  connect: [OrderWhereUniqueInput!]
+  set: [OrderWhereUniqueInput!]
+  disconnect: [OrderWhereUniqueInput!]
+  delete: [OrderWhereUniqueInput!]
+  update: [OrderUpdateWithWhereUniqueWithoutOwnerInput!]
+  updateMany: [OrderUpdateManyWithWhereNestedInput!]
+  deleteMany: [OrderScalarWhereInput!]
+  upsert: [OrderUpsertWithWhereUniqueWithoutOwnerInput!]
+}
+
+input OrderUpdateManyWithWhereNestedInput {
+  where: OrderScalarWhereInput!
+  data: OrderUpdateManyDataInput!
+}
+
+input OrderUpdateOneRequiredWithoutOrderItemCountInput {
+  create: OrderCreateWithoutOrderItemCountInput
+  connect: OrderWhereUniqueInput
+  update: OrderUpdateWithoutOrderItemCountDataInput
+  upsert: OrderUpsertWithoutOrderItemCountInput
+}
+
+input OrderUpdateOneRequiredWithoutPaymentOrderInput {
+  create: OrderCreateWithoutPaymentOrderInput
+  connect: OrderWhereUniqueInput
+  update: OrderUpdateWithoutPaymentOrderDataInput
+  upsert: OrderUpsertWithoutPaymentOrderInput
+}
+
+input OrderUpdateWithoutMultiOrderDataInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+  owner: UserUpdateOneRequiredWithoutOrdersInput
+  orderItemCount: OrderItemCountUpdateOneRequiredWithoutOrderInput
+  PaymentOrder: PaymentOrderUpdateOneWithoutOrderInput
+}
+
+input OrderUpdateWithoutOrderItemCountDataInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+  owner: UserUpdateOneRequiredWithoutOrdersInput
+  MultiOrder: MultiOrderUpdateOneWithoutOrdersInput
+  PaymentOrder: PaymentOrderUpdateOneWithoutOrderInput
+}
+
+input OrderUpdateWithoutOwnerDataInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+  orderItemCount: OrderItemCountUpdateOneRequiredWithoutOrderInput
+  MultiOrder: MultiOrderUpdateOneWithoutOrdersInput
+  PaymentOrder: PaymentOrderUpdateOneWithoutOrderInput
+}
+
+input OrderUpdateWithoutPaymentOrderDataInput {
+  id: String
+  paymentIntentId: String
+  price: Float
+  deletedAt: DateTime
+  owner: UserUpdateOneRequiredWithoutOrdersInput
+  orderItemCount: OrderItemCountUpdateOneRequiredWithoutOrderInput
+  MultiOrder: MultiOrderUpdateOneWithoutOrdersInput
+}
+
+input OrderUpdateWithWhereUniqueWithoutMultiOrderInput {
+  where: OrderWhereUniqueInput!
+  data: OrderUpdateWithoutMultiOrderDataInput!
+}
+
+input OrderUpdateWithWhereUniqueWithoutOwnerInput {
+  where: OrderWhereUniqueInput!
+  data: OrderUpdateWithoutOwnerDataInput!
+}
+
+input OrderUpsertWithoutOrderItemCountInput {
+  update: OrderUpdateWithoutOrderItemCountDataInput!
+  create: OrderCreateWithoutOrderItemCountInput!
+}
+
+input OrderUpsertWithoutPaymentOrderInput {
+  update: OrderUpdateWithoutPaymentOrderDataInput!
+  create: OrderCreateWithoutPaymentOrderInput!
+}
+
+input OrderUpsertWithWhereUniqueWithoutMultiOrderInput {
+  where: OrderWhereUniqueInput!
+  update: OrderUpdateWithoutMultiOrderDataInput!
+  create: OrderCreateWithoutMultiOrderInput!
+}
+
+input OrderUpsertWithWhereUniqueWithoutOwnerInput {
+  where: OrderWhereUniqueInput!
+  update: OrderUpdateWithoutOwnerDataInput!
+  create: OrderCreateWithoutOwnerInput!
 }
 
 input OrderWhereInput {
@@ -443,10 +1811,17 @@ input OrderWhereUniqueInput {
   id: String
 }
 
-input PayCurrentOrderInput {
-  user_id: String!
-  order_id: String!
-  payment_method_id: String!
+type OrderWithPrice {
+  id: String!
+  ownerId: String!
+  paymentIntentId: String
+  price: Float!
+  multiOrderId: String
+  deletedAt: DateTime
+  owner: User!
+  orderItemCount: OrderItemCount!
+  MultiOrder: MultiOrder
+  PaymentOrder: PaymentOrder
 }
 
 type PaymentMethod {
@@ -463,6 +1838,21 @@ type PaymentMultiOrder {
   paymentStatus: PaymentStatus!
   multiOrderId: String!
   paymentIntentId: String!
+  multiOrder: MultiOrder!
+  MultiOrderDeliveryStatus(where: MultiOrderDeliveryStatusWhereInput, orderBy: [MultiOrderDeliveryStatusOrderByInput!], cursor: MultiOrderDeliveryStatusWhereUniqueInput, take: Int, skip: Int, distinct: [MultiOrderDeliveryStatusDistinctFieldEnum!]): [MultiOrderDeliveryStatus!]
+}
+
+input PaymentMultiOrderCreateInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String!
+  multiOrder: MultiOrderCreateOneWithoutPaymentMultiOrderInput!
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusCreateManyWithoutPaymentMultiOrderInput
+}
+
+input PaymentMultiOrderCreateOneWithoutMultiOrderDeliveryStatusInput {
+  create: PaymentMultiOrderCreateWithoutMultiOrderDeliveryStatusInput
+  connect: PaymentMultiOrderWhereUniqueInput
 }
 
 input PaymentMultiOrderCreateOneWithoutMultiOrderInput {
@@ -470,10 +1860,86 @@ input PaymentMultiOrderCreateOneWithoutMultiOrderInput {
   connect: PaymentMultiOrderWhereUniqueInput
 }
 
+input PaymentMultiOrderCreateWithoutMultiOrderDeliveryStatusInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String!
+  multiOrder: MultiOrderCreateOneWithoutPaymentMultiOrderInput!
+}
+
 input PaymentMultiOrderCreateWithoutMultiOrderInput {
   id: String
   paymentStatus: PaymentStatus
   paymentIntentId: String!
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusCreateManyWithoutPaymentMultiOrderInput
+}
+
+enum PaymentMultiOrderDistinctFieldEnum {
+  id
+  paymentStatus
+  multiOrderId
+  paymentIntentId
+}
+
+input PaymentMultiOrderOrderByInput {
+  id: SortOrder
+  paymentStatus: SortOrder
+  multiOrderId: SortOrder
+  paymentIntentId: SortOrder
+}
+
+input PaymentMultiOrderUpdateInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String
+  multiOrder: MultiOrderUpdateOneRequiredWithoutPaymentMultiOrderInput
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusUpdateManyWithoutPaymentMultiOrderInput
+}
+
+input PaymentMultiOrderUpdateManyMutationInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String
+}
+
+input PaymentMultiOrderUpdateOneRequiredWithoutMultiOrderDeliveryStatusInput {
+  create: PaymentMultiOrderCreateWithoutMultiOrderDeliveryStatusInput
+  connect: PaymentMultiOrderWhereUniqueInput
+  update: PaymentMultiOrderUpdateWithoutMultiOrderDeliveryStatusDataInput
+  upsert: PaymentMultiOrderUpsertWithoutMultiOrderDeliveryStatusInput
+}
+
+input PaymentMultiOrderUpdateOneWithoutMultiOrderInput {
+  create: PaymentMultiOrderCreateWithoutMultiOrderInput
+  connect: PaymentMultiOrderWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: PaymentMultiOrderUpdateWithoutMultiOrderDataInput
+  upsert: PaymentMultiOrderUpsertWithoutMultiOrderInput
+}
+
+input PaymentMultiOrderUpdateWithoutMultiOrderDataInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusUpdateManyWithoutPaymentMultiOrderInput
+}
+
+input PaymentMultiOrderUpdateWithoutMultiOrderDeliveryStatusDataInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String
+  multiOrder: MultiOrderUpdateOneRequiredWithoutPaymentMultiOrderInput
+}
+
+input PaymentMultiOrderUpsertWithoutMultiOrderDeliveryStatusInput {
+  update: PaymentMultiOrderUpdateWithoutMultiOrderDeliveryStatusDataInput!
+  create: PaymentMultiOrderCreateWithoutMultiOrderDeliveryStatusInput!
+}
+
+input PaymentMultiOrderUpsertWithoutMultiOrderInput {
+  update: PaymentMultiOrderUpdateWithoutMultiOrderDataInput!
+  create: PaymentMultiOrderCreateWithoutMultiOrderInput!
 }
 
 input PaymentMultiOrderWhereInput {
@@ -485,6 +1951,7 @@ input PaymentMultiOrderWhereInput {
   multiOrderId: StringFilter
   multiOrder: MultiOrderWhereInput
   paymentIntentId: StringFilter
+  MultiOrderDeliveryStatus: MultiOrderDeliveryStatusListRelationFilter
 }
 
 input PaymentMultiOrderWhereUniqueInput {
@@ -496,6 +1963,21 @@ type PaymentOrder {
   paymentStatus: PaymentStatus!
   orderId: String!
   paymentIntentId: String!
+  order: Order!
+  orderDeliveryStatus: OrderDeliveryStatus
+}
+
+input PaymentOrderCreateInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String!
+  order: OrderCreateOneWithoutPaymentOrderInput!
+  orderDeliveryStatus: OrderDeliveryStatusCreateOneWithoutPaymentOrderInput
+}
+
+input PaymentOrderCreateOneWithoutOrderDeliveryStatusInput {
+  create: PaymentOrderCreateWithoutOrderDeliveryStatusInput
+  connect: PaymentOrderWhereUniqueInput
 }
 
 input PaymentOrderCreateOneWithoutOrderInput {
@@ -503,10 +1985,86 @@ input PaymentOrderCreateOneWithoutOrderInput {
   connect: PaymentOrderWhereUniqueInput
 }
 
+input PaymentOrderCreateWithoutOrderDeliveryStatusInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String!
+  order: OrderCreateOneWithoutPaymentOrderInput!
+}
+
 input PaymentOrderCreateWithoutOrderInput {
   id: String
   paymentStatus: PaymentStatus
   paymentIntentId: String!
+  orderDeliveryStatus: OrderDeliveryStatusCreateOneWithoutPaymentOrderInput
+}
+
+enum PaymentOrderDistinctFieldEnum {
+  id
+  paymentStatus
+  orderId
+  paymentIntentId
+}
+
+input PaymentOrderOrderByInput {
+  id: SortOrder
+  paymentStatus: SortOrder
+  orderId: SortOrder
+  paymentIntentId: SortOrder
+}
+
+input PaymentOrderUpdateInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String
+  order: OrderUpdateOneRequiredWithoutPaymentOrderInput
+  orderDeliveryStatus: OrderDeliveryStatusUpdateOneWithoutPaymentOrderInput
+}
+
+input PaymentOrderUpdateManyMutationInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String
+}
+
+input PaymentOrderUpdateOneRequiredWithoutOrderDeliveryStatusInput {
+  create: PaymentOrderCreateWithoutOrderDeliveryStatusInput
+  connect: PaymentOrderWhereUniqueInput
+  update: PaymentOrderUpdateWithoutOrderDeliveryStatusDataInput
+  upsert: PaymentOrderUpsertWithoutOrderDeliveryStatusInput
+}
+
+input PaymentOrderUpdateOneWithoutOrderInput {
+  create: PaymentOrderCreateWithoutOrderInput
+  connect: PaymentOrderWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: PaymentOrderUpdateWithoutOrderDataInput
+  upsert: PaymentOrderUpsertWithoutOrderInput
+}
+
+input PaymentOrderUpdateWithoutOrderDataInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String
+  orderDeliveryStatus: OrderDeliveryStatusUpdateOneWithoutPaymentOrderInput
+}
+
+input PaymentOrderUpdateWithoutOrderDeliveryStatusDataInput {
+  id: String
+  paymentStatus: PaymentStatus
+  paymentIntentId: String
+  order: OrderUpdateOneRequiredWithoutPaymentOrderInput
+}
+
+input PaymentOrderUpsertWithoutOrderDeliveryStatusInput {
+  update: PaymentOrderUpdateWithoutOrderDeliveryStatusDataInput!
+  create: PaymentOrderCreateWithoutOrderDeliveryStatusInput!
+}
+
+input PaymentOrderUpsertWithoutOrderInput {
+  update: PaymentOrderUpdateWithoutOrderDataInput!
+  create: PaymentOrderCreateWithoutOrderInput!
 }
 
 input PaymentOrderWhereInput {
@@ -518,6 +2076,7 @@ input PaymentOrderWhereInput {
   orderId: StringFilter
   order: OrderWhereInput
   paymentIntentId: StringFilter
+  orderDeliveryStatus: OrderDeliveryStatusWhereInput
 }
 
 input PaymentOrderWhereUniqueInput {
@@ -531,12 +2090,60 @@ enum PaymentStatus {
   REFUNDED
 }
 
+input PayMultiOrderInput {
+  multi_order_id: String!
+  payment_method_id: String!
+  address_id: String!
+}
+
+input PayUnfulfilledOrderInput {
+  order_id: String!
+  payment_method_id: String!
+  address_id: String!
+}
+
 type Query {
-  shopItems(where: ShopItemWhereInput, orderBy: [ShopItemOrderByInput!], cursor: ShopItemWhereUniqueInput, take: Int, skip: Int, distinct: [ShopItemDistinctFieldEnum!]): [ShopItem!]!
+  address(where: AddressWhereUniqueInput!): Address
+  addresses(where: AddressWhereInput, orderBy: [AddressOrderByInput!], cursor: AddressWhereUniqueInput, take: Int, skip: Int, distinct: [AddressDistinctFieldEnum!]): [Address!]!
+  aggregateAddress(where: AddressWhereInput, orderBy: [AddressOrderByInput!], cursor: AddressWhereUniqueInput, take: Int, skip: Int, distinct: [AddressDistinctFieldEnum!]): AggregateAddress!
+  multiOrder(where: MultiOrderWhereUniqueInput!): MultiOrder
+  multiOrders(where: MultiOrderWhereInput, orderBy: [MultiOrderOrderByInput!], cursor: MultiOrderWhereUniqueInput, take: Int, skip: Int, distinct: [MultiOrderDistinctFieldEnum!]): [MultiOrder!]!
+  aggregateMultiOrder(where: MultiOrderWhereInput, orderBy: [MultiOrderOrderByInput!], cursor: MultiOrderWhereUniqueInput, take: Int, skip: Int, distinct: [MultiOrderDistinctFieldEnum!]): AggregateMultiOrder!
+  multiOrderDeliveryStatus(where: MultiOrderDeliveryStatusWhereUniqueInput!): MultiOrderDeliveryStatus
+  multiOrderDeliveryStatuses(where: MultiOrderDeliveryStatusWhereInput, orderBy: [MultiOrderDeliveryStatusOrderByInput!], cursor: MultiOrderDeliveryStatusWhereUniqueInput, take: Int, skip: Int, distinct: [MultiOrderDeliveryStatusDistinctFieldEnum!]): [MultiOrderDeliveryStatus!]!
+  aggregateMultiOrderDeliveryStatus(where: MultiOrderDeliveryStatusWhereInput, orderBy: [MultiOrderDeliveryStatusOrderByInput!], cursor: MultiOrderDeliveryStatusWhereUniqueInput, take: Int, skip: Int, distinct: [MultiOrderDeliveryStatusDistinctFieldEnum!]): AggregateMultiOrderDeliveryStatus!
+  order(where: OrderWhereUniqueInput!): Order
+  orders(where: OrderWhereInput, orderBy: [OrderOrderByInput!], cursor: OrderWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDistinctFieldEnum!]): [Order!]!
+  aggregateOrder(where: OrderWhereInput, orderBy: [OrderOrderByInput!], cursor: OrderWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDistinctFieldEnum!]): AggregateOrder!
+  orderDeliveryStatus(where: OrderDeliveryStatusWhereUniqueInput!): OrderDeliveryStatus
+  orderDeliveryStatuses(where: OrderDeliveryStatusWhereInput, orderBy: [OrderDeliveryStatusOrderByInput!], cursor: OrderDeliveryStatusWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDeliveryStatusDistinctFieldEnum!]): [OrderDeliveryStatus!]!
+  aggregateOrderDeliveryStatus(where: OrderDeliveryStatusWhereInput, orderBy: [OrderDeliveryStatusOrderByInput!], cursor: OrderDeliveryStatusWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDeliveryStatusDistinctFieldEnum!]): AggregateOrderDeliveryStatus!
+  orderDeliveryStatusDescription(where: OrderDeliveryStatusDescriptionWhereUniqueInput!): OrderDeliveryStatusDescription
+  orderDeliveryStatusDescriptions(where: OrderDeliveryStatusDescriptionWhereInput, orderBy: [OrderDeliveryStatusDescriptionOrderByInput!], cursor: OrderDeliveryStatusDescriptionWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDeliveryStatusDescriptionDistinctFieldEnum!]): [OrderDeliveryStatusDescription!]!
+  aggregateOrderDeliveryStatusDescription(where: OrderDeliveryStatusDescriptionWhereInput, orderBy: [OrderDeliveryStatusDescriptionOrderByInput!], cursor: OrderDeliveryStatusDescriptionWhereUniqueInput, take: Int, skip: Int, distinct: [OrderDeliveryStatusDescriptionDistinctFieldEnum!]): AggregateOrderDeliveryStatusDescription!
+  orderItemCount(where: OrderItemCountWhereUniqueInput!): OrderItemCount
+  orderItemCounts(where: OrderItemCountWhereInput, orderBy: [OrderItemCountOrderByInput!], cursor: OrderItemCountWhereUniqueInput, take: Int, skip: Int, distinct: [OrderItemCountDistinctFieldEnum!]): [OrderItemCount!]!
+  aggregateOrderItemCount(where: OrderItemCountWhereInput, orderBy: [OrderItemCountOrderByInput!], cursor: OrderItemCountWhereUniqueInput, take: Int, skip: Int, distinct: [OrderItemCountDistinctFieldEnum!]): AggregateOrderItemCount!
+  paymentMultiOrder(where: PaymentMultiOrderWhereUniqueInput!): PaymentMultiOrder
+  paymentMultiOrders(where: PaymentMultiOrderWhereInput, orderBy: [PaymentMultiOrderOrderByInput!], cursor: PaymentMultiOrderWhereUniqueInput, take: Int, skip: Int, distinct: [PaymentMultiOrderDistinctFieldEnum!]): [PaymentMultiOrder!]!
+  aggregatePaymentMultiOrder(where: PaymentMultiOrderWhereInput, orderBy: [PaymentMultiOrderOrderByInput!], cursor: PaymentMultiOrderWhereUniqueInput, take: Int, skip: Int, distinct: [PaymentMultiOrderDistinctFieldEnum!]): AggregatePaymentMultiOrder!
+  paymentOrder(where: PaymentOrderWhereUniqueInput!): PaymentOrder
+  paymentOrders(where: PaymentOrderWhereInput, orderBy: [PaymentOrderOrderByInput!], cursor: PaymentOrderWhereUniqueInput, take: Int, skip: Int, distinct: [PaymentOrderDistinctFieldEnum!]): [PaymentOrder!]!
+  aggregatePaymentOrder(where: PaymentOrderWhereInput, orderBy: [PaymentOrderOrderByInput!], cursor: PaymentOrderWhereUniqueInput, take: Int, skip: Int, distinct: [PaymentOrderDistinctFieldEnum!]): AggregatePaymentOrder!
+  refund(where: RefundWhereUniqueInput!): Refund
+  refunds(where: RefundWhereInput, orderBy: [RefundOrderByInput!], cursor: RefundWhereUniqueInput, take: Int, skip: Int, distinct: [RefundDistinctFieldEnum!]): [Refund!]!
+  aggregateRefund(where: RefundWhereInput, orderBy: [RefundOrderByInput!], cursor: RefundWhereUniqueInput, take: Int, skip: Int, distinct: [RefundDistinctFieldEnum!]): AggregateRefund!
+  shop(where: ShopWhereUniqueInput!): Shop
+  shops(where: ShopWhereInput, orderBy: [ShopOrderByInput!], cursor: ShopWhereUniqueInput, take: Int, skip: Int, distinct: [ShopDistinctFieldEnum!]): [Shop!]!
+  aggregateShop(where: ShopWhereInput, orderBy: [ShopOrderByInput!], cursor: ShopWhereUniqueInput, take: Int, skip: Int, distinct: [ShopDistinctFieldEnum!]): AggregateShop!
   shopItem(where: ShopItemWhereUniqueInput!): ShopItem
+  shopItems(where: ShopItemWhereInput, orderBy: [ShopItemOrderByInput!], cursor: ShopItemWhereUniqueInput, take: Int, skip: Int, distinct: [ShopItemDistinctFieldEnum!]): [ShopItem!]!
+  aggregateShopItem(where: ShopItemWhereInput, orderBy: [ShopItemOrderByInput!], cursor: ShopItemWhereUniqueInput, take: Int, skip: Int, distinct: [ShopItemDistinctFieldEnum!]): AggregateShopItem!
   user(where: UserWhereUniqueInput!): User
-  findMultiCartsByUserId(findMultiOrderByUserIdInput: FindMultiOrderByUserIdInput!): MultiOrder!
-  findOrdersFromOwnerId(ownerId: String!): [Order!]!
+  users(where: UserWhereInput, orderBy: [UserOrderByInput!], cursor: UserWhereUniqueInput, take: Int, skip: Int, distinct: [UserDistinctFieldEnum!]): [User!]!
+  aggregateUser(where: UserWhereInput, orderBy: [UserOrderByInput!], cursor: UserWhereUniqueInput, take: Int, skip: Int, distinct: [UserDistinctFieldEnum!]): AggregateUser!
+  findMultiOrderByUserId: MultiOrder!
+  findOrdersFromOwnerId: [OrderWithPrice!]!
   getPaymentInfo(getPaymentInfoInput: GetPaymentInfoInput!): [PaymentMethod!]!
   getAddresses: [AddressWithDefault!]!
   findUserById(id: String!): User!
@@ -548,6 +2155,15 @@ type Refund {
   description: String!
   paymentIntentId: String!
   stripeRefundId: String!
+  shopItem: ShopItem!
+}
+
+input RefundCreateInput {
+  id: String
+  description: String!
+  paymentIntentId: String!
+  stripeRefundId: String!
+  shopItem: ShopItemCreateOneWithoutRefundsInput!
 }
 
 input RefundCreateManyWithoutShopItemInput {
@@ -584,6 +2200,74 @@ input RefundOrderByInput {
   stripeRefundId: SortOrder
 }
 
+input RefundScalarWhereInput {
+  AND: [RefundScalarWhereInput!]
+  OR: [RefundScalarWhereInput!]
+  NOT: [RefundScalarWhereInput!]
+  id: StringFilter
+  shopItemId: StringFilter
+  description: StringFilter
+  paymentIntentId: StringFilter
+  stripeRefundId: StringFilter
+}
+
+input RefundUpdateInput {
+  id: String
+  description: String
+  paymentIntentId: String
+  stripeRefundId: String
+  shopItem: ShopItemUpdateOneRequiredWithoutRefundsInput
+}
+
+input RefundUpdateManyDataInput {
+  id: String
+  description: String
+  paymentIntentId: String
+  stripeRefundId: String
+}
+
+input RefundUpdateManyMutationInput {
+  id: String
+  description: String
+  paymentIntentId: String
+  stripeRefundId: String
+}
+
+input RefundUpdateManyWithoutShopItemInput {
+  create: [RefundCreateWithoutShopItemInput!]
+  connect: [RefundWhereUniqueInput!]
+  set: [RefundWhereUniqueInput!]
+  disconnect: [RefundWhereUniqueInput!]
+  delete: [RefundWhereUniqueInput!]
+  update: [RefundUpdateWithWhereUniqueWithoutShopItemInput!]
+  updateMany: [RefundUpdateManyWithWhereNestedInput!]
+  deleteMany: [RefundScalarWhereInput!]
+  upsert: [RefundUpsertWithWhereUniqueWithoutShopItemInput!]
+}
+
+input RefundUpdateManyWithWhereNestedInput {
+  where: RefundScalarWhereInput!
+  data: RefundUpdateManyDataInput!
+}
+
+input RefundUpdateWithoutShopItemDataInput {
+  id: String
+  description: String
+  paymentIntentId: String
+  stripeRefundId: String
+}
+
+input RefundUpdateWithWhereUniqueWithoutShopItemInput {
+  where: RefundWhereUniqueInput!
+  data: RefundUpdateWithoutShopItemDataInput!
+}
+
+input RefundUpsertWithWhereUniqueWithoutShopItemInput {
+  where: RefundWhereUniqueInput!
+  update: RefundUpdateWithoutShopItemDataInput!
+  create: RefundCreateWithoutShopItemInput!
+}
+
 input RefundWhereInput {
   AND: [RefundWhereInput!]
   OR: [RefundWhereInput!]
@@ -610,6 +2294,7 @@ type Shop {
   email: String!
   username: String!
   password: String!
+  shopItems(where: ShopItemWhereInput, orderBy: [ShopItemOrderByInput!], cursor: ShopItemWhereUniqueInput, take: Int, skip: Int, distinct: [ShopItemDistinctFieldEnum!]): [ShopItem!]
 }
 
 input ShopCreateInput {
@@ -632,6 +2317,13 @@ input ShopCreateWithoutShopItemsInput {
   password: String!
 }
 
+enum ShopDistinctFieldEnum {
+  id
+  email
+  username
+  password
+}
+
 type ShopItem {
   id: String!
   createdAt: DateTime!
@@ -643,6 +2335,10 @@ type ShopItem {
   shop: Shop!
   orderItemCounts(where: OrderItemCountWhereInput, orderBy: [OrderItemCountOrderByInput!], cursor: OrderItemCountWhereUniqueInput, take: Int, skip: Int, distinct: [OrderItemCountDistinctFieldEnum!]): [OrderItemCount!]
   refunds(where: RefundWhereInput, orderBy: [RefundOrderByInput!], cursor: RefundWhereUniqueInput, take: Int, skip: Int, distinct: [RefundDistinctFieldEnum!]): [Refund!]
+}
+
+type ShopItemAvgAggregateOutputType {
+  price: Float!
 }
 
 input ShopItemCreateInput {
@@ -660,6 +2356,38 @@ input ShopItemCreateInput {
 input ShopItemCreateManyWithoutShopInput {
   create: [ShopItemCreateWithoutShopInput!]
   connect: [ShopItemWhereUniqueInput!]
+}
+
+input ShopItemCreateOneWithoutOrderItemCountsInput {
+  create: ShopItemCreateWithoutOrderItemCountsInput
+  connect: ShopItemWhereUniqueInput
+}
+
+input ShopItemCreateOneWithoutRefundsInput {
+  create: ShopItemCreateWithoutRefundsInput
+  connect: ShopItemWhereUniqueInput
+}
+
+input ShopItemCreateWithoutOrderItemCountsInput {
+  id: String
+  createdAt: DateTime
+  name: String!
+  description: String!
+  price: Float!
+  imageUrl: String!
+  shop: ShopCreateOneWithoutShopItemsInput!
+  refunds: RefundCreateManyWithoutShopItemInput
+}
+
+input ShopItemCreateWithoutRefundsInput {
+  id: String
+  createdAt: DateTime
+  name: String!
+  description: String!
+  price: Float!
+  imageUrl: String!
+  shop: ShopCreateOneWithoutShopItemsInput!
+  orderItemCounts: OrderItemCountCreateManyWithoutShopItemInput
 }
 
 input ShopItemCreateWithoutShopInput {
@@ -689,6 +2417,14 @@ input ShopItemListRelationFilter {
   none: ShopItemWhereInput
 }
 
+type ShopItemMaxAggregateOutputType {
+  price: Float!
+}
+
+type ShopItemMinAggregateOutputType {
+  price: Float!
+}
+
 input ShopItemOrderByInput {
   id: SortOrder
   createdAt: SortOrder
@@ -697,6 +2433,138 @@ input ShopItemOrderByInput {
   price: SortOrder
   imageUrl: SortOrder
   shopId: SortOrder
+}
+
+input ShopItemScalarWhereInput {
+  AND: [ShopItemScalarWhereInput!]
+  OR: [ShopItemScalarWhereInput!]
+  NOT: [ShopItemScalarWhereInput!]
+  id: StringFilter
+  createdAt: DateTimeFilter
+  name: StringFilter
+  description: StringFilter
+  price: FloatFilter
+  imageUrl: StringFilter
+  shopId: StringFilter
+}
+
+type ShopItemSumAggregateOutputType {
+  price: Float!
+}
+
+input ShopItemUpdateInput {
+  id: String
+  createdAt: DateTime
+  name: String
+  description: String
+  price: Float
+  imageUrl: String
+  shop: ShopUpdateOneRequiredWithoutShopItemsInput
+  orderItemCounts: OrderItemCountUpdateManyWithoutShopItemInput
+  refunds: RefundUpdateManyWithoutShopItemInput
+}
+
+input ShopItemUpdateManyDataInput {
+  id: String
+  createdAt: DateTime
+  name: String
+  description: String
+  price: Float
+  imageUrl: String
+}
+
+input ShopItemUpdateManyMutationInput {
+  id: String
+  createdAt: DateTime
+  name: String
+  description: String
+  price: Float
+  imageUrl: String
+}
+
+input ShopItemUpdateManyWithoutShopInput {
+  create: [ShopItemCreateWithoutShopInput!]
+  connect: [ShopItemWhereUniqueInput!]
+  set: [ShopItemWhereUniqueInput!]
+  disconnect: [ShopItemWhereUniqueInput!]
+  delete: [ShopItemWhereUniqueInput!]
+  update: [ShopItemUpdateWithWhereUniqueWithoutShopInput!]
+  updateMany: [ShopItemUpdateManyWithWhereNestedInput!]
+  deleteMany: [ShopItemScalarWhereInput!]
+  upsert: [ShopItemUpsertWithWhereUniqueWithoutShopInput!]
+}
+
+input ShopItemUpdateManyWithWhereNestedInput {
+  where: ShopItemScalarWhereInput!
+  data: ShopItemUpdateManyDataInput!
+}
+
+input ShopItemUpdateOneRequiredWithoutOrderItemCountsInput {
+  create: ShopItemCreateWithoutOrderItemCountsInput
+  connect: ShopItemWhereUniqueInput
+  update: ShopItemUpdateWithoutOrderItemCountsDataInput
+  upsert: ShopItemUpsertWithoutOrderItemCountsInput
+}
+
+input ShopItemUpdateOneRequiredWithoutRefundsInput {
+  create: ShopItemCreateWithoutRefundsInput
+  connect: ShopItemWhereUniqueInput
+  update: ShopItemUpdateWithoutRefundsDataInput
+  upsert: ShopItemUpsertWithoutRefundsInput
+}
+
+input ShopItemUpdateWithoutOrderItemCountsDataInput {
+  id: String
+  createdAt: DateTime
+  name: String
+  description: String
+  price: Float
+  imageUrl: String
+  shop: ShopUpdateOneRequiredWithoutShopItemsInput
+  refunds: RefundUpdateManyWithoutShopItemInput
+}
+
+input ShopItemUpdateWithoutRefundsDataInput {
+  id: String
+  createdAt: DateTime
+  name: String
+  description: String
+  price: Float
+  imageUrl: String
+  shop: ShopUpdateOneRequiredWithoutShopItemsInput
+  orderItemCounts: OrderItemCountUpdateManyWithoutShopItemInput
+}
+
+input ShopItemUpdateWithoutShopDataInput {
+  id: String
+  createdAt: DateTime
+  name: String
+  description: String
+  price: Float
+  imageUrl: String
+  orderItemCounts: OrderItemCountUpdateManyWithoutShopItemInput
+  refunds: RefundUpdateManyWithoutShopItemInput
+}
+
+input ShopItemUpdateWithWhereUniqueWithoutShopInput {
+  where: ShopItemWhereUniqueInput!
+  data: ShopItemUpdateWithoutShopDataInput!
+}
+
+input ShopItemUpsertWithoutOrderItemCountsInput {
+  update: ShopItemUpdateWithoutOrderItemCountsDataInput!
+  create: ShopItemCreateWithoutOrderItemCountsInput!
+}
+
+input ShopItemUpsertWithoutRefundsInput {
+  update: ShopItemUpdateWithoutRefundsDataInput!
+  create: ShopItemCreateWithoutRefundsInput!
+}
+
+input ShopItemUpsertWithWhereUniqueWithoutShopInput {
+  where: ShopItemWhereUniqueInput!
+  update: ShopItemUpdateWithoutShopDataInput!
+  create: ShopItemCreateWithoutShopInput!
 }
 
 input ShopItemWhereInput {
@@ -717,6 +2585,47 @@ input ShopItemWhereInput {
 
 input ShopItemWhereUniqueInput {
   id: String
+}
+
+input ShopOrderByInput {
+  id: SortOrder
+  email: SortOrder
+  username: SortOrder
+  password: SortOrder
+}
+
+input ShopUpdateInput {
+  id: String
+  email: String
+  username: String
+  password: String
+  shopItems: ShopItemUpdateManyWithoutShopInput
+}
+
+input ShopUpdateManyMutationInput {
+  id: String
+  email: String
+  username: String
+  password: String
+}
+
+input ShopUpdateOneRequiredWithoutShopItemsInput {
+  create: ShopCreateWithoutShopItemsInput
+  connect: ShopWhereUniqueInput
+  update: ShopUpdateWithoutShopItemsDataInput
+  upsert: ShopUpsertWithoutShopItemsInput
+}
+
+input ShopUpdateWithoutShopItemsDataInput {
+  id: String
+  email: String
+  username: String
+  password: String
+}
+
+input ShopUpsertWithoutShopItemsInput {
+  update: ShopUpdateWithoutShopItemsDataInput!
+  create: ShopCreateWithoutShopItemsInput!
 }
 
 input ShopWhereInput {
@@ -834,9 +2743,37 @@ type User {
   addresses(where: AddressWhereInput, orderBy: [AddressOrderByInput!], cursor: AddressWhereUniqueInput, take: Int, skip: Int, distinct: [AddressDistinctFieldEnum!]): [Address!]
 }
 
+input UserCreateInput {
+  id: String
+  email: String!
+  username: String!
+  password: String!
+  dob: DateTime!
+  stripe_cust_id: String
+  defaultAddressId: String
+  orders: OrderCreateManyWithoutOwnerInput
+  addresses: AddressCreateManyWithoutUserInput
+}
+
+input UserCreateOneWithoutAddressesInput {
+  create: UserCreateWithoutAddressesInput
+  connect: UserWhereUniqueInput
+}
+
 input UserCreateOneWithoutOrdersInput {
   create: UserCreateWithoutOrdersInput
   connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutAddressesInput {
+  id: String
+  email: String!
+  username: String!
+  password: String!
+  dob: DateTime!
+  stripe_cust_id: String
+  defaultAddressId: String
+  orders: OrderCreateManyWithoutOwnerInput
 }
 
 input UserCreateWithoutOrdersInput {
@@ -848,6 +2785,94 @@ input UserCreateWithoutOrdersInput {
   stripe_cust_id: String
   defaultAddressId: String
   addresses: AddressCreateManyWithoutUserInput
+}
+
+enum UserDistinctFieldEnum {
+  id
+  email
+  username
+  password
+  dob
+  stripe_cust_id
+  defaultAddressId
+}
+
+input UserOrderByInput {
+  id: SortOrder
+  email: SortOrder
+  username: SortOrder
+  password: SortOrder
+  dob: SortOrder
+  stripe_cust_id: SortOrder
+  defaultAddressId: SortOrder
+}
+
+input UserUpdateInput {
+  id: String
+  email: String
+  username: String
+  password: String
+  dob: DateTime
+  stripe_cust_id: String
+  defaultAddressId: String
+  orders: OrderUpdateManyWithoutOwnerInput
+  addresses: AddressUpdateManyWithoutUserInput
+}
+
+input UserUpdateManyMutationInput {
+  id: String
+  email: String
+  username: String
+  password: String
+  dob: DateTime
+  stripe_cust_id: String
+  defaultAddressId: String
+}
+
+input UserUpdateOneRequiredWithoutAddressesInput {
+  create: UserCreateWithoutAddressesInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateWithoutAddressesDataInput
+  upsert: UserUpsertWithoutAddressesInput
+}
+
+input UserUpdateOneRequiredWithoutOrdersInput {
+  create: UserCreateWithoutOrdersInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateWithoutOrdersDataInput
+  upsert: UserUpsertWithoutOrdersInput
+}
+
+input UserUpdateWithoutAddressesDataInput {
+  id: String
+  email: String
+  username: String
+  password: String
+  dob: DateTime
+  stripe_cust_id: String
+  defaultAddressId: String
+  orders: OrderUpdateManyWithoutOwnerInput
+}
+
+input UserUpdateWithoutOrdersDataInput {
+  id: String
+  email: String
+  username: String
+  password: String
+  dob: DateTime
+  stripe_cust_id: String
+  defaultAddressId: String
+  addresses: AddressUpdateManyWithoutUserInput
+}
+
+input UserUpsertWithoutAddressesInput {
+  update: UserUpdateWithoutAddressesDataInput!
+  create: UserCreateWithoutAddressesInput!
+}
+
+input UserUpsertWithoutOrdersInput {
+  update: UserUpdateWithoutOrdersDataInput!
+  create: UserCreateWithoutOrdersInput!
 }
 
 input UserWhereInput {

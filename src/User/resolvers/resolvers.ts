@@ -2,7 +2,7 @@ import { ApolloError } from 'apollo-server';
 import Stripe from 'stripe';
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 
-import { User } from '~prisma/models/User';
+import { User } from '~prisma/models';
 import { hashSync } from 'bcrypt';
 import { Context } from 'src/commonUtils';
 

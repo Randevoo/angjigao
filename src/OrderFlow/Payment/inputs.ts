@@ -6,4 +6,19 @@ export class PayUnfulfilledOrderInput {
 
   @Field()
   payment_method_id: string;
+
+  @Field()
+  address_id: string;
+}
+
+@InputType()
+export class PayMultiOrderInput {
+  @Field()
+  multi_order_id: string;
+
+  @Field()
+  payment_method_id: string;
+
+  @Field()
+  address_id: string;
 }

@@ -1,0 +1,544 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateEnum",
+      "enum": "DeliveryStatus",
+      "values": [
+        "PREPARING",
+        "READY",
+        "SHIPPED",
+        "RECEIVED"
+      ]
+    },
+    {
+      "tag": "CreateModel",
+      "model": "MultiOrderDeliveryStatus"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MultiOrderDeliveryStatus",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MultiOrderDeliveryStatus",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MultiOrderDeliveryStatus",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "uuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MultiOrderDeliveryStatus",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "MultiOrderDeliveryStatus",
+      "field": "addressId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MultiOrderDeliveryStatus",
+      "field": "Address",
+      "type": "Address",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MultiOrderDeliveryStatus",
+          "field": "Address"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MultiOrderDeliveryStatus",
+          "field": "Address"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[addressId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MultiOrderDeliveryStatus",
+          "field": "Address"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MultiOrderDeliveryStatus",
+      "field": "paymentMultiOrderId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MultiOrderDeliveryStatus",
+      "field": "PaymentMultiOrder",
+      "type": "PaymentMultiOrder",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "MultiOrderDeliveryStatus",
+          "field": "PaymentMultiOrder"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MultiOrderDeliveryStatus",
+          "field": "PaymentMultiOrder"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[paymentMultiOrderId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "MultiOrderDeliveryStatus",
+          "field": "PaymentMultiOrder"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MultiOrderDeliveryStatus",
+      "field": "status",
+      "type": "DeliveryStatus",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "MultiOrderDeliveryStatus",
+      "field": "description",
+      "type": "OrderDeliveryStatusDescription",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "OrderDeliveryStatus"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatus",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatus",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatus",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "uuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatus",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatus",
+      "field": "addressId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatus",
+      "field": "Address",
+      "type": "Address",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatus",
+          "field": "Address"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatus",
+          "field": "Address"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[addressId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatus",
+          "field": "Address"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatus",
+      "field": "paymentOrderId",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatus",
+      "field": "paymentOrder",
+      "type": "PaymentOrder",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatus",
+          "field": "paymentOrder"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatus",
+          "field": "paymentOrder"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[paymentOrderId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatus",
+          "field": "paymentOrder"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatus",
+      "field": "status",
+      "type": "DeliveryStatus",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatus",
+      "field": "description",
+      "type": "OrderDeliveryStatusDescription",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateModel",
+      "model": "OrderDeliveryStatusDescription"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatusDescription",
+      "field": "id",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatusDescription",
+          "field": "id"
+        },
+        "directive": "default"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatusDescription",
+          "field": "id"
+        },
+        "directive": "default"
+      },
+      "argument": "",
+      "value": "uuid()"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatusDescription",
+          "field": "id"
+        },
+        "directive": "id"
+      }
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatusDescription",
+      "field": "timestamp",
+      "type": "DateTime",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatusDescription",
+      "field": "description",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatusDescription",
+      "field": "OrderDeliveryStatus",
+      "type": "OrderDeliveryStatus",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatusDescription",
+          "field": "OrderDeliveryStatus"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatusDescription",
+          "field": "OrderDeliveryStatus"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[orderDeliveryStatusId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatusDescription",
+          "field": "OrderDeliveryStatus"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatusDescription",
+      "field": "orderDeliveryStatusId",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatusDescription",
+      "field": "MultiOrderDeliveryStatus",
+      "type": "MultiOrderDeliveryStatus",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatusDescription",
+          "field": "MultiOrderDeliveryStatus"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatusDescription",
+          "field": "MultiOrderDeliveryStatus"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[multiOrderDeliveryStatusId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "OrderDeliveryStatusDescription",
+          "field": "MultiOrderDeliveryStatus"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "OrderDeliveryStatusDescription",
+      "field": "multiOrderDeliveryStatusId",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "PaymentOrder",
+      "field": "orderDeliveryStatus",
+      "type": "OrderDeliveryStatus",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "PaymentMultiOrder",
+      "field": "MultiOrderDeliveryStatus",
+      "type": "MultiOrderDeliveryStatus",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Address",
+      "field": "OrderDeliveryStatus",
+      "type": "OrderDeliveryStatus",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Address",
+      "field": "MultiOrderDeliveryStatus",
+      "type": "MultiOrderDeliveryStatus",
+      "arity": "List"
+    }
+  ]
+}

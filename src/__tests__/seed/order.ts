@@ -29,7 +29,9 @@ export async function insertNewOrderItemCount(
           },
         },
       },
-      price: shopItem.price * (count ?? 1),
+    },
+    include: {
+      order: true,
     },
   });
   return itemCount;

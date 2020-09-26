@@ -1,0 +1,22 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "UpdateEnum",
+      "enum": "DeliveryStatus",
+      "createdValues": [
+        "TO_BE_STARTED"
+      ]
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Order",
+      "field": "price"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "OrderItemCount",
+      "field": "price"
+    }
+  ]
+}

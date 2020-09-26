@@ -61,7 +61,7 @@
     "migrateDev": "dotenv -e .env.dev.local -- npx prisma migrate up --experimental",
     "migrateTest": "dotenv -e .env.test -- npx prisma migrate up --experimental",
     "codegen": "prisma generate",
-    "test": "mocha --exit --timeout 10000 -r ts-node/register -r tsconfig-paths/register -r esm src/__tests__/*.spec.ts src/__tests__/**/*.spec.ts"
+    "test": "mocha --exit --timeout 10000 -r ts-node/register -r tsconfig-paths/register -r esm src/__tests__/*.spec.ts src/__tests__/**/*.spec.ts src/__tests__/**/**/*.spec.ts"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
